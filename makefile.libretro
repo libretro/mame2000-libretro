@@ -27,17 +27,17 @@ CFLAGS += -O3 -ffast-math -Isrc -Isrc/$(MAMEOS) -Isrc/zlib -fPIC \
 -Wno-sign-compare -Wunused -Wpointer-arith -Wcast-align -Waggregate-return -Wshadow -Wno-write-strings \
 -Wno-unused-but-set-variable
 
-LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/libretro.T
+LDFLAGS += -shared -s -Wl,--version-script=src/libretro/libretro.T
 
 LIBS = -lm -lpthread
 
 ifeq ($(CC),)
 	CC=gcc
 endif
-ifeq($(CPP),)
+ifeq ($(CPP),)
 	CPP=g++
 endif
-ifeq($(LD),)
+ifeq ($(LD),)
 	LD=$(CPP)
 endif
 
