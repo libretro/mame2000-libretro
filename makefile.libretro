@@ -31,9 +31,15 @@ LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/
 
 LIBS = -lm -lpthread
 
-CC=gcc
-CPP=g++
-LD=$(CPP)
+ifeq ($(CC),)
+	CC=gcc
+endif
+ifeq($(CPP),)
+	CPP=g++
+endif
+ifeq($(LD),)
+	LD=$(CPP)
+endif
 
 OBJ = obj_$(TARGET)_$(MAMEOS)
 OBJDIRS = $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
