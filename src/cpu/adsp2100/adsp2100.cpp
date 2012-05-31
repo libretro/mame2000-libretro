@@ -479,6 +479,10 @@ void adsp2100_set_sp(unsigned val)
 
 void adsp2100_reset(void *param)
 {
+	/* create the tables */
+	if (!create_tables())
+		exit(-1);
+
 	/* ensure that zero is zero */
 	adsp2100.r[0].zero.u = adsp2100.r[1].zero.u = 0;
 
@@ -545,10 +549,6 @@ void adsp2100_reset(void *param)
 	adsp2100.irq_latch[2] = CLEAR_LINE;
 	adsp2100.irq_latch[3] = CLEAR_LINE;
 	adsp2100.interrupt_cycles = 0;
-
-	/* create the tables */
-	if (!create_tables())
-		exit(-1);
 }
 
 
