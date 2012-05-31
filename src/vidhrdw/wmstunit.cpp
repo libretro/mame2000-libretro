@@ -835,11 +835,10 @@ static void update_screen(struct osd_bitmap *bitmap)
 			/* handle the refresh */
 			UINT16 *src = &local_videoram[offset];
 			UINT16 *dst = &((UINT16 *)bitmap->line[v])[xoffs];
-			UINT32 diff = dst - src;
 
 			/* copy one row */
-			for (h = 0; h < width; h++, src++)
-				*(src + diff) = pens[*src];
+			for (h = 0; h < width; h++)
+				*dst++ = pens[*src++];
 
 			/* point to the next row */
 			offset = (offset + 512) & 0x3ffff;
