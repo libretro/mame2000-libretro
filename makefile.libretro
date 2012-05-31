@@ -31,16 +31,6 @@ LDFLAGS += -shared -s -Wl,--version-script=src/libretro/libretro.T
 
 LIBS = -lm -lpthread
 
-ifeq ($(CC),)
-	CC=gcc
-endif
-ifeq ($(CPP),)
-	CPP=g++
-endif
-ifeq ($(LD),)
-	LD=$(CPP)
-endif
-
 OBJ = obj_$(TARGET)_$(MAMEOS)
 OBJDIRS = $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
 	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw \
@@ -60,7 +50,7 @@ CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
 $(EMULATOR): $(OBJC) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
 	@echo Linking $@...
-	@$(LD) $(LDFLAGS) $(OBJC) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS) -o $@
+	@$(CXX) $(LDFLAGS) $(OBJC) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS) -o $@
 
 $(OBJ)/%.o: src/%.c
 	@echo Compiling $<...
@@ -68,15 +58,15 @@ $(OBJ)/%.o: src/%.c
 
 $(OBJ)/%.o: src/%.cpp
 	@echo Compiling $<...
-	@$(CPP) $(CDEFS) $(CFLAGS) -fpermissive -fno-rtti -c $< -o $@
+	@$(CXX) $(CDEFS) $(CFLAGS) -fpermissive -fno-rtti -c $< -o $@
 
 $(OBJ)/%.o: src/%.s
 	@echo Compiling $<...
-	@$(CPP) $(CDEFS) $(CFLAGS) -c $< -o $@
+	@$(CXX) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: src/%.S
 	@echo Compiling $<...
-	@$(CPP) $(CDEFS) $(CFLAGS) -c $< -o $@
+	@$(CXX) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(sort $(OBJDIRS)):
 	$(MD) $@
