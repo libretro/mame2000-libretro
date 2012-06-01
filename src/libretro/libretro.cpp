@@ -129,6 +129,7 @@ void retro_get_system_info(struct retro_system_info *info)
 	info->library_version  = build_version;
 	info->need_fullpath    = true;
 	info->valid_extensions = "zip|ZIP";
+   info->block_extract    = true;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -214,6 +215,7 @@ static void update_input(void)
 void *run_thread_proc(void *v)
 {
 	(void)v;
+
 	run_game(game_index);
 	thread_done = 1;
 	pthread_cond_signal(&libretro_cond);
@@ -234,11 +236,16 @@ void retro_run(void)
 	}
 
 	pthread_cond_signal(&libretro_cond);
-	pthread_cond_wait(&libretro_cond, &libretro_mutex);
+   pthread_mutex_lock(&libretro_mutex);
+
+   while (!frame_is_ready && !thread_done)
+      pthread_cond_wait(&libretro_cond, &libretro_mutex);
 
 	video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
 	if (samples_per_frame)
 		audio_batch_cb(samples_buffer, samples_per_frame);
+
+   pthread_mutex_unlock(&libretro_mutex);
 }
 
 bool retro_load_game(const struct retro_game_info *info)
