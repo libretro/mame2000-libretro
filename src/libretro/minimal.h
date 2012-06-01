@@ -80,9 +80,6 @@ extern void gp2x_sound_thread_start(int len);
 extern void gp2x_sound_thread_stop(void);
 extern void gp2x_sound_set_rate(int rate);
 extern void gp2x_sound_set_stereo(int stereo);
-extern unsigned long long gp2x_timer_read(void);
-//extern unsigned long long gp2x_timer_read_real(void);
-//extern unsigned long gp2x_timer_read_scale(void);
 extern void gp2x_timer_profile(void);
 
 extern void gp2x_set_video_mode(int bpp,int width,int height);

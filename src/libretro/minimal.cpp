@@ -87,27 +87,6 @@ void gp2x_timer_delay(unsigned long ticks)
 }
 
 
-unsigned long long gp2x_timer_read(void)
-{
-	struct timeval current_time;
-	gettimeofday(&current_time, NULL);
-	
-	return ((unsigned long long)current_time.tv_sec * 1000LL + (current_time.tv_usec / 1000LL));
-}
-
-unsigned long long gp2x_timer_read_real(void)
-{
-	struct timeval current_time;
-	gettimeofday(&current_time, NULL);
-	
-	return (((unsigned long long)current_time.tv_sec * 1000000LL + current_time.tv_usec));
-}
-
-unsigned long gp2x_timer_read_scale(void)
-{
- 	return 0;//gp2x_ticks_per_second;
-}
-
 void gp2x_timer_profile(void)
 {
 }

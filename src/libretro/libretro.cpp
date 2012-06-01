@@ -60,14 +60,6 @@ void gp2x_printf(char* fmt, ...)
 	va_end(marker);
 }
 
-unsigned long long gp2x_timer_read(void)
-{
-	struct timeval current_time;
-	gettimeofday(&current_time, NULL);
-	
-	return ((unsigned long long)current_time.tv_sec * 1000LL + (current_time.tv_usec / 1000LL));
-}
-
 void gp2x_set_video_mode(int bpp,int width,int height)
 {
 	(void)bpp;

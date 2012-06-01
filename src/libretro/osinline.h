@@ -25,7 +25,6 @@ INLINE int _vec_mult(int x, int y)
 }
 
 #include "minimal.h"
-#define osd_cycles gp2x_timer_read
 
 //dst=(src>>1)+(dst>>1);
 //#define mix_sample _mix_sample
