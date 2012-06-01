@@ -520,6 +520,7 @@ static int vh_open(void)
 ***************************************************************************/
 
 int need_to_clear_bitmap;	/* set by the user interface */
+extern unsigned retro_hook_quit;
 
 int updatescreen(void)
 {
@@ -550,7 +551,7 @@ int updatescreen(void)
 
 	if (drv->vh_eof_callback) (*drv->vh_eof_callback)();
 
-	return 0;
+	return retro_hook_quit;
 }
 
 

@@ -6,7 +6,7 @@ int samples_per_frame = 0;
 short *samples_buffer;
 int usestereo = 1;
 
-extern retro_audio_sample_batch_t audio_batch_cb;
+void hook_audio_done(void);
 
 int osd_start_audio_stream(int stereo)
 {
@@ -28,8 +28,8 @@ void osd_stop_audio_stream(void)
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-	//audio_batch_cb(buffer, samples_per_frame * 2);
 	memcpy(samples_buffer, buffer, samples_per_frame * 2 * 2);
+   hook_audio_done();
 
 	return samples_per_frame;
 }

@@ -1,6 +1,5 @@
 #include "driver.h"
 #include <math.h>
-#include <pthread.h>
 #include "vidhrdw/vector.h"
 #include "dirty.h"
 
@@ -14,6 +13,7 @@ int iOS_cropVideo = 0;
 int iOS_aspectRatio = 0;
 int iOS_fixedRes = 0;
 
+void hook_video_done(void);
 
 dirtygrid grid1;
 dirtygrid grid2;
@@ -95,8 +95,6 @@ int video_aspect=0;
 
 const int safety = 16;
 
-extern pthread_cond_t libretro_cond;
-extern pthread_mutex_t libretro_mutex;
 
 struct osd_bitmap *osd_alloc_bitmap(int width,int height,int depth)
 {
@@ -908,11 +906,8 @@ void osd_update_video_and_audio(struct osd_bitmap *bitmap)
 	/* Check for PGUP, PGDN and pan screen */
 	pan_display();
 
-	pthread_cond_signal(&libretro_cond);
-	pthread_cond_wait(&libretro_cond, &libretro_mutex);
+   hook_video_done();
 }
-
-
 
 void osd_set_gamma(float _gamma)
 {

@@ -9,9 +9,15 @@
 #include "allegro.h"
 
 char *IMAMEBASEPATH = NULL;
-pthread_t run_thread = 0;
-pthread_cond_t libretro_cond;
-pthread_mutex_t libretro_mutex;
+
+unsigned retro_hook_quit;
+volatile static unsigned audio_done;
+volatile static unsigned video_done;
+volatile static unsigned mame_sleep;
+static pthread_t run_thread = 0;
+static pthread_cond_t libretro_cond;
+static pthread_mutex_t libretro_mutex;
+
 int game_index = -1;
 unsigned short *gp2x_screen15;
 int thread_done = 0;
@@ -212,40 +218,85 @@ static void update_input(void)
 #undef _B
 }
 
+static void hook_check(void)
+{
+   if (video_done && audio_done)
+   {
+      pthread_cond_signal(&libretro_cond);
+      if (mame_sleep && !retro_hook_quit)
+         pthread_cond_wait(&libretro_cond, &libretro_mutex);
+      mame_sleep = 1;
+   }
+}
+
+void hook_audio_done(void)
+{
+   pthread_mutex_lock(&libretro_mutex);
+   audio_done = 1;
+   hook_check();
+   pthread_mutex_unlock(&libretro_mutex);
+}
+
+void hook_video_done(void)
+{
+   pthread_mutex_lock(&libretro_mutex);
+   if (video_done) // Audio doesn't seem to be running atm, so fake it ...
+      audio_done = 1;
+   video_done = 1;
+   hook_check();
+   pthread_mutex_unlock(&libretro_mutex);
+}
+
 void *run_thread_proc(void *v)
 {
 	(void)v;
 
 	run_game(game_index);
 	thread_done = 1;
-	pthread_cond_signal(&libretro_cond);
+   hook_audio_done();
+   hook_video_done();
 	return NULL;
+}
+
+static void lock_mame(void)
+{
+   pthread_mutex_lock(&libretro_mutex);
+   while (!audio_done || !video_done)
+      pthread_cond_wait(&libretro_cond, &libretro_mutex);
+   pthread_mutex_unlock(&libretro_mutex);
+}
+
+static void unlock_mame(void)
+{
+   pthread_mutex_lock(&libretro_mutex);
+   mame_sleep = 0;
+   pthread_cond_signal(&libretro_cond);
+   pthread_mutex_unlock(&libretro_mutex);
 }
 
 void retro_run(void)
 {
 	if (run_thread == 0)
+   {
+      mame_sleep = 1;
 		pthread_create(&run_thread, NULL, run_thread_proc, NULL);
+   }
 
-	update_input();
+   lock_mame();
 
 	if (thread_done)
-	{
 		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
-		return;
-	}
 
-	pthread_cond_signal(&libretro_cond);
-   pthread_mutex_lock(&libretro_mutex);
-
-   while (!frame_is_ready && !thread_done)
-      pthread_cond_wait(&libretro_cond, &libretro_mutex);
+	update_input();
 
 	video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
 	if (samples_per_frame)
 		audio_batch_cb(samples_buffer, samples_per_frame);
 
-   pthread_mutex_unlock(&libretro_mutex);
+   audio_done = 0;
+   video_done = 0;
+
+   unlock_mame();
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -391,6 +442,16 @@ bool retro_load_game(const struct retro_game_info *info)
 
 void retro_unload_game(void)
 {
+   pthread_mutex_lock(&libretro_mutex);
+   retro_hook_quit = 1;
+   mame_sleep = 0;
+   pthread_cond_signal(&libretro_cond);
+   pthread_mutex_unlock(&libretro_mutex);
+
+   if (run_thread)
+      pthread_join(run_thread, NULL);
+   run_thread = 0;
+   retro_hook_quit = 0;
 }
 
 unsigned retro_get_region(void)
