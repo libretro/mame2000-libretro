@@ -77,14 +77,7 @@ int gfx_display_columns;
 static int xmultiply,ymultiply;
 int throttle = 0;       /* toggled by F10 */
 
-static int frameskip_counter;
-
 #include "minimal.h"
-#define TICKER unsigned long long
-#define ticker() gp2x_timer_read() 
-#define TICKS_PER_SEC 1000
-//#define vsync() do{}while(0)
-#define vsync() 
 #define makecol(r,g,b) gp2x_video_color15(r,g,b,0)
 #define getr(c) gp2x_video_getr15(c)
 #define getg(c) gp2x_video_getg15(c)
@@ -487,17 +480,6 @@ int osd_create_display(int width,int height,int depth,int fps,int attributes,int
 	brightness_paused_adjust = 1.0;
 	dirty_bright = 1;
 
-	if (frameskip < 0) frameskip = 0;
-	if (frameskip >= FRAMESKIP_LEVELS) frameskip = FRAMESKIP_LEVELS-1;
-
-#ifdef GP2X
-	{
-		extern int gp2x_pal_50hz;
-		if ((gp2x_pal_50hz) && (video_fps>50) && (frameskip<2))
-			frameskip=2;
-	}
-#endif
-
 	/* Look if this is a vector game */
 	if (attributes & VIDEO_TYPE_VECTOR)
 		vector_game = 1;
@@ -559,52 +541,6 @@ int osd_set_display(int width,int height,int depth,int attributes,int orientatio
 	gp2x_set_video_mode(depth,gfx_width,gfx_height);
 
 	vsync_frame_rate = video_fps;
-
-	if (video_sync)
-	{
-		TICKER a,b;
-		float rate;
-
-
-		/* wait some time to let everything stabilize */
-		for (i = 0;i < 60;i++)
-		{
-			vsync();
-			a = ticker();
-		}
-
-		/* small delay for really really fast machines */
-		for (i = 0;i < 100000;i++) ;
-
-		vsync();
-		b = ticker();
-
-		rate = ((float)TICKS_PER_SEC)/(b-a);
-
-		logerror("target frame rate = %ffps, video frame rate = %3.2fHz\n",video_fps,rate);
-
-		/* don't allow more than 8% difference between target and actual frame rate */
-		while (rate > video_fps * 108 / 100)
-			rate /= 2;
-
-		if (rate < video_fps * 92 / 100)
-		{
-			osd_close_display();
-			logerror("-vsync option cannot be used with this display mode:\n"
-						"video refresh frequency = %dHz, target frame rate = %ffps\n",
-						(int)(TICKS_PER_SEC/(b-a)),video_fps);
-			return 0;
-		}
-
-		logerror("adjusted video frame rate = %3.2fHz\n",rate);
-			vsync_frame_rate = rate;
-
-		if (Machine->sample_rate)
-		{
-			Machine->sample_rate = Machine->sample_rate * video_fps / rate;
-			logerror("sample rate adjusted to match video freq: %d\n",Machine->sample_rate);
-		}
-	}
 
 	return 1;
 }
@@ -863,253 +799,97 @@ INLINE void pan_display(void)
 
 int osd_skip_this_frame(void)
 {
-	static const int skiptable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
-	{
-		{ 0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,1 },
-		{ 0,0,0,0,0,1,0,0,0,0,0,1 },
-		{ 0,0,0,1,0,0,0,1,0,0,0,1 },
-		{ 0,0,1,0,0,1,0,0,1,0,0,1 },
-		{ 0,1,0,0,1,0,1,0,0,1,0,1 },
-		{ 0,1,0,1,0,1,0,1,0,1,0,1 },
-		{ 0,1,0,1,1,0,1,0,1,1,0,1 },
-		{ 0,1,1,0,1,1,0,1,1,0,1,1 },
-		{ 0,1,1,1,0,1,1,1,0,1,1,1 },
-		{ 0,1,1,1,1,1,0,1,1,1,1,1 },
-		{ 0,1,1,1,1,1,1,1,1,1,1,1 }
-	};
-	return skiptable[frameskip][frameskip_counter];
+   return 0;
 }
 
 /* Update the display. */
 void osd_update_video_and_audio(struct osd_bitmap *bitmap)
 {
-	static const int waittable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
-	{
-		{ 1,1,1,1,1,1,1,1,1,1,1,1 },
-		{ 2,1,1,1,1,1,1,1,1,1,1,0 },
-		{ 2,1,1,1,1,0,2,1,1,1,1,0 },
-		{ 2,1,1,0,2,1,1,0,2,1,1,0 },
-		{ 2,1,0,2,1,0,2,1,0,2,1,0 },
-		{ 2,0,2,1,0,2,0,2,1,0,2,0 },
-		{ 2,0,2,0,2,0,2,0,2,0,2,0 },
-		{ 2,0,2,0,0,3,0,2,0,0,3,0 },
-		{ 3,0,0,3,0,0,3,0,0,3,0,0 },
-		{ 4,0,0,0,4,0,0,0,4,0,0,0 },
-		{ 6,0,0,0,0,0,6,0,0,0,0,0 },
-		{12,0,0,0,0,0,0,0,0,0,0,0 }
-	};
 	int i;
-	static int showfps,showfpstemp;
-	TICKER curr;
-	static TICKER prev_measure=0,this_frame_base,prev;
-	static int speed = 100;
-	static int vups,vfcount;
 	int have_to_clear_bitmap = 0;
 
-
-
-	if (prev_measure==0 || iOS_exitPause)
-	{
-		iOS_exitPause = 0;
-		/* first time through, initialize timer */
-		prev_measure = ticker() - FRAMESKIP_LEVELS * TICKS_PER_SEC/video_fps;
-	}
-
-	if (frameskip_counter == 0)
-		this_frame_base = prev_measure + FRAMESKIP_LEVELS * TICKS_PER_SEC/video_fps;
 
 	/* update audio */
 	//msdos_update_audio();
 
-	if (osd_skip_this_frame() == 0)
+	if (bitmap->depth == 8)
 	{
-		if (showfpstemp)
+		if (dirty_bright)
 		{
-			showfpstemp--;
-			if (showfps == 0 && showfpstemp == 0)
+			dirty_bright = 0;
+			for (i = 0;i < 256;i++)
 			{
-				have_to_clear_bitmap = 1;
+				float rate = brightness * brightness_paused_adjust * pow(i / 255.0, 1 / osd_gamma_correction) / 100;
+				bright_lookup[i] = 255 * rate + 0.5;
 			}
 		}
-
-		if (input_ui_pressed(IPT_UI_SHOW_FPS))
+		if (dirtypalette)
 		{
-			if (showfpstemp)
+			dirtypalette = 0;
+			for (i = 0;i < screen_colors;i++)
 			{
-				showfpstemp = 0;
-				have_to_clear_bitmap = 1;
-			}
-			else
-			{
-				showfps ^= 1;
-				if (showfps == 0)
+				if (dirtycolor[i])
 				{
-					have_to_clear_bitmap = 1;
-				}
-			}
-		}
+					unsigned char r,g,b;
 
-		/* now wait until it's time to update the screen */
-		if (throttle)
-		{
-			profiler_mark(PROFILER_IDLE);
-			if (video_sync)
-			{
-				static TICKER last;
-				do
-				{
-					vsync();
-					curr = ticker();
-				} while (TICKS_PER_SEC / (curr - last) > video_fps * 11 /10);
-				last = curr;
-			}
-			else
-			{
-				TICKER target;
-				/* wait for video sync but use normal throttling */
-				if (wait_vsync)
-					vsync();
-				curr = ticker();
-				target = this_frame_base + frameskip_counter * TICKS_PER_SEC/video_fps;
-				if ((curr < target) && (target-curr<TICKS_PER_SEC))
-				{
-					do
+					dirtycolor[i] = 0;
+
+					r = current_palette[3*i+0];
+					g = current_palette[3*i+1];
+					b = current_palette[3*i+2];
+					if (i != Machine->uifont->colortable[1])	/* don't adjust the user interface text */
 					{
-                        //sched_yield();
-						curr = ticker();
-					} while ((curr < target) && (target-curr<TICKS_PER_SEC));
-				}
-			}
-			profiler_mark(PROFILER_END);
-		}
-		else curr = ticker();
-
-		if (frameskip_counter == 0)
-		{
-
-			float divdr;
-			divdr = (float)((float)((float)(TICKS_PER_SEC) / video_fps) * (float)(FRAMESKIP_LEVELS)) / (float)(curr - prev_measure);
-			speed = (int)(divdr * 100.0);
-			prev_measure = curr;
-
-			/*
-			int divdr;
-			divdr = video_fps * (curr - prev_measure) / (100 * FRAMESKIP_LEVELS);
-			if (divdr==0)
-			    divdr=1;
-			speed = (TICKS_PER_SEC + divdr/2) / divdr;
-			prev_measure = curr;
-			*/
-		}
-
-		prev = curr;
-
-		vfcount += waittable[frameskip][frameskip_counter];
-		if (vfcount >= video_fps)
-		{
-			extern int vector_updates; /* avgdvg_go_w()'s per Mame frame, should be 1 */
-			vfcount = 0;
-			vups = vector_updates;
-			vector_updates = 0;
-		}
-
-		if (global_fps || showfps || showfpstemp)
-		{
-			int fps;
-			char buf[30];
-			int divdr;
-			divdr = 100 * FRAMESKIP_LEVELS;
-			fps = (video_fps * (FRAMESKIP_LEVELS - frameskip) * speed + (divdr / 2)) / divdr;
-			sprintf(buf,"%s%2d%4d%%%4d/%d fps",autoframeskip?"auto":"fskp",frameskip,speed,fps,(int)(video_fps+0.5));
-			ui_text(bitmap,buf,Machine->uiwidth-strlen(buf)*Machine->uifontwidth,0);
-			if (vector_game)
-			{
-				sprintf(buf," %d vector updates",vups);
-				ui_text(bitmap,buf,Machine->uiwidth-strlen(buf)*Machine->uifontwidth,Machine->uifontheight);
-			}
-		}
-
-		if (bitmap->depth == 8)
-		{
-			if (dirty_bright)
-			{
-				dirty_bright = 0;
-				for (i = 0;i < 256;i++)
-				{
-					float rate = brightness * brightness_paused_adjust * pow(i / 255.0, 1 / osd_gamma_correction) / 100;
-					bright_lookup[i] = 255 * rate + 0.5;
-				}
-			}
-			if (dirtypalette)
-			{
-				dirtypalette = 0;
-				for (i = 0;i < screen_colors;i++)
-				{
-					if (dirtycolor[i])
-					{
-						unsigned char r,g,b;
-						
-						dirtycolor[i] = 0;
-
-						r = current_palette[3*i+0];
-						g = current_palette[3*i+1];
-						b = current_palette[3*i+2];
-						if (i != Machine->uifont->colortable[1])	/* don't adjust the user interface text */
-						{
-							r = bright_lookup[r];
-							g = bright_lookup[g];
-							b = bright_lookup[b];
-						}
-						gp2x_video_color8(i,r,g,b);
+						r = bright_lookup[r];
+						g = bright_lookup[g];
+						b = bright_lookup[b];
 					}
+					gp2x_video_color8(i,r,g,b);
 				}
-				gp2x_video_setpalette();
 			}
+			gp2x_video_setpalette();
 		}
-		else
+	}
+	else
+	{
+		if (dirty_bright)
 		{
-			if (dirty_bright)
+			dirty_bright = 0;
+			for (i = 0;i < 256;i++)
 			{
-				dirty_bright = 0;
-				for (i = 0;i < 256;i++)
-				{
-					float rate = brightness * brightness_paused_adjust * pow(i / 255.0, 1 / osd_gamma_correction) / 100;
-					bright_lookup[i] = 255 * rate + 0.5;
-				}
+				float rate = brightness * brightness_paused_adjust * pow(i / 255.0, 1 / osd_gamma_correction) / 100;
+				bright_lookup[i] = 255 * rate + 0.5;
 			}
-			if (dirtypalette)
+		}
+		if (dirtypalette)
+		{
+			if (use_dirty) init_dirty(1);	/* have to redraw the whole screen */
+
+			dirtypalette = 0;
+			for (i = 0;i < screen_colors;i++)
 			{
-				if (use_dirty) init_dirty(1);	/* have to redraw the whole screen */
-
-				dirtypalette = 0;
-				for (i = 0;i < screen_colors;i++)
+				if (dirtycolor[i])
 				{
-					if (dirtycolor[i])
+					int r,g,b;
+
+					dirtycolor[i] = 0;
+
+					r = current_palette[3*i+0];
+					g = current_palette[3*i+1];
+					b = current_palette[3*i+2];
+					if (i != Machine->uifont->colortable[1])	/* don't adjust the user interface text */
 					{
-						int r,g,b;
-
-						dirtycolor[i] = 0;
-
-						r = current_palette[3*i+0];
-						g = current_palette[3*i+1];
-						b = current_palette[3*i+2];
-						if (i != Machine->uifont->colortable[1])	/* don't adjust the user interface text */
-						{
-							r = bright_lookup[r];
-							g = bright_lookup[g];
-							b = bright_lookup[b];
-						}
-						palette_16bit_lookup[i] = makecol(r,g,b);
+						r = bright_lookup[r];
+						g = bright_lookup[g];
+						b = bright_lookup[b];
 					}
+					palette_16bit_lookup[i] = makecol(r,g,b);
 				}
 			}
 		}
+	}
 
 		/* copy the bitmap to screen memory */
-		profiler_mark(PROFILER_BLIT);
 		update_screen(bitmap);
-		profiler_mark(PROFILER_END);
 
 		if (have_to_clear_bitmap)
 			osd_clearbitmap(bitmap);
@@ -1124,112 +904,9 @@ void osd_update_video_and_audio(struct osd_bitmap *bitmap)
 		if (have_to_clear_bitmap)
 			osd_clearbitmap(bitmap);
 
-		if (throttle && autoframeskip && frameskip_counter == 0)
-		{
-			static int frameskipadjust/* = 0*/;
-			int adjspeed;
-
-			/* adjust speed to video refresh rate if vsync is on */
-			adjspeed = speed * video_fps / vsync_frame_rate;
-
-			if (adjspeed >= 100 /*92*/)
-			{
-				frameskipadjust++;
-				if (frameskipadjust >= 3)
-				{
-					frameskipadjust = 0;
-#ifdef GP2X
-					{	
-						extern int gp2x_pal_50hz;
-						if ((gp2x_pal_50hz) && (video_fps>50))
-						{ 
-							if (frameskip>2)
-								frameskip--;
-						}
-						else if (frameskip > 0)
-							frameskip--;
-					}
-#else
-					if (frameskip > 0) frameskip--;
-#endif
-				}
-			}
-			else
-			{
-				if (adjspeed < 80)
-				{
-					frameskipadjust -= (90 - adjspeed) / 5;
-				}
-				else
-				{
-					/* don't push frameskip too far if we are close to 100% speed */
-					if (frameskip < 8)
-						frameskipadjust--;
-				}
-				
-				while (frameskipadjust <= -2)
-				{
-					frameskipadjust += 2;
-//#ifdef GP2X
-//					if (frameskip < 7) frameskip++;
-//#else
-					if (frameskip < FRAMESKIP_LEVELS-1) frameskip++;
-//#endif
-				}
-			}
-		}
-	}
 
 	/* Check for PGUP, PGDN and pan screen */
 	pan_display();
-
-	if (input_ui_pressed(IPT_UI_FRAMESKIP_INC))
-	{
-		if (autoframeskip)
-		{
-			autoframeskip = 0;
-			frameskip = 0;
-		}
-		else
-		{
-			if (frameskip == FRAMESKIP_LEVELS-1)
-			{
-				frameskip = 0;
-				autoframeskip = 1;
-			}
-			else
-				frameskip++;
-		}
-
-		if (showfps == 0)
-			showfpstemp = 2*video_fps;
-	}
-
-	if (input_ui_pressed(IPT_UI_FRAMESKIP_DEC))
-	{
-		if (autoframeskip)
-		{
-			autoframeskip = 0;
-			frameskip = FRAMESKIP_LEVELS-1;
-		}
-		else
-		{
-			if (frameskip == 0)
-				autoframeskip = 1;
-			else
-				frameskip--;
-		}
-
-		if (showfps == 0)
-			showfpstemp = 2*video_fps;
-	}
-
-	if (input_ui_pressed(IPT_UI_THROTTLE))
-	{
-		throttle ^= 1;
-	}
-
-	frameskip_counter = (frameskip_counter + 1) % FRAMESKIP_LEVELS;
 
 	pthread_cond_signal(&libretro_cond);
 	pthread_cond_wait(&libretro_cond, &libretro_mutex);
