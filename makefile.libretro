@@ -48,9 +48,9 @@ include src/$(MAMEOS)/$(MAMEOS).mak
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
-$(EMULATOR): $(OBJC) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+$(EMULATOR): $(COREOBJS) $(OSOBJS) $(DRVOBJS)
 	@echo Linking $@...
-	@$(CXX) $(LDFLAGS) $(OBJC) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS) -o $@
+	@$(CXX) $(LDFLAGS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS) -o $@
 
 $(OBJ)/%.o: src/%.c
 	@echo Compiling $<...
