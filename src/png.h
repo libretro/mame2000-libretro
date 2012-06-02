@@ -67,7 +67,5 @@ int png_expand_buffer_8bit (struct png_info *p);
 void png_delete_unused_colors (struct png_info *p);
 int png_unfilter(struct png_info *p);
 
-int png_write_bitmap(void *fp, struct osd_bitmap *bitmap);
-
 #endif
 

@@ -916,33 +916,6 @@ void bitmap_free(struct osd_bitmap *bitmap)
 
 void save_screen_snapshot_as(void *fp,struct osd_bitmap *bitmap)
 {
-	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-		png_write_bitmap(fp,bitmap);
-	else
-	{
-		struct osd_bitmap *copy;
-		int sizex, sizey, scalex, scaley;
-
-		sizex = Machine->visible_area.max_x - Machine->visible_area.min_x + 1;
-		sizey = Machine->visible_area.max_y - Machine->visible_area.min_y + 1;
-
-		scalex = 1;
-		scaley = (Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_1_2) ? 2 : 1;
-
-		copy = bitmap_alloc_depth(sizex * scalex,sizey * scaley,bitmap->depth);
-
-		if (copy)
-		{
-			copyrozbitmap(copy,bitmap,
-					Machine->visible_area.min_x << 16,Machine->visible_area.min_y << 16,
-					0x10000 / scalex,0,0,0x10000 / scaley,	/* zoom, no rotation */
-					0,	/* no wraparound */
-					0,TRANSPARENCY_NONE,0,0);
-
-			png_write_bitmap(fp,copy);
-			bitmap_free(copy);
-		}
-	}
 }
 
 int snapno;
