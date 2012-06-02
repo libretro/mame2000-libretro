@@ -16,6 +16,7 @@
 
 ***************************************************************************/
 
+#include <stdint.h>
 #include "driver.h"
 #include "osd_cpu.h"
 
@@ -888,7 +889,7 @@ void cpu_setbankhandler_r(int bank, mem_read_handler handler)
 		(((FPTR)handler)==((FPTR)MRA_BANK13)) || (((FPTR)handler)==((FPTR)MRA_BANK14)) ||
 		(((FPTR)handler)==((FPTR)MRA_BANK15)) || (((FPTR)handler)==((FPTR)MRA_BANK16)))
 	{
-		hardware = (int)MWA_BANK1 - (int)handler + 1;
+		hardware = (intptr_t)MWA_BANK1 - (intptr_t)handler + 1;
 		handler = bank_read_handler[hardware];
 		offset = bankreadoffset[hardware];
 	}
@@ -923,7 +924,7 @@ void cpu_setbankhandler_w(int bank, mem_write_handler handler)
 		(((FPTR)handler)==((FPTR)MWA_BANK13)) || (((FPTR)handler)==((FPTR)MWA_BANK14)) || 
 		(((FPTR)handler)==((FPTR)MWA_BANK15)) || (((FPTR)handler)==((FPTR)MWA_BANK16)))
 	{
-		hardware = (int)MWA_BANK1 - (int)handler + 1;
+		hardware = (intptr_t)MWA_BANK1 - (intptr_t)handler + 1;
 		handler = bank_write_handler[hardware];
 		offset = bankwriteoffset[hardware];
 	}
@@ -1003,7 +1004,7 @@ void *install_mem_read_handler(int cpu, int start, int end, mem_read_handler han
 		(((FPTR)handler)==((FPTR)MRA_BANK13)) || (((FPTR)handler)==((FPTR)MRA_BANK14)) ||
 		(((FPTR)handler)==((FPTR)MRA_BANK15)) || (((FPTR)handler)==((FPTR)MRA_BANK16)))
 	{
-		hardware = (int)MRA_BANK1 - (int)handler + 1;
+		hardware = (intptr_t)MRA_BANK1 - (intptr_t)handler + 1;
 		memoryreadoffset[hardware] = bankreadoffset[hardware] = start;
 		cpu_bankbase[hardware] = memory_find_base(cpu, start);
 		hw_set = 1;
@@ -1091,7 +1092,7 @@ void *install_mem_write_handler(int cpu, int start, int end, mem_write_handler h
 		(((FPTR)handler)==((FPTR)MWA_BANK13)) || (((FPTR)handler)==((FPTR)MWA_BANK14)) ||
 		(((FPTR)handler)==((FPTR)MWA_BANK15)) || (((FPTR)handler)==((FPTR)MWA_BANK16)))
 	{
-		hardware = (int)MWA_BANK1 - (int)handler + 1;
+		hardware = (intptr_t)MWA_BANK1 - (intptr_t)handler + 1;
 		memorywriteoffset[hardware] = bankwriteoffset[hardware] = start;
 		cpu_bankbase[hardware] = memory_find_base(cpu, start);
 		hw_set = 1;
