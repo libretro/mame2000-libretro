@@ -16,9 +16,6 @@ VPATH=src $(wildcard src/cpu/*)
 MD = @mkdir
 RM = @rm -f
 
-
-#DEVLIBS = -LC:/DEVKITGP2X/sysroot/usr/lib/
-
 EMULATOR = $(TARGET)$(EXE)
 
 DEFS = -DGP2X -DLSB_FIRST -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" -Dasm="__asm__ __volatile__" -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -DLIBRETRO
@@ -55,10 +52,6 @@ $(EMULATOR): $(COREOBJS) $(OSOBJS) $(DRVOBJS)
 $(OBJ)/%.o: src/%.c
 	@echo Compiling $<...
 	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
-
-$(OBJ)/%.o: src/%.cpp
-	@echo Compiling $<...
-	@$(CXX) $(CDEFS) $(CFLAGS) -fpermissive -fno-rtti -c $< -o $@
 
 $(OBJ)/%.o: src/%.s
 	@echo Compiling $<...
