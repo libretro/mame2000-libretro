@@ -41,9 +41,6 @@ extern struct artwork_element tailg_overlay[];
 extern struct artwork_element sundance_overlay[];
 extern struct artwork_element solarq_overlay[];
 
-/* from sndhrdw/cinemat.c */
-typedef void (*cinemat_sound_handler_proc)(UINT8, UINT8);
-
 READ_HANDLER( cinemat_output_port_r );
 WRITE_HANDLER( cinemat_output_port_w );
 void cinemat_set_sound_handler(cinemat_sound_handler_proc sound_handler);
