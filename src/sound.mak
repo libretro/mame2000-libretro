@@ -256,7 +256,7 @@ endif
 SOUND=$(strip $(findstring TMS5220@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_TMS5220=1
-$(OBJ)/sound/5220intf.o: src/sound/tms5220.cpp src/sound/5220intf.cpp
+$(OBJ)/sound/5220intf.o: src/sound/tms5220.c src/sound/5220intf.c
 SOUNDOBJS += $(OBJ)/sound/5220intf.o
 endif
 
@@ -309,7 +309,7 @@ endif
 SOUND=$(strip $(findstring TIA@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_TIA=1
-$(OBJ)/sound/tiaintf.o: src/sound/tiasound.cpp src/sound/tiaintf.cpp
+$(OBJ)/sound/tiaintf.o: src/sound/tiasound.c src/sound/tiaintf.c
 SOUNDOBJS += $(OBJ)/sound/tiaintf.o
 endif
 

@@ -15,7 +15,7 @@ CPUS+=M68000@
 SOUNDS+=AY8910@
 SOUNDS+=YM2610@
 
-$(OBJ)/drivers/neogeo.o: src/machine/neogeo.cpp src/machine/pd4990a.cpp src/vidhrdw/neogeo.cpp src/drivers/neogeo.cpp
+$(OBJ)/drivers/neogeo.o: src/machine/neogeo.c src/machine/pd4990a.c src/vidhrdw/neogeo.c src/drivers/neogeo.c
 
 DRVOBJS = $(OBJ)/drivers/neogeo.o
 

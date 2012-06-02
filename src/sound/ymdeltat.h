@@ -48,7 +48,7 @@ void YM_DELTAT_ADPCM_Reset(YM_DELTAT *DELTAT,int pan);
 
 /* INLINE void YM_DELTAT_ADPCM_CALC(YM_DELTAT *DELTAT); */
 #define YM_INLINE_BLOCK
-#include "ymdeltat.cpp" /* include inline function section */
+#include "ymdeltat.c" /* include inline function section */
 #undef  YM_INLINE_BLOCK
 
 #endif

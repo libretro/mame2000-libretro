@@ -1,6 +1,6 @@
 
-$(OBJ)/memory.o: src/memory.cpp src/memory.h src/memory_read.h src/memory_write.h
-$(OBJ)/tilemap.o: src/tilemap.cpp src/tilemap.h src/tilemap_draw.h
+$(OBJ)/memory.o: src/memory.c src/memory.h src/memory_read.h src/memory_write.h
+$(OBJ)/tilemap.o: src/tilemap.c src/tilemap.h src/tilemap_draw.h
 
 # the core object files (without target specific objects;
 # those are added in the target.mak files)
