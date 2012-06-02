@@ -325,6 +325,40 @@ static unsigned Dummy_dasm(char *buffer, unsigned pc);
 		ABITS1_##MEM, ABITS2_##MEM, ABITS_MIN_##MEM 							   \
 	}																			   \
 
+/* alternative CPU0 for ICount refs */
+#define CPU3(cpu,name,nirq,dirq,oc,i0,i1,i2,mem,shift,bits,endian,align,maxinst,MEM) \
+{																			   \
+	CPU_##cpu,																   \
+	name##_reset, name##_exit, name##_execute, NULL,						   \
+	name##_get_context, name##_set_context, NULL, NULL, 					   \
+	name##_get_pc, name##_set_pc,											   \
+	name##_get_sp, name##_set_sp, name##_get_reg, name##_set_reg,			   \
+	name##_set_nmi_line, name##_set_irq_line, name##_set_irq_callback,		   \
+		NULL,NULL,NULL, name##_info, name##_dasm,								   \
+	nirq, dirq, NULL, oc, i0, i1, i2,							   \
+	cpu_readmem##mem, cpu_writemem##mem, cpu_setOPbase##mem,				   \
+	shift, bits, CPU_IS_##endian, align, maxinst,							   \
+	ABITS1_##MEM, ABITS2_##MEM, ABITS_MIN_##MEM 							   \
+}
+
+/* alternative CPU1 for ICount refs */
+#define CPU4(cpu,name,nirq,dirq,oc,i0,i1,i2,mem,shift,bits,endian,align,maxinst,MEM)   \
+{																			   \
+	CPU_##cpu,																   \
+	name##_reset, name##_exit, name##_execute,								   \
+	name##_burn,															   \
+	name##_get_context, name##_set_context, 								   \
+	name##_get_cycle_table, name##_set_cycle_table, 						   \
+	name##_get_pc, name##_set_pc,											   \
+	name##_get_sp, name##_set_sp, name##_get_reg, name##_set_reg,			   \
+	name##_set_nmi_line, name##_set_irq_line, name##_set_irq_callback,		   \
+	NULL,name##_state_save,name##_state_load, name##_info, name##_dasm, 	   \
+	nirq, dirq, NULL, oc, i0, i1, i2,							   \
+	cpu_readmem##mem, cpu_writemem##mem, cpu_setOPbase##mem,				   \
+	shift, bits, CPU_IS_##endian, align, maxinst,							   \
+	ABITS1_##MEM, ABITS2_##MEM, ABITS_MIN_##MEM 							   \
+}
+
 
 
 /* warning the ordering must match the one of the enum in driver.h! */
@@ -335,7 +369,7 @@ struct cpu_interface cpuintf[] =
 	CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    16,	  0,16,LE,1, 4,16	),
 #endif
 #if (HAS_DRZ80)
-	CPU1(DRZ80,	   drz80, 	 1,255,1.00,DRZ80_IGNORE_INT,    DRZ80_IRQ_INT,    DRZ80_NMI_INT,    16,	  0,16,LE,1, 4,16	),
+	CPU4(DRZ80,	   drz80, 	 1,255,1.00,DRZ80_IGNORE_INT,    DRZ80_IRQ_INT,    DRZ80_NMI_INT,    16,	  0,16,LE,1, 4,16	),
 #endif
 #if (HAS_Z80GB)
 	CPU0(Z80GB,    z80gb,	 5,255,1.00,Z80GB_IGNORE_INT,  0,			   1,			   16,	  0,16,LE,1, 4,16	),
@@ -465,7 +499,7 @@ struct cpu_interface cpuintf[] =
 	CPU0(M68000,   m68000,	 8, -1,1.00,MC68000_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
 #endif
 #if (HAS_CYCLONE)
-	CPU0(CYCLONE,   cyclone, 8, -1,1.00,cyclone_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
+	CPU3(CYCLONE,   cyclone, 8, -1,1.00,cyclone_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
 #endif
 #if (HAS_M68010)
 	CPU0(M68010,   m68010,	 8, -1,1.00,MC68010_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
@@ -556,6 +590,15 @@ logerror("CPU #%d [%s] wrong ID %d: check enum CPU_... in src/driver.h!\n", i, c
 			exit(1);
 		}
 	}
+
+/* hacks for our two custom CPUs */
+#ifdef HAS_DRZ80
+	cpuintf[CPU_DRZ80].icount = &drz80_ICount;
+#endif
+
+#ifdef HAS_CYCLONE
+	cpuintf[CPU_CYCLONE].icount = &cyclone_ICount;
+#endif
 
 	/* count how many CPUs we have to emulate */
 	totalcpu = 0;
