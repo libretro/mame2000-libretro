@@ -391,17 +391,16 @@ bool retro_load_game(const struct retro_game_info *info)
 void retro_unload_game(void)
 {
    pthread_mutex_lock(&libretro_mutex);
+   // make sure we escape the copyright warning and game warning loops
+   key[KEY_ESC] = 1;
    retro_hook_quit = 1;
    mame_sleep = 0;
    pthread_cond_signal(&libretro_cond);
    pthread_mutex_unlock(&libretro_mutex);
 
    if (run_thread)
-   {
-      // make sure we escape the copyright warning and game warning loops
-      key[KEY_ESC] = 1;
       pthread_join(run_thread, NULL);
-   }
+
    run_thread = 0;
    retro_hook_quit = 0;
 }
