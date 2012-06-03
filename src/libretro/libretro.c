@@ -182,19 +182,14 @@ void retro_reset(void)
 
 static void update_input(void)
 {
-#define _B(x) RETRO_DEVICE_ID_JOYPAD_##x
-#define JS(port, button) input_state_cb(port, RETRO_DEVICE_JOYPAD, 0, _B(button))
+#define JS(port, button) input_state_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
 	int i, c = 0;
 	input_poll_cb();
 	
 	for (i = 0; i < 4; i++)
 	{
-		key[KEY_1 + i] = JS(i, START);
-		key[KEY_5 + i] = JS(i, SELECT);
-	}
-	
-	for (i = 0; i < 4; i++)
-	{
+		key[KEY_1 + i]   = JS(i, START);
+		key[KEY_5 + i]   = JS(i, SELECT);
 		joy_pressed[c++] = JS(i, LEFT);
 		joy_pressed[c++] = JS(i, RIGHT);
 		joy_pressed[c++] = JS(i, UP);
@@ -402,7 +397,11 @@ void retro_unload_game(void)
    pthread_mutex_unlock(&libretro_mutex);
 
    if (run_thread)
+   {
+      // make sure we escape the copyright warning and game warning loops
+      key[KEY_ESC] = 1;
       pthread_join(run_thread, NULL);
+   }
    run_thread = 0;
    retro_hook_quit = 0;
 }
