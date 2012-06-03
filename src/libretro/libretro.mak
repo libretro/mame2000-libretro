@@ -1,4 +1,5 @@
 ifneq ($(ARM),)
+	DEFS += -DIS_ARM=1
 	CPUDEFS += -DHAS_CYCLONE=1 -DHAS_DRZ80=1
 	OBJDIRS += $(OBJ)/cpu/m68000_cyclone $(OBJ)/cpu/z80_drz80
 	CPUOBJS += $(OBJ)/cpu/m68000_cyclone/cyclone.o $(OBJ)/cpu/m68000_cyclone/c68000.o
