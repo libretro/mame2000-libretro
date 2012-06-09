@@ -38,27 +38,30 @@ else ifeq ($(platform), ps3)
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    ENDIANNESS_DEFINES :=
-   PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__POWERPC__ -D__ppc__
+   PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
+   HAVE_RZLIB := 1
 else ifeq ($(platform), sncps3)
    EXE = .a
    TARGET := libretro
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    CFLAGS += -DWORDS_BIGENDIAN=1
-   PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__POWERPC__ -D__ppc__
+   PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
+   HAVE_RZLIB := 1
 else ifeq ($(platform), xenon)
    EXE = .a
    TARGET := libretro
    CC = xenon-gcc
    AR = xenon-ar
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
-   PLATFORM_DEFINES := -D__LIBXENON__ -D__POWERPC__ -D__ppc_
+   PLATFORM_DEFINES := -D__LIBXENON__ -D__ppc_
 else ifeq ($(platform), wii)
    EXE = .a
    TARGET := libretro
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar
    PLATFORM_DEFINES += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float
+   HAVE_RZLIB := 1
 else
    EXE = .dll
    TARGET := retro
@@ -69,7 +72,7 @@ else
 endif
 
 ifeq ($(IS_X86), 1)
-X86_DEFINES = 
+X86_DEFINES = -Dasm="__asm__ __volatile__"
 CFLAGS +=  $(X86_DEFINES)
 endif
 
@@ -78,6 +81,7 @@ CFLAGS += -O0 -g
 else
 CFLAGS += -O3
 endif
+
 
 # set this the operating system you're building for
 # (actually you'll probably need your own main makefile anyways)
@@ -93,18 +97,21 @@ RM = @rm -f
 
 EMULATOR = $(TARGET)$(EXE)
 
-DEFS = -DGP2X -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" -Dasm="__asm__ __volatile__" -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -DLIBRETRO $(ENDIANNESS_DEFINES)
-
-CFLAGS += -ffast-math $(fpic) -Isrc -Isrc/$(MAMEOS) -Isrc/zlib \
--Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow -Wno-write-strings \
--Wno-unused-but-set-variable
+DEFS = -DGP2X -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" $(X86_DEFINES) -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -D__LIBRETRO__ $(ENDIANNESS_DEFINES)
 
 LIBS = -lm -lpthread
 
 OBJ = obj_$(TARGET)_$(MAMEOS)
+
+ifeq ($(HAVE_RZLIB),)
+ZLIB_INCLUDE := -Isrc/zlib
+endif
+
+CFLAGS += -ffast-math $(fpic) $(PLATFORM_DEFINES) -Isrc -Isrc/$(MAMEOS) $(ZLIB_INCLUDE) \
+-Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
+
 OBJDIRS = $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
-	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw \
-	$(OBJ)/zlib
+	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw $(OBJ)/zlib
 
 all:	maketree $(EMULATOR)
 
@@ -118,20 +125,24 @@ include src/$(MAMEOS)/$(MAMEOS).mak
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
-$(EMULATOR): $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+ifeq ($(HAVE_RZLIB),1)
+OBJECTS_COMBINED := $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+else
+OBJECTS_COMBINED := $(ZLIBOBJS) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+endif
+
+$(EMULATOR): $(OBJECTS_COMBINED)
 ifeq ($(platform), ps3)
-	$(AR) rcs $@ $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS)
+	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), sncps3)
-	$(AR) rcs $@ $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS)
-
+	$(AR) rcs $@ $(OBJECTS_COMBINED
 else ifeq ($(platform), xenon)
-	$(AR) rcs $@ $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS)
-
+	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), wii)
-	$(AR) rcs $@ $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS)
+	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else
 	@echo Linking $@...
-	@$(CC) $(SHARED) $(LDFLAGS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVOBJS) -o $@
+	@$(CC) $(SHARED) $(LDFLAGS) $(LIBS) $(OBJECTS_COMBINED) -o $@
 endif
 
 $(OBJ)/%.o: src/%.c

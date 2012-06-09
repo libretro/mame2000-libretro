@@ -7,7 +7,9 @@
  *************************************************************************/
 
 #include <stdio.h>
+#ifdef HAVE_STRINGS
 #include <strings.h>
+#endif
 #include "driver.h"
 #include "state.h"
 #include "s2650.h"

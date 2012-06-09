@@ -1,5 +1,7 @@
 #include "driver.h"
+#ifdef HAVE_STRINGS
 #include "strings.h"
+#endif
 #include "audit.h"
 
 

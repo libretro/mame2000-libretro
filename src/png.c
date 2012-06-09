@@ -20,7 +20,7 @@
 *********************************************************************/
 
 #include <math.h>
-#include <zlib.h>
+#include "zlib/zlib.h"
 #include "driver.h"
 #include "png.h"
 

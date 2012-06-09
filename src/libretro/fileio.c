@@ -1,9 +1,11 @@
 #include "driver.h"
 #include "unzip.h"
-#include "zlib.h"
+#include "../zlib/zlib.h"
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef HAVE_SIGNALS
 #include <signal.h>
+#endif
 #include "shared.h"
 
 /* Verbose outputs to error.log ? */
@@ -179,7 +181,9 @@ void decompose_rom_sample_path (char *rompath, char *samplepath)
 	if( !roms || !samples )
 	{
 		logerror("decompose_rom_sample_path: failed to malloc!\n");
+#ifdef HAVE_SIGNALS
 		raise(SIGABRT);
+#endif
 	}
 
 	strcpy (roms, rompath);
