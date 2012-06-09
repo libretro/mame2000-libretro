@@ -267,7 +267,7 @@ void retro_run(void)
    if (run_thread == 0)
    {
       mame_sleep = 1;
-		pthread_create(&run_thread, NULL, run_thread_proc, NULL);
+      pthread_create(&run_thread, NULL, run_thread_proc, NULL);
    }
 
    lock_mame();
