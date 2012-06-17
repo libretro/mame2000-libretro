@@ -25,8 +25,10 @@ extern int gfx_xoffset;
 extern int gfx_yoffset;
 extern int gfx_width;
 extern int gfx_height;
+extern int usestereo;
 extern int samples_per_frame;
 extern short *samples_buffer;
+extern short *conversion_buffer;
 extern int joy_pressed[40];
 extern int key[KEY_MAX];
 
@@ -90,51 +92,6 @@ void osd_exit(void)
 int screen_reinit(void)
 {
    return 1;
-}
-
-void retro_init(void)
-{
-   IMAMEBASEPATH = (char *) malloc(1024);
-   gp2x_screen15 = (unsigned short *) malloc(640 * 480 * 2);
-   pthread_cond_init(&libretro_cond, NULL);
-   pthread_mutex_init(&libretro_mutex, NULL);
-   init_joy_list();
-}
-
-void retro_deinit(void)
-{
-   free(IMAMEBASEPATH);
-   free(gp2x_screen15);
-   pthread_cond_destroy(&libretro_cond);
-   pthread_mutex_destroy(&libretro_mutex);
-}
-
-unsigned retro_api_version(void)
-{
-   return RETRO_API_VERSION;
-}
-
-void retro_set_controller_port_device(unsigned port, unsigned device)
-{
-   (void)port;
-   (void)device;
-}
-
-void retro_get_system_info(struct retro_system_info *info)
-{
-   info->library_name     = "iMAME4all";
-   info->library_version  = build_version;
-   info->need_fullpath    = true;
-   info->valid_extensions = "zip|ZIP";
-   info->block_extract    = true;
-}
-
-void retro_get_system_av_info(struct retro_system_av_info *info)
-{
-   struct retro_game_geometry g = { 320, 240, 640, 480, 4.0 / 3.0 };
-   struct retro_system_timing t = { 60.0, 32000.0 };
-   info->timing = t;
-   info->geometry = g;
 }
 
 static retro_video_refresh_t video_cb;
@@ -261,12 +218,66 @@ static void unlock_mame(void)
    pthread_mutex_unlock(&libretro_mutex);
 }
 
+void retro_init(void)
+{
+   IMAMEBASEPATH = (char *) malloc(1024);
+   gp2x_screen15 = (unsigned short *) malloc(640 * 480 * 2);
+   pthread_cond_init(&libretro_cond, NULL);
+   pthread_mutex_init(&libretro_mutex, NULL);
+   init_joy_list();
+}
+
+void retro_deinit(void)
+{
+   free(IMAMEBASEPATH);
+   free(gp2x_screen15);
+   pthread_cond_destroy(&libretro_cond);
+   pthread_mutex_destroy(&libretro_mutex);
+}
+
+unsigned retro_api_version(void)
+{
+   return RETRO_API_VERSION;
+}
+
+void retro_set_controller_port_device(unsigned port, unsigned device)
+{
+   (void)port;
+   (void)device;
+}
+
+void retro_get_system_info(struct retro_system_info *info)
+{
+   info->library_name     = "iMAME4all";
+   info->library_version  = build_version;
+   info->need_fullpath    = true;
+   info->valid_extensions = "zip|ZIP";
+   info->block_extract    = true;
+}
+
+void retro_get_system_av_info(struct retro_system_av_info *info)
+{
+   lock_mame();
+   struct retro_game_geometry g = {
+      Machine->drv->screen_width,
+      Machine->drv->screen_height,
+      Machine->drv->screen_width,
+      Machine->drv->screen_height,
+      ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
+   };
+   struct retro_system_timing t = {
+      Machine->drv->frames_per_second,
+      32000.0
+   };
+   info->timing = t;
+   info->geometry = g;
+}
+
 void retro_run(void)
 {
+   int i, j;
    if (run_thread == 0)
    {
-      mame_sleep = 1;
-      pthread_create(&run_thread, NULL, run_thread_proc, NULL);
    }
 
    lock_mame();
@@ -278,7 +289,19 @@ void retro_run(void)
 
    video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
    if (samples_per_frame)
-      audio_batch_cb(samples_buffer, samples_per_frame);
+   {
+      if (usestereo)
+         audio_batch_cb(samples_buffer, samples_per_frame);
+      else
+      {
+         for (i = 0, j = 0; i < samples_per_frame; i++)
+         {
+            conversion_buffer[j++] = samples_buffer[i];
+            conversion_buffer[j++] = samples_buffer[i];
+         }
+         audio_batch_cb(conversion_buffer, samples_per_frame);
+      }
+   }
 
    audio_done = 0;
    video_done = 0;
@@ -383,6 +406,9 @@ bool retro_load_game(const struct retro_game_info *info)
    }
 
    decompose_rom_sample_path(IMAMEBASEPATH, IMAMEBASEPATH);
+
+   mame_sleep = 1;
+   pthread_create(&run_thread, NULL, run_thread_proc, NULL);
 
    return true;
 }

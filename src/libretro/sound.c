@@ -4,20 +4,23 @@
 
 int samples_per_frame = 0;
 short *samples_buffer;
+short *conversion_buffer;
 int usestereo = 1;
 
 void hook_audio_done(void);
 
 int osd_start_audio_stream(int stereo)
 {
-	if (stereo) stereo = 1;	/* make sure it's either 0 or 1 */
+	usestereo = stereo ? 1 : 0;
 
 	/* determine the number of samples per frame */
 	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
 
 	if (Machine->sample_rate == 0) return 0;
 
-	samples_buffer = (short *) calloc(samples_per_frame, 4);
+	samples_buffer = (short *) calloc(samples_per_frame, 2 + usestereo * 2);
+	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
+	
 	return samples_per_frame;
 }
 
@@ -28,7 +31,7 @@ void osd_stop_audio_stream(void)
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-	memcpy(samples_buffer, buffer, samples_per_frame * 2 * 2);
+	memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
    hook_audio_done();
 
 	return samples_per_frame;
