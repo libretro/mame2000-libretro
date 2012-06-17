@@ -86,7 +86,7 @@ const char * default_text[] =
 #endif
 	"The game has protection which isn't fully emulated.",
 	"There are working clones of this game. They are:",
-	"Type OK to continue",
+	"Hit Left then Right to continue",
 #ifdef MESS
 	"The emulated system is a computer: ",
 	"The keyboard emulation may not be 100% accurate.",
