@@ -1,3 +1,4 @@
 ﻿
-*.so
 obj_*
+retro.dll
+libretro.*
