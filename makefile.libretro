@@ -51,6 +51,15 @@ else ifeq ($(platform), sncps3)
    GCC_DEFINES := 
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
+else ifeq ($(platform), psl1ght)
+   EXE = .a
+   TARGET := libretro
+   CC = $(PS3DEV)/ppu/bin/ppu-gcc
+   AR = $(PS3DEV)/ppu/bin/ppu-ar
+   CFLAGS += -DWORDS_BIGENDIAN=1
+   GCC_DEFINES := 
+   PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
+   HAVE_RZLIB := 1
 else ifeq ($(platform), xenon)
    EXE = .a
    TARGET := libretro
@@ -139,6 +148,8 @@ $(EMULATOR): $(OBJECTS_COMBINED)
 ifeq ($(platform), ps3)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), sncps3)
+	$(AR) rcs $@ $(OBJECTS_COMBINED)
+else ifeq ($(platform), psl1ght)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), xenon)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
