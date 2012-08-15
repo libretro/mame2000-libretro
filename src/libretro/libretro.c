@@ -252,6 +252,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_version  = build_version;
    info->need_fullpath    = true;
    info->valid_extensions = "zip|ZIP";
+   info->nonblock_state   = false;
    info->block_extract    = true;
 }
 
