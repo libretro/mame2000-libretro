@@ -78,12 +78,19 @@ else ifeq ($(platform), xenon)
    AR = xenon-ar$(EXE_EXT)
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
    PLATFORM_DEFINES := -D__LIBXENON__ -D__ppc_
+else ifeq ($(platform), ngc)
+   EXE = .a
+   TARGET := libretro
+   CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
+   AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
+   PLATFORM_DEFINES += -DGEKKO -DHW_DOL -mrvl -mcpu=750 -meabi -mhard-float
+   HAVE_RZLIB := 1
 else ifeq ($(platform), wii)
    EXE = .a
    TARGET := libretro
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
-   PLATFORM_DEFINES += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float
+   PLATFORM_DEFINES += -DGEKKO _DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
 else
    EXE = .dll
@@ -163,6 +170,8 @@ else ifeq ($(platform), sncps3)
 else ifeq ($(platform), psl1ght)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), xenon)
+	$(AR) rcs $@ $(OBJECTS_COMBINED)
+else ifeq ($(platform), ngc)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
 else ifeq ($(platform), wii)
 	$(AR) rcs $@ $(OBJECTS_COMBINED)
