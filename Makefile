@@ -23,24 +23,51 @@ endif
 # system platform
 system_platform = unix
 ifeq ($(shell uname -a),)
-EXE_EXT = .exe
-   system_platform = win
+	EXE_EXT = .exe
+	system_platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
-   system_platform = osx
+	system_platform = osx
+ifeq ($(shell uname -p),powerpc)
+	arch = ppc
+else
+	arch = intel
+endif
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
-   system_platform = win
+	system_platform = win
 endif
 
+# UNIX
 ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
    IS_X86 = 1
+
+# OS X
 else ifeq ($(platform), osx)
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
+ifeq ($(arch),ppc)
+		CFLAGS += -D__ppc__ -DMSB_FIRST
+endif
    SHARED := -dynamiclib
    IS_X86 = 1
+
+# iOS
+else ifneq (,$(findstring ios,$(platform)))
+	TARGET := $(TARGET_NAME)_libretro_ios.dylib
+	fpic := -fPIC
+	SHARED := -dynamiclib
+
+ifeq ($(IOSSDK),)
+   IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
+endif
+
+   CC = cc -arch armv7 -isysroot $(IOSSDK)
+	LD = armv7-apple-darwin11-ld
+	CFLAGS += -DIOS
+
+# PS3
 else ifeq ($(platform), ps3)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
@@ -49,6 +76,8 @@ else ifeq ($(platform), ps3)
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
+
+# PS3 (SNC)
 else ifeq ($(platform), sncps3)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
@@ -59,6 +88,8 @@ else ifeq ($(platform), sncps3)
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
+
+# Lightweight PS3 Homebrew SDK
 else ifeq ($(platform), psl1ght)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$(EXE_EXT)
@@ -69,6 +100,8 @@ else ifeq ($(platform), psl1ght)
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
+
+# Xbox 360 (libxenon)
 else ifeq ($(platform), xenon)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = xenon-gcc$(EXE_EXT)
@@ -77,6 +110,8 @@ else ifeq ($(platform), xenon)
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
    PLATFORM_DEFINES := -D__LIBXENON__ -D__ppc_
    STATIC_LINKING := 1
+
+# Nintendo Game Cube
 else ifeq ($(platform), ngc)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
@@ -85,6 +120,8 @@ else ifeq ($(platform), ngc)
    PLATFORM_DEFINES += -DGEKKO -DHW_DOL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
+
+# Nintendo Wii
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
@@ -93,6 +130,7 @@ else ifeq ($(platform), wii)
    PLATFORM_DEFINES += -DGEKKO _DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
+
 # CTR(3DS)
 else ifeq ($(platform), ctr)
    TARGET := $(TARGET_NAME)_libretro_ctr.a
@@ -109,6 +147,8 @@ else ifeq ($(platform), ctr)
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
    STATIC_LINKING := 1
+
+# Windows
 else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
