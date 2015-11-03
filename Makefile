@@ -66,6 +66,7 @@ endif
    CC = cc -arch armv7 -isysroot $(IOSSDK)
 	LD = armv7-apple-darwin11-ld
 	CFLAGS += -DIOS
+   ARM = 1
 
 # PS3
 else ifeq ($(platform), ps3)
@@ -143,7 +144,6 @@ else ifeq ($(platform), ctr)
    CFLAGS += -fomit-frame-pointer -ffast-math
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
    HAVE_RZLIB := 1
-   WANT_LIBCO := 1
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
    STATIC_LINKING := 1
