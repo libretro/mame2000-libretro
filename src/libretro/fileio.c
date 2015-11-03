@@ -1,11 +1,10 @@
+#include <stdint.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "driver.h"
 #include "unzip.h"
 #include "../zlib/zlib.h"
-#include <sys/stat.h>
-#include <unistd.h>
-#ifdef HAVE_SIGNALS
-#include <signal.h>
-#endif
 #include "shared.h"
 
 /* Verbose outputs to error.log ? */
