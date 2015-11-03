@@ -66,7 +66,6 @@ endif
    CC = cc -arch armv7 -isysroot $(IOSSDK)
 	LD = armv7-apple-darwin11-ld
 	CFLAGS += -DIOS
-   ARM = 1
 
 # PS3
 else ifeq ($(platform), ps3)
