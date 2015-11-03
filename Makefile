@@ -35,13 +35,13 @@ ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
-   ENDIANNESS_DEFINES := 
+   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 else ifeq ($(platform), osx)
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-   ENDIANNESS_DEFINES := 
+   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 else ifeq ($(platform), ps3)
    TARGET := $(TARGET_NAME)_libretro.a
@@ -50,40 +50,46 @@ else ifeq ($(platform), ps3)
    ENDIANNESS_DEFINES :=
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
+   STATIC_LINKING := 1
 else ifeq ($(platform), sncps3)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    CFLAGS += -DWORDS_BIGENDIAN=1
-   GCC_DEFINES := 
+   GCC_DEFINES :=
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
+   STATIC_LINKING := 1
 else ifeq ($(platform), psl1ght)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$(EXE_EXT)
    AR = $(PS3DEV)/ppu/bin/ppu-ar$(EXE_EXT)
    CFLAGS += -DWORDS_BIGENDIAN=1
-   GCC_DEFINES := 
+   GCC_DEFINES :=
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
+   STATIC_LINKING := 1
 else ifeq ($(platform), xenon)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = xenon-gcc$(EXE_EXT)
    AR = xenon-ar$(EXE_EXT)
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
    PLATFORM_DEFINES := -D__LIBXENON__ -D__ppc_
+   STATIC_LINKING := 1
 else ifeq ($(platform), ngc)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATFORM_DEFINES += -DGEKKO -DHW_DOL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
+   STATIC_LINKING := 1
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATFORM_DEFINES += -DGEKKO _DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
+   STATIC_LINKING := 1
 # CTR(3DS)
 else ifeq ($(platform), ctr)
    TARGET := $(TARGET_NAME)_libretro_ctr.a
@@ -99,12 +105,13 @@ else ifeq ($(platform), ctr)
    WANT_LIBCO := 1
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
+   STATIC_LINKING := 1
 else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
-   ENDIANNESS_DEFINES := 
+   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 endif
 
@@ -130,7 +137,7 @@ VPATH=src $(wildcard src/cpu/*)
 
 # compiler, linker and utilities
 MD = @mkdir
-RM = @rm -f
+RM = rm -f
 
 EMULATOR = $(TARGET)
 
@@ -163,42 +170,30 @@ include src/$(MAMEOS)/$(MAMEOS).mak
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
 ifeq ($(HAVE_RZLIB),1)
-OBJECTS_COMBINED := $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+OBJS := $(COREOBJS) $(OSOBJS) $(DRVOBJS)
 else
-OBJECTS_COMBINED := $(ZLIBOBJS) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
+OBJS := $(ZLIBOBJS) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
 endif
 
-$(EMULATOR): $(OBJECTS_COMBINED)
-ifeq ($(platform), ps3)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), sncps3)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), psl1ght)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), xenon)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), ngc)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), wii)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
-else ifeq ($(platform), ctr)
-	$(AR) rcs $@ $(OBJECTS_COMBINED)
+$(EMULATOR): $(OBJS)
+ifeq ($(STATIC_LINKING), 1)
+	$(AR) rcs $@ $(OBJS)
 else
 	@echo Linking $@...
-	@$(CC) $(SHARED) $(LDFLAGS) $(LIBS) $(OBJECTS_COMBINED) -o $@
+	$(CC) $(SHARED) $(LDFLAGS) $(LIBS) $(OBJS) -o $@
 endif
 
 $(OBJ)/%.o: src/%.c
 	@echo Compiling $<...
-	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: src/%.s
 	@echo Compiling $<...
-	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: src/%.S
 	@echo Compiling $<...
-	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(sort $(OBJDIRS)):
 	$(MD) $@
