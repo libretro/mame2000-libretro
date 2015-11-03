@@ -345,14 +345,12 @@ static int result_code;
 static READ_HANDLER( timer_r )
 {
 	int res;
-
-
-	int coinflip = read_4990_testbit();
-	int databit = read_4990_databit();
+	int neo_coinflip = read_4990_testbit();
+	int databit      = read_4990_databit();
 
 //	logerror("CPU %04x - Read timer\n",cpu_get_pc());
 
-	res = readinputport(4) ^ (coinflip << 6) ^ (databit << 7);
+	res = readinputport(4) ^ (neo_coinflip << 6) ^ (databit << 7);
 
 	if (Machine->sample_rate)
 	{

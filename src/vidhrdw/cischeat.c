@@ -276,11 +276,12 @@ int old_data, new_data;
 
 WRITE_HANDLER( f1gpstar_vregs_w )
 {
-int old_data, new_data;
-
-	old_data = READ_WORD(&megasys1_vregs[offset]);
+   int new_data;
+	int old_data = READ_WORD(&megasys1_vregs[offset]);
 	COMBINE_WORD_MEM(&megasys1_vregs[offset],data);
 	new_data  = READ_WORD(&megasys1_vregs[offset]);
+
+   (void)old_data;
 
 	switch (offset)
 	{

@@ -988,7 +988,7 @@ void *osd_fopen (const char *game, const char *filename, int filetype, int _writ
 		/* open as ASCII files, not binary like the others */
 		f->file = fopen (name, _write ? "w" : "r");
 		found = f->file != 0;
-logerror("fopen %s = %08x\n",name,(int)f->file);
+      logerror("fopen %s = %08x\n",name,(intptr_t)f->file);
         break;
 
 	default:
