@@ -35,19 +35,17 @@ ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
-   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 else ifeq ($(platform), osx)
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 else ifeq ($(platform), ps3)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
-   ENDIANNESS_DEFINES :=
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
@@ -55,6 +53,7 @@ else ifeq ($(platform), sncps3)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    CFLAGS += -DWORDS_BIGENDIAN=1
    GCC_DEFINES :=
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
@@ -64,6 +63,7 @@ else ifeq ($(platform), psl1ght)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$(EXE_EXT)
    AR = $(PS3DEV)/ppu/bin/ppu-ar$(EXE_EXT)
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    CFLAGS += -DWORDS_BIGENDIAN=1
    GCC_DEFINES :=
    PLATFORM_DEFINES := -D__CELLOS_LV2__ -D__ppc__
@@ -73,6 +73,7 @@ else ifeq ($(platform), xenon)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = xenon-gcc$(EXE_EXT)
    AR = xenon-ar$(EXE_EXT)
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
    PLATFORM_DEFINES := -D__LIBXENON__ -D__ppc_
    STATIC_LINKING := 1
@@ -80,6 +81,7 @@ else ifeq ($(platform), ngc)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    PLATFORM_DEFINES += -DGEKKO -DHW_DOL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
@@ -87,6 +89,7 @@ else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
+   ENDIANNESS_DEFINES := -DMSB_FIRST
    PLATFORM_DEFINES += -DGEKKO _DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
@@ -111,7 +114,6 @@ else
    CC = gcc
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
-   ENDIANNESS_DEFINES :=
    IS_X86 = 1
 endif
 
@@ -121,15 +123,13 @@ CFLAGS +=  $(X86_DEFINES)
 endif
 
 ifeq ($(DEBUG), 1)
-CFLAGS += -O0 -g
+	CFLAGS += -O0 -g
 else
 CFLAGS += -O3
 endif
 
 
 # set this the operating system you're building for
-# (actually you'll probably need your own main makefile anyways)
-# MAMEOS = msdos
 MAMEOS = libretro
 
 # CPU core include paths
