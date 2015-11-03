@@ -1,1 +1,0 @@
-Frontend game configuration files will be placed here
