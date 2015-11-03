@@ -369,12 +369,12 @@ static int TC0100SCN_word_r(int chip,offs_t offset)
 
 	res = READ_WORD(&TC0100SCN_ram[chip][offset]);
 
+#ifndef MSB_FIRST
 	/* for char gfx data, we have to straighten out the 16-bit word into
 	   bytes for gfxdecode() to work */
-	#ifdef LSB_FIRST
-	if (offset >= 0x6000 && offset < 0x7000)
-		res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
-	#endif
+   if (offset >= 0x6000 && offset < 0x7000)
+      res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
+#endif
 
 	return res;
 }
@@ -395,12 +395,12 @@ static void TC0100SCN_word_w(int chip,offs_t offset,data_t data)
 	int oldword = READ_WORD(&TC0100SCN_ram[chip][offset]);
 	int newword;
 
+#ifndef MSB_FIRST
 	/* for char gfx data, we have to straighten out the 16-bit word into
 	   bytes for gfxdecode() to work */
-	#ifdef LSB_FIRST
-	if (offset >= 0x6000 && offset < 0x7000)
-		data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
-	#endif
+   if (offset >= 0x6000 && offset < 0x7000)
+      data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
+#endif
 
 	newword = COMBINE_WORD(oldword,data);
 	if (oldword != newword)
@@ -908,12 +908,12 @@ static int TC0480SCP_word_read(offs_t offset)
 
 	res = READ_WORD(&TC0480SCP_ram[offset]);
 
-	/* for char gfx data, we have to straighten out the 16-bit word into
-	   bytes for gfxdecode() to work */
-	#ifdef LSB_FIRST
-	if (offset >= 0xe000 && offset <= 0xffff)
-		res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
-	#endif
+#ifndef MSB_FIRST
+   /* for char gfx data, we have to straighten out the 16-bit word into
+      bytes for gfxdecode() to work */
+   if (offset >= 0xe000 && offset <= 0xffff)
+      res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
+#endif
 
 	return res;
 }
@@ -928,12 +928,12 @@ static void TC0480SCP_word_write(offs_t offset,data_t data)
 	int oldword = READ_WORD(&TC0480SCP_ram[offset]);
 	int newword;
 
-	/* for char gfx data, we have to straighten out the 16-bit word into
-	   bytes for gfxdecode() to work */
-	#ifdef LSB_FIRST
-	if (offset >= 0xe000 && offset <= 0xffff)
-		data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
-	#endif
+#ifndef MSB_FIRST
+   /* for char gfx data, we have to straighten out the 16-bit word into
+      bytes for gfxdecode() to work */
+   if (offset >= 0xe000 && offset <= 0xffff)
+      data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
+#endif
 
 	newword = COMBINE_WORD(oldword,data);
 	if (oldword != newword)

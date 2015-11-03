@@ -754,7 +754,7 @@ static void williams_dcs_boot( void )
 
 	/* see how many words we need to copy */
 	data = src[0];
-#ifdef LSB_FIRST // ************** not really tested yet ****************
+#ifndef MSB_FIRST // ************** not really tested yet ****************
 	data = ( ( data & 0xff ) << 24 ) | ( ( data & 0xff00 ) << 8 ) | ( ( data >> 8 ) & 0xff00 ) | ( ( data >> 24 ) & 0xff );
 #endif
 	size = ( ( data & 0xff ) + 1 ) * 8;
@@ -762,7 +762,7 @@ static void williams_dcs_boot( void )
 	for( i = 0; i < size; i++ )
 	{
 		data = src[i];
-#ifdef LSB_FIRST // ************** not really tested yet ****************
+#ifndef MSB_FIRST // ************** not really tested yet ****************
 		data = ( ( data & 0xff ) << 24 ) | ( ( data & 0xff00 ) << 8 ) | ( ( data >> 8 ) & 0xff00 ) | ( ( data >> 24 ) & 0xff );
 #endif
 		data >>= 8;

@@ -490,10 +490,10 @@ static void reset_decrementer(void);
 	/*The code is complex, so we use functions rather than macros*/
 
 	/* Why aren't these in memory.h ??? */
-#if LSB_FIRST
-	#define BYTE_XOR_BE(a) ((a) ^ 1)
-#else
+#ifdef MSB_FIRST
 	#define BYTE_XOR_BE(a) (a)
+#else
+	#define BYTE_XOR_BE(a) ((a) ^ 1)
 #endif
 
 	static int readword(int addr)

@@ -94,40 +94,14 @@ static UINT8 z8000_zsp[256];
  *			   R14 15- 0	RR14  31-16 		 31-16
  *			   R15 15- 0		  15- 0 		 15- 0
  *
- * Note that for LSB_FIRST machines we have the case that the RR registers
+ * Note that for non-MSB_FIRST machines we have the case that the RR registers
  * use the lower numbered R registers in the higher bit positions.
  * And also the RQ registers use the lower numbered RR registers in the
  * higher bit positions.
  * That's the reason for the ordering in the following pointer table.
  **************************************************************************/
-#ifdef	LSB_FIRST
-	/* pointers to byte (8bit) registers */
-	static UINT8	*pRB[16] =
-	{
-		&Z.regs.B[ 7],&Z.regs.B[ 5],&Z.regs.B[ 3],&Z.regs.B[ 1],
-		&Z.regs.B[15],&Z.regs.B[13],&Z.regs.B[11],&Z.regs.B[ 9],
-		&Z.regs.B[ 6],&Z.regs.B[ 4],&Z.regs.B[ 2],&Z.regs.B[ 0],
-		&Z.regs.B[14],&Z.regs.B[12],&Z.regs.B[10],&Z.regs.B[ 8]
-	};
+#ifdef MSB_FIRST
 
-	static UINT16	*pRW[16] =
-	{
-        &Z.regs.W[ 3],&Z.regs.W[ 2],&Z.regs.W[ 1],&Z.regs.W[ 0],
-        &Z.regs.W[ 7],&Z.regs.W[ 6],&Z.regs.W[ 5],&Z.regs.W[ 4],
-        &Z.regs.W[11],&Z.regs.W[10],&Z.regs.W[ 9],&Z.regs.W[ 8],
-        &Z.regs.W[15],&Z.regs.W[14],&Z.regs.W[13],&Z.regs.W[12]
-    };
-
-    /* pointers to long (32bit) registers */
-	static UINT32	*pRL[16] =
-	{
-		&Z.regs.L[ 1],&Z.regs.L[ 1],&Z.regs.L[ 0],&Z.regs.L[ 0],
-		&Z.regs.L[ 3],&Z.regs.L[ 3],&Z.regs.L[ 2],&Z.regs.L[ 2],
-		&Z.regs.L[ 5],&Z.regs.L[ 5],&Z.regs.L[ 4],&Z.regs.L[ 4],
-		&Z.regs.L[ 7],&Z.regs.L[ 7],&Z.regs.L[ 6],&Z.regs.L[ 6]
-    };
-
-#else	/* MSB_FIRST */
 
     /* pointers to byte (8bit) registers */
 	static UINT8	*pRB[16] =
@@ -156,6 +130,32 @@ static UINT8 z8000_zsp[256];
 		&Z.regs.L[ 6],&Z.regs.L[ 6],&Z.regs.L[ 7],&Z.regs.L[ 7]
 	};
 
+#else
+	/* pointers to byte (8bit) registers */
+	static UINT8	*pRB[16] =
+	{
+		&Z.regs.B[ 7],&Z.regs.B[ 5],&Z.regs.B[ 3],&Z.regs.B[ 1],
+		&Z.regs.B[15],&Z.regs.B[13],&Z.regs.B[11],&Z.regs.B[ 9],
+		&Z.regs.B[ 6],&Z.regs.B[ 4],&Z.regs.B[ 2],&Z.regs.B[ 0],
+		&Z.regs.B[14],&Z.regs.B[12],&Z.regs.B[10],&Z.regs.B[ 8]
+	};
+
+	static UINT16	*pRW[16] =
+	{
+        &Z.regs.W[ 3],&Z.regs.W[ 2],&Z.regs.W[ 1],&Z.regs.W[ 0],
+        &Z.regs.W[ 7],&Z.regs.W[ 6],&Z.regs.W[ 5],&Z.regs.W[ 4],
+        &Z.regs.W[11],&Z.regs.W[10],&Z.regs.W[ 9],&Z.regs.W[ 8],
+        &Z.regs.W[15],&Z.regs.W[14],&Z.regs.W[13],&Z.regs.W[12]
+    };
+
+    /* pointers to long (32bit) registers */
+	static UINT32	*pRL[16] =
+	{
+		&Z.regs.L[ 1],&Z.regs.L[ 1],&Z.regs.L[ 0],&Z.regs.L[ 0],
+		&Z.regs.L[ 3],&Z.regs.L[ 3],&Z.regs.L[ 2],&Z.regs.L[ 2],
+		&Z.regs.L[ 5],&Z.regs.L[ 5],&Z.regs.L[ 4],&Z.regs.L[ 4],
+		&Z.regs.L[ 7],&Z.regs.L[ 7],&Z.regs.L[ 6],&Z.regs.L[ 6]
+    };
 #endif
 
 /* pointers to quad word (64bit) registers */

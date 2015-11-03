@@ -141,9 +141,9 @@ READ_HANDLER( nemesis_characterram_r )
 
 	res = READ_WORD(&nemesis_characterram_gfx[offset]);
 
-	#ifdef LSB_FIRST
-	res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
-	#endif
+#ifndef MSB_FIRST
+   res = ((res & 0x00ff) << 8) | ((res & 0xff00) >> 8);
+#endif
 
 	return res;
 }
@@ -156,9 +156,9 @@ WRITE_HANDLER( nemesis_characterram_w )
 	COMBINE_WORD_MEM(&nemesis_characterram[offset],data);	/* this is need so that twinbee can run code in the
 																character RAM */
 
-	#ifdef LSB_FIRST
-	data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
-	#endif
+#ifndef MSB_FIRST
+   data = ((data & 0x00ff00ff) << 8) | ((data & 0xff00ff00) >> 8);
+#endif
 
 	newword = COMBINE_WORD(oldword,data);
 	if (oldword != newword)

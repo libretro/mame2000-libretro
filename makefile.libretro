@@ -38,14 +38,14 @@ ifeq ($(platform), unix)
    TARGET := imame4all_libretro
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
-   ENDIANNESS_DEFINES := -DLSB_FIRST
+   ENDIANNESS_DEFINES := 
    IS_X86 = 1
 else ifeq ($(platform), osx)
    EXE = .dylib
    TARGET := imame4all_libretro
    fpic := -fPIC
    SHARED := -dynamiclib
-   ENDIANNESS_DEFINES := -DLSB_FIRST
+   ENDIANNESS_DEFINES := 
    IS_X86 = 1
 else ifeq ($(platform), ps3)
    EXE = .a
@@ -116,7 +116,7 @@ else
    CC = gcc
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
-   ENDIANNESS_DEFINES := -DLSB_FIRST
+   ENDIANNESS_DEFINES := 
    IS_X86 = 1
 endif
 

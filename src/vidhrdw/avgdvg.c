@@ -834,7 +834,7 @@ int avgdvg_init (int vgType)
 
 	if (vectorEngine==USE_AVG_SWARS)
 		flipword=1;
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	else if (vectorEngine==USE_AVG_QUANTUM)
 		flipword=1;
 #endif

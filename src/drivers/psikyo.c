@@ -834,10 +834,10 @@ void init_psikyo(void)
 	{
 		unsigned char t[4];
 		t[0]=RAM[i+0]; t[1]=RAM[i+1]; t[2]=RAM[i+2]; t[3]=RAM[i+3];
-#ifdef LSB_FIRST
-		RAM[i+0]=t[1]; RAM[i+1]=t[3]; RAM[i+2]=t[0]; RAM[i+3]=t[2];
-#else
+#ifdef MSB_FIRST
 		RAM[i+0]=t[2]; RAM[i+1]=t[0]; RAM[i+2]=t[3]; RAM[i+3]=t[1];
+#else
+		RAM[i+0]=t[1]; RAM[i+1]=t[3]; RAM[i+2]=t[0]; RAM[i+3]=t[2];
 #endif
 	}
 }

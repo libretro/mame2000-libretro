@@ -35,11 +35,11 @@ struct wave_file {
 static struct Wave_interface *intf;
 static struct wave_file wave[MAX_WAVE] = {{-1,},{-1,}};
 
-#ifdef LSB_FIRST
-#define intelLong(x) (x)
-#else
+#ifdef MSB_FIRST
 #define intelLong(x) (((x << 24) | (((unsigned long) x) >> 24) | \
                        (( x & 0x0000ff00) << 8) | (( x & 0x00ff0000) >> 8)))
+#else
+#define intelLong(x) (x)
 #endif
 
 #define WAVE_OK    0

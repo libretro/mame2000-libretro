@@ -162,10 +162,10 @@ extern int mips_ICount;
 /* OP_COP0 */
 #define CF_RFE ( 16 )
 
-#ifdef LSB_FIRST
-#define READ_LONG(a)          (*(UINT32 *)(a))
-#else
+#ifdef MSB_FIRST
 #define READ_LONG(a)		  (READ_WORD(a+2)<<16)|READ_WORD(a)
+#else
+#define READ_LONG(a)          (*(UINT32 *)(a))
 #endif
 
 #define cpu_readop32(A)     READ_LONG(&OP_ROM[A])

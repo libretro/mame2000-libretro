@@ -228,10 +228,10 @@ int readroms(void)
 					{
 						/* ROM_LOAD_EVEN and ROM_LOAD_ODD */
 						/* copy the ROM data */
-					#ifdef LSB_FIRST
-						c = Machine->memory_region[region] + (romp->offset ^ 1);
-					#else
+					#ifdef MSB_FIRST
 						c = Machine->memory_region[region] + romp->offset;
+					#else
+						c = Machine->memory_region[region] + (romp->offset ^ 1);
 					#endif
 
 						if (osd_fread_scatter(f,c,length,2) != length)
@@ -250,20 +250,38 @@ int readroms(void)
 						/* Copy quad to region */
 						c = Machine->memory_region[region] + romp->offset;
 
-					#ifdef LSB_FIRST
-						switch (which_quad%4) {
-							case 0: base=1; break;
-							case 1: base=0; break;
-							case 2: base=3; break;
-							case 3: base=2; break;
+					#ifdef MSB_FIRST
+						switch (which_quad%4)
+                  {
+							case 0:
+                        base=0;
+                        break;
+							case 1:
+                        base=1;
+                        break;
+							case 2:
+                        base=2;
+                        break;
+							case 3:
+                        base=3;
+                        break;
 						}
 					#else
-						switch (which_quad%4) {
-							case 0: base=0; break;
-							case 1: base=1; break;
-							case 2: base=2; break;
-							case 3: base=3; break;
-						}
+						switch (which_quad%4)
+                  {
+                     case 0:
+                        base=1;
+                        break;
+                     case 1:
+                        base=0;
+                        break;
+                     case 2:
+                        base=3;
+                        break;
+                     case 3:
+                        base=2;
+                        break;
+                  }
 					#endif
 
 						for (i=base; i< length*4; i += 4)
@@ -275,10 +293,10 @@ int readroms(void)
 					else
 					{
 						int wide = romp->length & ROMFLAG_WIDE;
-					#ifdef LSB_FIRST
-						int swap = (romp->length & ROMFLAG_SWAP) ^ ROMFLAG_SWAP;
-					#else
+					#ifdef MSB_FIRST
 						int swap = romp->length & ROMFLAG_SWAP;
+					#else
+						int swap = (romp->length & ROMFLAG_SWAP) ^ ROMFLAG_SWAP;
 					#endif
 
 						osd_fread(f,Machine->memory_region[region] + romp->offset,length);
@@ -351,10 +369,10 @@ int readroms(void)
 							unsigned char *c;
 
 							/* ROM_LOAD_EVEN and ROM_LOAD_ODD */
-						#ifdef LSB_FIRST
-							c = Machine->memory_region[region] + (romp->offset ^ 1);
-						#else
+						#ifdef MSB_FIRST
 							c = Machine->memory_region[region] + romp->offset;
+						#else
+							c = Machine->memory_region[region] + (romp->offset ^ 1);
 						#endif
 
 							for (i = 0;i < (romp->length & ~ROMFLAG_MASK);i++)
@@ -472,10 +490,10 @@ void printromlist(const struct RomModule *romp,const char *basename)
 
 ***************************************************************************/
 
-#ifdef LSB_FIRST
-#define intelLong(x) (x)
-#else
+#ifdef MSB_FIRST
 #define intelLong(x) (((x << 24) | (((unsigned long) x) >> 24) | (( x & 0x0000ff00) << 8) | (( x & 0x00ff0000) >> 8)))
+#else
+#define intelLong(x) (x)
 #endif
 
 static struct GameSample *read_wav_sample(void *f)

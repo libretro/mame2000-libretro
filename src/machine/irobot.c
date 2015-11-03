@@ -62,10 +62,10 @@ static void irmb_run(void);
 
 
 /* mathbox and vector data is stored in big-endian format */
-#ifdef LSB_FIRST
-#define BYTE_XOR_LE(x)	((x) ^ 1)
-#else
+#ifdef MSB_FIRST
 #define BYTE_XOR_LE(x)	(x)
+#else
+#define BYTE_XOR_LE(x)	((x) ^ 1)
 #endif
 
 

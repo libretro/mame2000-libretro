@@ -146,12 +146,12 @@ New 34020 ops:
 /* TMS34010 State */
 typedef struct
 {
-#if LSB_FIRST
-	INT16 x;
+#ifdef MSB_FIRST
 	INT16 y;
+	INT16 x;
 #else
-	INT16 y;
 	INT16 x;
+	INT16 y;
 #endif
 } XY;
 

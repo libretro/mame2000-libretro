@@ -704,7 +704,7 @@ ROM_START( wardner )
 	ROM_LOAD( "b25-16.rom", 0x00000, 0x08000, 0xe5202ff8 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "82s137.3d",  0x1000, 0x0400, 0x70b537b9 ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "82s137.3e",  0x1000, 0x0400, 0x6edb2de8 )
 	ROM_LOAD_NIB_HIGH( "82s131.2a",  0x1400, 0x0200, 0xac843ca6 )
@@ -766,7 +766,7 @@ ROM_START( pyros )
 	ROM_LOAD( "b25-16.rom", 0x00000, 0x08000, 0xe5202ff8 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "82s137.3d",  0x1000, 0x0400, 0x70b537b9 ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "82s137.3e",  0x1000, 0x0400, 0x6edb2de8 )
 	ROM_LOAD_NIB_HIGH( "82s131.2a",  0x1400, 0x0200, 0xac843ca6 )
@@ -828,7 +828,7 @@ ROM_START( wardnerj )
 	ROM_LOAD( "b25-16.rom", 0x00000, 0x08000, 0xe5202ff8 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "82s137.3d",  0x1000, 0x0400, 0x70b537b9 ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "82s137.3e",  0x1000, 0x0400, 0x6edb2de8 )
 	ROM_LOAD_NIB_HIGH( "82s131.2a",  0x1400, 0x0200, 0xac843ca6 )

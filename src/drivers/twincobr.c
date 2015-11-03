@@ -906,7 +906,7 @@ ROM_START( fshark )
 	ROM_LOAD( "b02_16.rom",		0x0000, 0x8000, 0xcdd1a153 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "82s137-3.mcu",  0x1000, 0x0400, 0x70b537b9 ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "82s137-4.mcu",  0x1000, 0x0400, 0x6edb2de8 )
 	ROM_LOAD_NIB_HIGH( "82s137-7.mcu",  0x1400, 0x0400, 0xcbf3184b )
@@ -968,7 +968,7 @@ ROM_START( skyshark )
 	ROM_LOAD( "b02_16.rom",		0x0000, 0x8000, 0xcdd1a153 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "82s137-3.mcu",  0x1000, 0x0400, 0x70b537b9 ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "82s137-4.mcu",  0x1000, 0x0400, 0x6edb2de8 )
 	ROM_LOAD_NIB_HIGH( "82s137-7.mcu",  0x1400, 0x0400, 0xcbf3184b )
@@ -1030,7 +1030,7 @@ ROM_START( hishouza )
 	ROM_LOAD( "b02_16.rom",		0x0000, 0x8000, 0xcdd1a153 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "dsp-a3.bpr", 0x1000, 0x0400, 0xdf88e79b ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "dsp-a4.bpr", 0x1000, 0x0400, 0xa2094a7f )
 	ROM_LOAD_NIB_HIGH( "dsp-b7.bpr", 0x1400, 0x0400, 0xe87540cd )
@@ -1092,7 +1092,7 @@ ROM_START( fsharkbt )
 	ROM_LOAD( "b02_16.rom",		0x0000, 0x8000, 0xcdd1a153 )
 
 	ROM_REGION( 0x10000, REGION_CPU3 )	/* Co-Processor TMS320C10 MCU code */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	ROM_LOAD_NIB_HIGH( "mcu-3.bpr",  0x1000, 0x0400, 0xdf88e79b ) /* lsb */
 	ROM_LOAD_NIB_LOW ( "mcu-4.bpr",  0x1000, 0x0400, 0xa2094a7f )
 	ROM_LOAD_NIB_HIGH( "mcu-7.bpr",  0x1400, 0x0400, 0x0cd30d49 )

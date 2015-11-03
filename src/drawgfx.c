@@ -2,22 +2,21 @@
 
 #include "driver.h"
 
-
 /* LBO */
-#ifdef LSB_FIRST
-#define BL0 0
-#define BL1 1
-#define BL2 2
-#define BL3 3
-#define WL0 0
-#define WL1 1
-#else
+#ifdef MSB_FIRST
 #define BL0 3
 #define BL1 2
 #define BL2 1
 #define BL3 0
 #define WL0 1
 #define WL1 0
+#else
+#define BL0 0
+#define BL1 1
+#define BL2 2
+#define BL3 3
+#define WL0 0
+#define WL1 1
 #endif
 
 
@@ -28,21 +27,20 @@ plot_box_proc plot_box;
 
 static UINT8 is_raw[TRANSPARENCY_MODES];
 
-
 #ifdef ALIGN_INTS /* GSL 980108 read/write nonaligned dword routine for ARM processor etc */
 	#define write_dword_aligned(address,data) *(UINT32 *)address = data
-	#ifdef LSB_FIRST
-		#define write_dword_unaligned(address,data) \
-			*(address) =    data; \
-			*(address+1) = (data >> 8); \
-			*(address+2) = (data >> 16); \
-			*(address+3) = (data >> 24)
-	#else
+	#ifdef MSB_FIRST
 		#define write_dword_unaligned(address,data) \
 			*(address+3) =  data; \
 			*(address+2) = (data >> 8); \
 			*(address+1) = (data >> 16); \
 			*(address)   = (data >> 24)
+	#else
+		#define write_dword_unaligned(address,data) \
+			*(address) =    data; \
+			*(address+1) = (data >> 8); \
+			*(address+2) = (data >> 16); \
+			*(address+3) = (data >> 24)
 	#endif
 #else
 #define write_dword(address,data) *address=data

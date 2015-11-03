@@ -289,16 +289,16 @@ int osd_fread(void *file,void *buffer,int length);
 int osd_fwrite(void *file,const void *buffer,int length);
 int osd_fread_swap(void *file,void *buffer,int length);
 int osd_fwrite_swap(void *file,const void *buffer,int length);
-#if LSB_FIRST
-#define osd_fread_msbfirst osd_fread_swap
-#define osd_fwrite_msbfirst osd_fwrite_swap
-#define osd_fread_lsbfirst osd_fread
-#define osd_fwrite_lsbfirst osd_fwrite
-#else
+#ifdef MSB_FIRST
 #define osd_fread_msbfirst osd_fread
 #define osd_fwrite_msbfirst osd_fwrite
 #define osd_fread_lsbfirst osd_fread_swap
 #define osd_fwrite_lsbfirst osd_fwrite_swap
+#else
+#define osd_fread_msbfirst osd_fread_swap
+#define osd_fwrite_msbfirst osd_fwrite_swap
+#define osd_fread_lsbfirst osd_fread
+#define osd_fwrite_lsbfirst osd_fwrite
 #endif
 int osd_fread_scatter(void *file,void *buffer,int length,int increment);
 int osd_fseek(void *file,int offset,int whence);

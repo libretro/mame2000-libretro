@@ -19,16 +19,16 @@ static int searchlight_enable = 0;
 
 
 /* LBO */
-#ifdef LSB_FIRST
-#define BL0 0
-#define BL1 1
-#define BL2 2
-#define BL3 3
-#else
+#ifdef MSB_FIRST
 #define BL0 3
 #define BL1 2
 #define BL2 1
 #define BL3 0
+#else
+#define BL0 0
+#define BL1 1
+#define BL2 2
+#define BL3 3
 #endif
 
 #ifdef ALIGN_INTS /* GSL 980108 read/write nonaligned dword routine for ARM processor etc */

@@ -2377,15 +2377,14 @@ static struct GfxLayout spritelayout =
 	8*16
 };
 
-
-#ifdef LSB_FIRST
+#ifdef MSB_FIRST
 static struct GfxLayout tatsujn2_textlayout =
 {
 	8,8,	/* 8x8 characters */
 	1024,	/* 1024 characters */
 	4,		/* 4 bits per pixel */
 	{ 0, 1, 2, 3 },
-	{ 8, 12, 0, 4, 24, 28, 16, 20 },
+	{ 0, 4, 8, 12, 16, 20, 24, 28 },
 	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
 	8*32
 };
@@ -2396,7 +2395,7 @@ static struct GfxLayout tatsujn2_textlayout =
 	1024,	/* 1024 characters */
 	4,		/* 4 bits per pixel */
 	{ 0, 1, 2, 3 },
-	{ 0, 4, 8, 12, 16, 20, 24, 28 },
+	{ 8, 12, 0, 4, 24, 28, 16, 20 },
 	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
 	8*32
 };

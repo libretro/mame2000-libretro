@@ -40,27 +40,27 @@ typedef struct {
 	int (*irq_callback)(int irqline);
 } z80gb_16BitRegs;
 
-#ifdef LSB_FIRST
+#ifdef MSB_FIRST
 typedef struct {
-	UINT8 F;
-	UINT8 A;
-	UINT8 C;
-	UINT8 B;
-	UINT8 E;
-	UINT8 D;
-	UINT8 L;
-	UINT8 H;
+   UINT8 A;
+   UINT8 F;
+   UINT8 B;
+   UINT8 C;
+   UINT8 D;
+   UINT8 E;
+   UINT8 H;
+   UINT8 L;
 } z80gb_8BitRegs;
 #else
 typedef struct {
-	UINT8 A;
-	UINT8 F;
-	UINT8 B;
-	UINT8 C;
-	UINT8 D;
-	UINT8 E;
-	UINT8 H;
-	UINT8 L;
+   UINT8 F;
+   UINT8 A;
+   UINT8 C;
+   UINT8 B;
+   UINT8 E;
+   UINT8 D;
+   UINT8 L;
+   UINT8 H;
 } z80gb_8BitRegs;
 #endif
 

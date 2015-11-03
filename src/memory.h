@@ -333,12 +333,12 @@ void memorycontextswap(int activecpu);
 
 #define HT_BANKMAX (HT_BANK1 + MAX_BANKS - 1)
 
-#if LSB_FIRST
-	#define BYTE_XOR_BE(a) ((a) ^ 1)
-	#define BYTE_XOR_LE(a) (a)
-#else
+#ifdef MSB_FIRST
 	#define BYTE_XOR_BE(a) (a)
 	#define BYTE_XOR_LE(a) ((a) ^ 1)
+#else
+	#define BYTE_XOR_BE(a) ((a) ^ 1)
+	#define BYTE_XOR_LE(a) (a)
 #endif
 
 /* stupid workarounds so that we can generate an address mask that works even for 32 bits */
