@@ -1,5 +1,6 @@
 DEBUG=0
 WANT_LIBCO = 0
+DISABLE_ERROR_LOGGING = 0
 #set later according to platform
 IS_X86 = 0
 TARGET_NAME = imame4all
@@ -106,6 +107,7 @@ else ifeq ($(platform), ctr)
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
    HAVE_RZLIB := 1
    WANT_LIBCO := 1
+   DISABLE_ERROR_LOGGING := 1
    ARM = 1
    EXE =
 else

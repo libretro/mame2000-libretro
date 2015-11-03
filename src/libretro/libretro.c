@@ -45,12 +45,19 @@ extern int key[KEY_MAX];
 void decompose_rom_sample_path(char *rompath, char *samplepath);
 void init_joy_list(void);
 
+#if defined(_3DS)
+void* linearMemAlign(size_t size, size_t alignment);
+void linearFree(void* mem);
+#endif
+
 void CLIB_DECL logerror(const char *text,...)
 {
+#ifdef DISABLE_ERROR_LOGGING
    va_list arg;
    va_start(arg,text);
    vprintf(text,arg);
    va_end(arg);
+#endif
 }
 
 int global_showinfo = 1;
@@ -247,7 +254,11 @@ static void unlock_mame(void)
 void retro_init(void)
 {
    IMAMEBASEPATH = (char *) malloc(1024);
+#ifdef _3DS
+   gp2x_screen15 = (unsigned short *) linearMemAlign(640 * 480 * 2, 0x80);
+#else
    gp2x_screen15 = (unsigned short *) malloc(640 * 480 * 2);
+#endif
 #ifndef WANT_LIBCO
    pthread_cond_init(&libretro_cond, NULL);
    pthread_mutex_init(&libretro_mutex, NULL);
@@ -258,7 +269,11 @@ void retro_init(void)
 void retro_deinit(void)
 {
    free(IMAMEBASEPATH);
+#ifdef _3DS
+   linearFree(gp2x_screen15);
+#else
    free(gp2x_screen15);
+#endif
 #ifndef WANT_LIBCO
    pthread_cond_destroy(&libretro_cond);
    pthread_mutex_destroy(&libretro_mutex);
