@@ -219,7 +219,7 @@ ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJS)
 else
 	@echo Linking $@...
-	$(CC) $(SHARED) $(LDFLAGS) $(LIBS) $(OBJS) -o $@
+	$(CC) $(SHARED) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 endif
 
 $(OBJ)/%.o: src/%.c
