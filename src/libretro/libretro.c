@@ -1,4 +1,3 @@
-#define WANT_LIBCO
 #ifdef WANT_LIBCO
 #include <libco.h>
 #else
