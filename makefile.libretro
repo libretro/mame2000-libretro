@@ -1,11 +1,12 @@
 DEBUG=0
+WANT_LIBCO = 0
 #set later according to platform
 IS_X86 = 0
 TARGET = mame
 # extension for executables
 EXE = .so
 
-GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
+GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow -Werror=implicit-function-declaration
 
 ifeq ($(platform),)
 platform = unix

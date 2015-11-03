@@ -1,4 +1,9 @@
+#define WANT_LIBCO
+#ifdef WANT_LIBCO
+#include <libco.h>
+#else
 #include <pthread.h>
+#endif
 #include <stdarg.h>
 #include <sys/time.h>
 #include "libretro.h"
@@ -14,9 +19,14 @@ unsigned retro_hook_quit;
 volatile static unsigned audio_done;
 volatile static unsigned video_done;
 volatile static unsigned mame_sleep;
+#ifdef WANT_LIBCO
+static cothread_t core_thread;
+static cothread_t main_thread;
+#else
 static pthread_t run_thread = 0;
 static pthread_cond_t libretro_cond;
 static pthread_mutex_t libretro_mutex;
+#endif
 
 int game_index = -1;
 unsigned short *gp2x_screen15;
@@ -160,7 +170,23 @@ static void update_input(void)
 #undef JS
 #undef _B
 }
+#ifdef WANT_LIBCO
+void hook_audio_done(void)
+{
+}
 
+void hook_video_done(void)
+{
+   co_switch(main_thread);
+}
+
+void run_thread_proc(void)
+{
+   run_game(game_index);
+   hook_audio_done();
+   hook_video_done();
+}
+#else
 static void hook_check(void)
 {
    if (video_done && audio_done)
@@ -217,13 +243,15 @@ static void unlock_mame(void)
    pthread_cond_signal(&libretro_cond);
    pthread_mutex_unlock(&libretro_mutex);
 }
-
+#endif
 void retro_init(void)
 {
    IMAMEBASEPATH = (char *) malloc(1024);
    gp2x_screen15 = (unsigned short *) malloc(640 * 480 * 2);
+#ifndef WANT_LIBCO
    pthread_cond_init(&libretro_cond, NULL);
    pthread_mutex_init(&libretro_mutex, NULL);
+#endif
    init_joy_list();
 }
 
@@ -231,8 +259,10 @@ void retro_deinit(void)
 {
    free(IMAMEBASEPATH);
    free(gp2x_screen15);
+#ifndef WANT_LIBCO
    pthread_cond_destroy(&libretro_cond);
    pthread_mutex_destroy(&libretro_mutex);
+#endif
 }
 
 unsigned retro_api_version(void)
@@ -257,7 +287,9 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
+#ifndef WANT_LIBCO
    lock_mame();
+#endif
    struct retro_game_geometry g = {
       Machine->drv->screen_width,
       Machine->drv->screen_height,
@@ -276,6 +308,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 void retro_run(void)
 {
    int i, j;
+#ifdef WANT_LIBCO
+   co_switch(core_thread);
+#else
    if (run_thread == 0)
    {
    }
@@ -284,6 +319,7 @@ void retro_run(void)
 
    if (thread_done)
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
+#endif
 
    update_input();
 
@@ -306,7 +342,9 @@ void retro_run(void)
    audio_done = 0;
    video_done = 0;
 
+#ifndef WANT_LIBCO
    unlock_mame();
+#endif
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -415,13 +453,23 @@ bool retro_load_game(const struct retro_game_info *info)
    decompose_rom_sample_path(IMAMEBASEPATH, IMAMEBASEPATH);
 
    mame_sleep = 1;
+
+#ifdef WANT_LIBCO
+   main_thread = co_active();
+   core_thread = co_create(0x10000, run_thread_proc);
+   co_switch(core_thread);
+#else
    pthread_create(&run_thread, NULL, run_thread_proc, NULL);
+#endif
 
    return true;
 }
 
 void retro_unload_game(void)
 {
+#ifdef WANT_LIBCO
+   co_delete(core_thread);
+#else
    pthread_mutex_lock(&libretro_mutex);
    // make sure we escape the copyright warning and game warning loops
    key[KEY_ESC] = 1;
@@ -435,6 +483,7 @@ void retro_unload_game(void)
 
    run_thread = 0;
    retro_hook_quit = 0;
+#endif
 }
 
 unsigned retro_get_region(void)

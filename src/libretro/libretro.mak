@@ -13,3 +13,10 @@ endif
 OSOBJS = $(OBJ)/libretro/libretro.o $(OBJ)/libretro/video.o $(OBJ)/libretro/blit.o \
 	$(OBJ)/libretro/sound.o $(OBJ)/libretro/input.o $(OBJ)/libretro/fileio.o \
 	$(OBJ)/libretro/config.o $(OBJ)/libretro/shared.o
+
+ifeq ($(WANT_LIBCO), 1)
+	DEFS += -DWANT_LIBCO
+   OBJDIRS += $(OBJ)/libretro/libco
+	OSOBJS += $(OBJ)/libretro/libco/libco.o
+endif
+
