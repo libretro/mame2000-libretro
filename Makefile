@@ -175,7 +175,7 @@ MAMEOS = libretro
 VPATH=src $(wildcard src/cpu/*)
 
 # compiler, linker and utilities
-MD = @mkdir
+MD = @mkdir -p
 RM = rm -f
 
 EMULATOR = $(TARGET)
