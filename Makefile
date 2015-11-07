@@ -41,7 +41,9 @@ ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
+ifneq ($(ARM), 1)
    IS_X86 = 1
+endif
 
 # OS X
 else ifeq ($(platform), osx)
