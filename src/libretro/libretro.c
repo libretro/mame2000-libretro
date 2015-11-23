@@ -402,6 +402,9 @@ bool retro_load_game(const struct retro_game_info *info)
    Machine->sample_rate = 32000;
    options.samplerate = 32000;
 
+   /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
+   options.use_emulated_ym3812 = 1;
+
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
    int use_cyclone = 1;
