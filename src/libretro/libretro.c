@@ -13,6 +13,7 @@
 #include "allegro.h"
 
 char *IMAMEBASEPATH = NULL;
+char *IMAMESAMPLEPATH = NULL;
 
 unsigned retro_hook_quit;
 volatile static unsigned audio_done;
@@ -253,6 +254,7 @@ static void unlock_mame(void)
 void retro_init(void)
 {
    IMAMEBASEPATH = (char *) malloc(1024);
+   IMAMESAMPLEPATH = (char *) malloc(1024);
 #ifdef _3DS
    gp2x_screen15 = (unsigned short *) linearMemAlign(640 * 480 * 2, 0x80);
 #else
@@ -268,6 +270,7 @@ void retro_init(void)
 void retro_deinit(void)
 {
    free(IMAMEBASEPATH);
+   free(IMAMESAMPLEPATH);
 #ifdef _3DS
    linearFree(gp2x_screen15);
 #else
@@ -380,6 +383,9 @@ bool retro_load_game(const struct retro_game_info *info)
    memcpy(baseName, romName, strlen(romName) + 1);
    if (strrchr(baseName, '.')) *(strrchr(baseName, '.')) = 0;
 
+   strcpy(IMAMESAMPLEPATH, IMAMEBASEPATH);
+   strcat(IMAMESAMPLEPATH, "/samples");
+
    /* do we have a driver for this? */
    for (i = 0; drivers[i] && (game_index == -1); i++)
    {
@@ -404,6 +410,9 @@ bool retro_load_game(const struct retro_game_info *info)
 
    /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
    options.use_emulated_ym3812 = 1;
+
+   /* enable samples - should be stored in "sample" subdirectory from roms */
+   options.use_samples = 1;
 
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
@@ -467,7 +476,7 @@ bool retro_load_game(const struct retro_game_info *info)
 	   use_mouse=0;
    }
 
-   decompose_rom_sample_path(IMAMEBASEPATH, IMAMEBASEPATH);
+   decompose_rom_sample_path(IMAMEBASEPATH, IMAMESAMPLEPATH);
 
    mame_sleep = 1;
 
