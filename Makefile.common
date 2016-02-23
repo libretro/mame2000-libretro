@@ -1,0 +1,1799 @@
+SOURCES_ASM :=
+SOURCES_C   :=
+CPUS        :=
+SOUNDS      :=
+
+INCFLAGS    := -I$(CORE_DIR)/src -I$(CORE_DIR)/src/libretro -I$(CORE_DIR)/src/libretro/libretro-common/include
+
+# uncomment the following lines to include a CPU core
+CPUS+=Z80@
+#CPUS+=Z80GB@
+CPUS+=8080@
+CPUS+=8085A@
+CPUS+=M6502@
+CPUS+=M65C02@
+#CPUS+=M65SC02@
+#CPUS+=M65CE02@
+#CPUS+=M6509@
+CPUS+=M6510@
+#CPUS+=M6510T@
+#CPUS+=M7501@
+#CPUS+=M8502@
+#CPUS+=M4510@
+CPUS+=N2A03@
+CPUS+=H6280@
+CPUS+=I86@
+#CPUS+=I88@
+CPUS+=I186@
+#CPUS+=I188@
+#CPUS+=I288@
+CPUS+=V20@
+CPUS+=V30@
+CPUS+=V33@
+CPUS+=I8035@
+CPUS+=I8039@
+CPUS+=I8048@
+CPUS+=N7751@
+CPUS+=M6800@
+CPUS+=M6801@
+CPUS+=M6802@
+CPUS+=M6803@
+CPUS+=M6808@
+CPUS+=HD63701@
+CPUS+=NSC8105@
+CPUS+=M6805@
+CPUS+=M68705@
+CPUS+=HD63705@
+CPUS+=HD6309@
+CPUS+=M6809@
+CPUS+=KONAMI@
+CPUS+=M68000@
+CPUS+=M68010@
+CPUS+=M68EC020@
+CPUS+=M68020@
+CPUS+=T11@
+CPUS+=S2650@
+CPUS+=TMS34010@
+#CPUS+=TMS9900@
+#CPUS+=TMS9940@
+CPUS+=TMS9980@
+#CPUS+=TMS9985@
+#CPUS+=TMS9989@
+#CPUS+=TMS9995@
+#CPUS+=TMS99105A@
+#CPUS+=TMS99110A@
+CPUS+=Z8000@
+CPUS+=TMS320C10@
+CPUS+=CCPU@
+#CPUS+=PDP1@
+CPUS+=ADSP2100@
+CPUS+=ADSP2105@
+CPUS+=MIPS@
+#CPUS+=SC61860@
+#CPUS+=ARM@
+
+# uncomment the following lines to include a sound core
+SOUNDS+=CUSTOM@
+SOUNDS+=SAMPLES@
+SOUNDS+=DAC@
+SOUNDS+=DISCRETE@
+SOUNDS+=AY8910@
+SOUNDS+=YM2203@
+# enable only one of the following two
+SOUNDS+=YM2151@
+#SOUNDS+=YM2151_ALT@
+SOUNDS+=YM2608@
+SOUNDS+=YM2610@
+SOUNDS+=YM2610B@
+SOUNDS+=YM2612@
+SOUNDS+=YM3438@
+SOUNDS+=YM2413@
+SOUNDS+=YM3812@
+SOUNDS+=YMZ280B@
+SOUNDS+=YM3526@
+SOUNDS+=Y8950@
+SOUNDS+=SN76477@
+SOUNDS+=SN76496@
+SOUNDS+=POKEY@
+#SOUNDS+=TIA@
+SOUNDS+=NES@
+SOUNDS+=ASTROCADE@
+SOUNDS+=NAMCO@
+SOUNDS+=TMS36XX@
+SOUNDS+=TMS5220@
+SOUNDS+=VLM5030@
+SOUNDS+=ADPCM@
+SOUNDS+=OKIM6295@
+SOUNDS+=MSM5205@
+SOUNDS+=UPD7759@
+SOUNDS+=HC55516@
+SOUNDS+=K005289@
+SOUNDS+=K007232@
+SOUNDS+=K051649@
+SOUNDS+=K053260@
+SOUNDS+=K054539@
+SOUNDS+=SEGAPCM@
+SOUNDS+=RF5C68@
+SOUNDS+=CEM3394@
+SOUNDS+=C140@
+SOUNDS+=QSOUND@
+#SOUNDS+=SPEAKER@
+#SOUNDS+=WAVE@
+# the core object files (without target specific objects;
+# those are added in the target.mak files)
+
+SOURCES_C   += $(CORE_DIR)/src/zlib/adler32.c \
+				 $(CORE_DIR)/src/zlib/compress.c \
+				 $(CORE_DIR)/src/zlib/crc32.c \
+				 $(CORE_DIR)/src/zlib/gzio.c \
+				 $(CORE_DIR)/src/zlib/uncompr.c \
+				 $(CORE_DIR)/src/zlib/deflate.c \
+				 $(CORE_DIR)/src/zlib/trees.c \
+				 $(CORE_DIR)/src/zlib/zutil.c \
+				 $(CORE_DIR)/src/zlib/inflate.c \
+				 $(CORE_DIR)/src/zlib/infback.c \
+				 $(CORE_DIR)/src/zlib/inftrees.c \
+				 $(CORE_DIR)/src/zlib/inffast.c
+
+SOURCES_C += $(CORE_DIR)/src/version.c \
+				$(CORE_DIR)/src/info.c \
+				$(CORE_DIR)/src/audit.c \
+				$(CORE_DIR)/src/datafile.c \
+				$(CORE_DIR)/src/state.c \
+				$(CORE_DIR)/src/png.c \
+				$(CORE_DIR)/src/artwork.c \
+				$(CORE_DIR)/src/unzip.c \
+				$(CORE_DIR)/src/profiler.c \
+				$(CORE_DIR)/src/cheat.c \
+				$(CORE_DIR)/src/hiscore.c \
+				$(CORE_DIR)/src/input.c \
+				$(CORE_DIR)/src/inptport.c \
+				$(CORE_DIR)/src/mame.c \
+				$(CORE_DIR)/src/usrintrf.c \
+				$(CORE_DIR)/src/ui_text.c \
+				$(CORE_DIR)/src/tilemap.c \
+				$(CORE_DIR)/src/sprite.c \
+				$(CORE_DIR)/src/gfxobj.c \
+				$(CORE_DIR)/src/drawgfx.c \
+				$(CORE_DIR)/src/palette.c \
+				$(CORE_DIR)/src/common.c \
+				$(CORE_DIR)/src/cpuintrf.c \
+				$(CORE_DIR)/src/memory.c \
+				$(CORE_DIR)/src/timer.c \
+				$(CORE_DIR)/src/sndintrf.c \
+				$(CORE_DIR)/src/sound/streams.c \
+				$(CORE_DIR)/src/sound/mixer.c \
+				$(CORE_DIR)/src/machine/z80fmly.c \
+				$(CORE_DIR)/src/machine/6821pia.c \
+				$(CORE_DIR)/src/machine/8255ppi.c \
+				$(CORE_DIR)/src/machine/ticket.c \
+				$(CORE_DIR)/src/machine/eeprom.c \
+				$(CORE_DIR)/src/vidhrdw/generic.c \
+				$(CORE_DIR)/src/vidhrdw/vector.c \
+				$(CORE_DIR)/src/vidhrdw/avgdvg.c \
+				$(CORE_DIR)/src/machine/mathbox.c \
+				$(CORE_DIR)/src/sound/votrax.c
+
+
+SOURCES_C += $(CORE_DIR)/src/drivers/wardner.c \
+				 $(CORE_DIR)/src/drivers/pacman.c \
+				 $(CORE_DIR)/src/drivers/jrpacman.c \
+				 $(CORE_DIR)/src/drivers/pengo.c \
+				 $(CORE_DIR)/src/drivers/scobra.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cclimber.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/seicross.c \
+				 $(CORE_DIR)/src/drivers/wiping.c \
+				 $(CORE_DIR)/src/drivers/cop01.c \
+				 $(CORE_DIR)/src/drivers/locomotn.c \
+				 $(CORE_DIR)/src/vidhrdw/mcr12.c \
+				 $(CORE_DIR)/src/drivers/mcr1.c \
+				 $(CORE_DIR)/src/drivers/mcr2.c \
+				 $(CORE_DIR)/src/drivers/mcr3.c \
+				 $(CORE_DIR)/src/drivers/olibochu.c \
+				 $(CORE_DIR)/src/drivers/congo.c \
+				 $(CORE_DIR)/src/drivers/junofrst.c \
+				 $(CORE_DIR)/src/drivers/jailbrek.c \
+				 $(CORE_DIR)/src/drivers/bwidow.c \
+				 $(CORE_DIR)/src/drivers/tempest.c \
+				 $(CORE_DIR)/src/drivers/scregg.c \
+				 $(CORE_DIR)/src/drivers/shanghai.c \
+				 $(CORE_DIR)/src/drivers/omegrace.c \
+				 $(CORE_DIR)/src/drivers/royalmah.c
+
+SOURCES_C += $(CORE_DIR)/src/sndhrdw/atarijsa.c  \
+				 $(CORE_DIR)/src/sndhrdw/irem.c  \
+				 $(CORE_DIR)/src/sndhrdw/seibu.c \
+				 $(CORE_DIR)/src/sndhrdw/redbaron.c \
+				 $(CORE_DIR)/src/sndhrdw/llander.c \
+				 $(CORE_DIR)/src/vidhrdw/llander.c \
+				 $(CORE_DIR)/src/vidhrdw/konamiic.c  \
+				 $(CORE_DIR)/src/vidhrdw/taitoic.c  \
+				 $(CORE_DIR)/src/machine/atarigen.c  \
+				 $(CORE_DIR)/src/machine/slapstic.c  \
+				 $(CORE_DIR)/src/machine/atari_vg.c  \
+				 $(CORE_DIR)/src/machine/segacrpt.c 
+
+SOURCES_C += $(CORE_DIR)/src/drivers/terracre.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/galivan.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/armedf.c \
+				 $(CORE_DIR)/src/drivers/yamato.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/phoenix.c \
+				 $(CORE_DIR)/src/drivers/naughtyb.c \
+				 $(CORE_DIR)/src/drivers/safarir.c \
+				 $(CORE_DIR)/src/sndhrdw/pleiads.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/geebee.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/warpwarp.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tankbatt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/galaxian.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rallyx.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bosco.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/galaga.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/digdug.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/xevious.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/superpac.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/phozon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mappy.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/grobda.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gaplus.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/toypop.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/polepos.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pacland.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/skykid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/baraduke.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/namcos86.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/namcos1.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/namcos2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cosmic.c \
+				 $(CORE_DIR)/src/drivers/cheekyms.c \
+				 $(CORE_DIR)/src/drivers/ladybug.c \
+				 $(CORE_DIR)/src/drivers/mrdo.c \
+				 $(CORE_DIR)/src/drivers/docastle.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dkong.c \
+				 $(CORE_DIR)/src/drivers/mario.c \
+				 $(CORE_DIR)/src/drivers/popeye.c \
+				 $(CORE_DIR)/src/drivers/punchout.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/8080bw.c \
+				 $(CORE_DIR)/src/drivers/m79amb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/z80bw.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lazercmd.c \
+				 $(CORE_DIR)/src/drivers/meadows.c \
+				 $(CORE_DIR)/src/drivers/astrocde.c
+
+SOURCES_C += $(CORE_DIR)/src/sndhrdw/mcr.c \
+				 $(CORE_DIR)/src/machine/mcr.c \
+				 $(CORE_DIR)/src/drivers/mcr68.c \
+				 $(CORE_DIR)/src/vidhrdw/mcr3.c \
+				 $(CORE_DIR)/src/drivers/balsente.c \
+				 $(CORE_DIR)/src/sndhrdw/carnival.c \
+				 $(CORE_DIR)/src/drivers/hal21.c \
+				 $(CORE_DIR)/src/sndhrdw/gorf.c \
+				 $(CORE_DIR)/src/machine/cchip.c \
+				 $(CORE_DIR)/src/machine/konami.c \
+				 $(CORE_DIR)/src/sndhrdw/pulsar.c \
+				 $(CORE_DIR)/src/sndhrdw/depthch.c \
+				 $(CORE_DIR)/src/sndhrdw/invinco.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/skychut.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mpatrol.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/troangel.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/yard.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/travrusa.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/m62.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vigilant.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/m72.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/shisen.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/m92.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/m107.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gottlieb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/crbaloon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/qix.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/taitosj.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bking2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gsword.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/retofinv.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tsamurai.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/flstory.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gladiatr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lsasquad.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bublbobl.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mexico86.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rastan.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rainbow.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/arkanoid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/superqix.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/superman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/minivadr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tnzs.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lkage.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/taito_l.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/taito_b.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/taito_f2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/slapfght.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/twincobr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/toaplan1.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/snowbros.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/toaplan2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cave.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kyugo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/williams.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vulgus.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sonson.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/higemaru.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/1942.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exedexes.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/commando.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gng.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gunsmoke.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/srumbler.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lwings.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sidearms.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bionicc.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/1943.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blktiger.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tigeroad.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lastduel.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sf1.c
+
+SOURCES_C += $(CORE_DIR)/src/machine/kabuki.c \
+				 $(CORE_DIR)/src/drivers/mitchell.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cbasebal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cps1.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/capbowl.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blockade.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vicdual.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sega.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/segar.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/zaxxon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/turbo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/suprloco.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/appoooh.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bankp.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dotrikun.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/system1.c
+	
+SOURCES_C += $(CORE_DIR)/src/drivers/system16.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/deniam.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/btime.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/astrof.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kchamp.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/firetrap.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/brkthru.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/shootout.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sidepckt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exprraid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pcktgal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/battlera.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/actfancr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dec8.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/karnov.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dec0.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/stadhero.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/madmotor.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vaportra.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cbuster.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/darkseal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/supbtime.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cninja.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tumblep.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/funkyjet.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/senjyo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bombjack.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pbaction.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tehkanwc.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/solomon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tecmo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gaiden.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/wc90.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/wc90b.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tecmo16.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/scramble.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/frogger.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/amidar.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/fastfred.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tutankhm.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pooyan.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/timeplt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/megazone.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pandoras.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gyruss.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/trackfld.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rocnrope.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/circusc.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tp84.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/hyperspt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sbasketb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mikie.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/yiear.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/shaolins.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pingpong.c
+	
+SOURCES_C += $(CORE_DIR)/src/drivers/gberet.c
+
+SOURECES_C += $(CORE_DIR)/src/drivers/jailbrek.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/finalizr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ironhors.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/jackal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ddrible.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/contra.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/combatsc.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/hcastle.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/nemesis.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rockrage.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/flkatck.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/fastlane.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/labyrunr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/battlnts.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bladestl.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ajax.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/thunderx.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mainevt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/88games.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gbusters.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/crimfght.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/spy.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bottom9.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blockhl.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/aliens.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/surpratk.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/parodius.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rollerg.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/xexex.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/simpsons.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vendetta.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/twin16.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gradius3.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tmnt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/xmen.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/wecleman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/chqflag.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ultraman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exidy.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/circus.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/starfire.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/victory.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exidy440.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/asteroid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bzone.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/starwars.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mhavoc.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/quantum.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/atarifb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sprint2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sbrkout.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dominos.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/nitedrvr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bsktball.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/copsnrob.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/avalnche.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/subs.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/canyon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/skydiver.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/warlord.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/centiped.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/milliped.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/qwakprot.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kangaroo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/arabian.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/missile.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/foodf.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/liberatr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ccastles.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cloak.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cloud9.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/jedi.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/atarisy1.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/atarisy2.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gauntlet.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/atetris.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/toobin.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vindictr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/klax.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blstroid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/xybots.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/eprom.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/skullxbo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/badlands.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cyberbal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rampart.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/shuuz.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/hydra.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/thunderj.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/batman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/relief.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/offtwall.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/arcadecl.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/firetrk.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rockola.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/lasso.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/munchmo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/marvins.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/snk.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/snk68.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/prehisle.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/alpha68k.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/champbas.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exctsccr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tagteam.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ssozumo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mystston.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bogeyman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/matmania.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/renegade.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/xain.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/battlane.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ddragon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ddragon3.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blockout.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/suna8.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/berzerk.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gameplan.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/route16.c \
+				 $(CORE_DIR)/src/drivers/ttmahjng.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/zaccaria.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/nova2001.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pkunwar.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ninjakd2.c \
+				 $(CORE_DIR)/src/drivers/mnight.c \
+				 $(CORE_DIR)/src/drivers/exterm.c \
+				 $(CORE_DIR)/src/drivers/wmsyunit.c \
+				 $(CORE_DIR)/src/drivers/wmstunit.c \
+				 $(CORE_DIR)/src/drivers/wmswolfu.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/jack.c \
+				 $(CORE_DIR)/src/drivers/cinemat.c \
+				 $(CORE_DIR)/src/drivers/cchasm.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/thepit.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bagman.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/wiz.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/stfight.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dynduke.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/raiden.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dcon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kncljoe.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cabal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/toki.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/bloodbro.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/exerion.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/aeroboto.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/citycon.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pinbo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/psychic5.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ginganin.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/megasys1.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/cischeat.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/skyfox.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/argus.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/momoko.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/rpunch.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/tail2nos.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/pipedrm.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/aerofgt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/psikyo.c
+
+SOURCES_C += $(CORE_DIR)/src/machine/8254pit.c \
+				 $(CORE_DIR)/src/drivers/leland.c \
+				 $(CORE_DIR)/src/drivers/ataxx.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/marineb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/funkybee.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/zodiack.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/espial.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/vastar.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gaelco.c \
+				 $(CORE_DIR)/src/drivers/splash.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kaneko16.c \
+				 $(CORE_DIR)/src/drivers/galpanic.c \
+				 $(CORE_DIR)/src/drivers/airbustr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/neogeo.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/hanaawas.c \
+				 $(CORE_DIR)/src/drivers/seta.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ohmygod.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/powerins.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/shangha3.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gundealr.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/macross.c \
+				 $(CORE_DIR)/src/drivers/bjtwin.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/spacefb.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/blueprnt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/dday.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/leprechn.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/hexa.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/redalert.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/irobot.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/spiders.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/stactics.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sharkatt.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/kingobox.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/zerozone.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/speedbal.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/sauro.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/ambush.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/starcrus.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/goindol.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/meteor.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/aztarac.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mole.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/gotya.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mrjong.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/polyplay.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/mermaid.c
+
+SOURCES_C += $(CORE_DIR)/src/drivers/magix.c
+
+SOURCES_C += $(CORE_DIR)/src/driver.c
+
+# List of sound cores
+
+# --------------
+# FM sound cores
+# --------------
+
+# add AY8910
+ifneq ($(strip $(findstring AY8910@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM2203@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM2608@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM2610@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM2610B@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM2612@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+ifneq ($(strip $(findstring YM3438@,$(SOUNDS))),)
+HAS_AY8910=1
+endif
+
+ifeq ($(HAS_AY8910),1)
+SOURCES_C += $(CORE_DIR)/src/sound/ay8910.c
+endif
+
+# add interfaces
+
+ifneq ($(strip $(findstring AY8910@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_AY8910=1
+endif
+
+ifneq ($(strip $(findstring YM2203@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2203=1
+SOURCES_C += $(CORE_DIR)/src/sound/2203intf.c
+endif
+
+ifneq ($(strip $(findstring YM2151@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2151=1
+SOURCES_C += $(CORE_DIR)/src/sound/2151intf.c
+endif
+
+ifneq ($(strip $(findstring YM2151_ALT@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2151_ALT=1
+SOURCES_C += $(CORE_DIR)/src/sound/2151intf.c
+SOURCES_C += $(CORE_DIR)/src/sound/ym2151.c
+endif
+
+ifneq ($(strip $(findstring YM2608@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2608=1
+SOURCES_C += $(CORE_DIR)/src/sound/2608intf.c
+endif
+
+ifneq ($(strip $(findstring YM2610@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2610=1
+HAS_YM2610_INTF=1
+endif
+
+ifneq ($(strip $(findstring YM2610B@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2610B=1
+HAS_YM2610_INTF=1
+endif
+
+ifeq ($(HAS_YM2610_INTF),1)
+SOURCES_C += $(CORE_DIR)/src/sound/2610intf.c
+endif
+
+ifneq ($(strip $(findstring YM2612@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2612=1
+HAS_YM2612=1
+endif
+
+ifneq ($(strip $(findstring YM3438@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM3438=1
+HAS_YM2612=1
+endif
+
+ifeq ($(HAS_YM2612),1)
+SOURCES_C += $(CORE_DIR)/src/sound/2612intf.c
+endif
+
+# add FM and YMDELTAT
+ifneq ($(strip $(findstring YM2203@,$(SOUNDS))),)
+HAS_FM=1
+endif
+
+ifneq ($(strip $(findstring YM2151@,$(SOUNDS))),)
+HAS_FM=1
+endif
+
+ifneq ($(strip $(findstring YM2151_ALT@,$(SOUNDS))),)
+HAS_FM=1
+endif
+
+ifneq ($(strip $(findstring YM2612@,$(SOUNDS))),)
+HAS_FM=1
+endif
+
+ifneq ($(strip $(findstring YM3438@,$(SOUNDS))),)
+HAS_FM=1
+endif
+
+ifneq ($(strip $(findstring YM2608@,$(SOUNDS))),)
+HAS_FM=1
+HAS_YMDELTAT=1
+endif
+
+ifneq ($(strip $(findstring YM2610@,$(SOUNDS))),)
+HAS_FM=1
+HAS_YMDELTAT=1
+endif
+
+ifneq ($(strip $(findstring YM2610B@,$(SOUNDS))),)
+HAS_FM=1
+HAS_YMDELTAT=1
+endif
+
+ifeq ($(HAS_FM),1)
+SOURCES_C += $(CORE_DIR)/src/sound/fm.c
+endif
+
+ifeq ($(HAS_YMDELTAT),1)
+SOURCES_C += $(CORE_DIR)/src/sound/ymdeltat.c
+endif
+
+# -----------------
+# FMOPL sound cores
+# -----------------
+
+ifneq ($(strip $(findstring YM2413@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM2413=1
+HAS_FMOPL=1
+HAS_YM3812=1
+SOURCES_C += $(CORE_DIR)/src/sound/ym2413.c
+endif
+
+ifneq ($(strip $(findstring YM3812@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM3812=1
+HAS_FMOPL=1
+HAS_YM3812=1
+endif
+
+ifneq ($(strip $(findstring YM3526@,$(SOUNDS))),)
+SOUNDDEFS += -DHAS_YM3526=1
+HAS_FMOPL=1
+HAS_YM3812=1
+endif
+
+SOUND=$(strip $(findstring Y8950@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_Y8950=1
+HAS_FMOPL=1
+HAS_YM3812=1
+endif
+
+ifeq ($(HAS_YM3812),1)
+SOURCES_C += $(CORE_DIR)/src/sound/3812intf.c
+endif
+
+ifeq ($(HAS_FMOPL),1)
+SOURCES_C += $(CORE_DIR)/src/sound/fmopl.c
+endif
+
+# -----------------
+# other sound cores
+# -----------------
+
+SOUND=$(strip $(findstring CUSTOM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_CUSTOM=1
+endif
+
+SOUND=$(strip $(findstring YMZ280B@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YMZ280B=1
+SOURCES_C += $(CORE_DIR)/src/sound/ymz280b.c
+endif
+
+SOUND=$(strip $(findstring POKEY@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_POKEY=1
+SOURCES_C += $(CORE_DIR)/src/sound/pokey.c
+endif
+
+SOUND=$(strip $(findstring QSOUND@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_QSOUND=1
+SOURCES_C += $(CORE_DIR)/src/sound/qsound.c
+endif
+
+SOUND=$(strip $(findstring SN76477@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SN76477=1
+SOURCES_C += $(CORE_DIR)/src/sound/sn76477.c
+endif
+
+SOUND=$(strip $(findstring SN76496@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SN76496=1
+SOURCES_C += $(CORE_DIR)/src/sound/sn76496.c
+endif
+
+SOUND=$(strip $(findstring TMS36XX@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_TMS36XX=1
+SOURCES_C += $(CORE_DIR)/src/sound/tms36xx.c
+endif
+
+SOUND=$(strip $(findstring TMS5220@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_TMS5220=1
+SOURCES_C +=  $(CORE_DIR)/src/sound/5220intf.c
+endif
+
+SOUND=$(strip $(findstring SEGAPCM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SEGAPCM=1
+SOURCES_C += $(CORE_DIR)/src/sound/segapcm.c
+endif
+
+SOUND=$(strip $(findstring DISCRETE@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_DISCRETE=1
+SOURCES_C += $(CORE_DIR)/src/sound/discrete.c
+endif
+
+SOUND=$(strip $(findstring DAC@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_DAC=1
+SOURCES_C += $(CORE_DIR)/src/sound/dac.c
+endif
+
+SOUND=$(strip $(findstring ADPCM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_ADPCM=1
+HAS_ADPCM=1
+endif
+
+SOUND=$(strip $(findstring OKIM6295@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_OKIM6295=1
+HAS_ADPCM=1
+endif
+
+ifeq ($(HAS_ADPCM),1)
+SOURCES_C += $(CORE_DIR)/src/sound/adpcm.c
+endif
+
+SOUND=$(strip $(findstring SAMPLES@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SAMPLES=1
+SOURCES_C += $(CORE_DIR)/src/sound/samples.c
+endif
+
+SOUND=$(strip $(findstring ASTROCADE@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_ASTROCADE=1
+SOURCES_C += $(CORE_DIR)/src/sound/astrocde.c
+endif
+
+SOUND=$(strip $(findstring TIA@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_TIA=1
+SOURCES_C += $(CORE_DIR)/src/sound/tiasound.c \
+				 $(CORE_DIR)/src/sound/tiaintf.c
+endif
+
+SOUND=$(strip $(findstring NES@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NES=1
+SOURCES_C += $(CORE_DIR)/src/sound/nes_apu.c
+endif
+
+SOUND=$(strip $(findstring NAMCO@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NAMCO=1
+SOURCES_C += $(CORE_DIR)/src/sound/namco.c
+endif
+
+SOUND=$(strip $(findstring VLM5030@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_VLM5030=1
+SOURCES_C += $(CORE_DIR)/src/sound/vlm5030.c
+endif
+
+SOUND=$(strip $(findstring MSM5205@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_MSM5205=1
+SOURCES_C += $(CORE_DIR)/src/sound/msm5205.c
+endif
+
+SOUND=$(strip $(findstring UPD7759@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_UPD7759=1
+SOURCES_C += $(CORE_DIR)/src/sound/upd7759.c
+endif
+
+SOUND=$(strip $(findstring HC55516@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_HC55516=1
+SOURCES_C += $(CORE_DIR)/src/sound/hc55516.c
+endif
+
+SOUND=$(strip $(findstring K005289@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K005289=1
+SOURCES_C += $(CORE_DIR)/src/sound/k005289.c
+endif
+
+SOUND=$(strip $(findstring K007232@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K007232=1
+SOURCES_C += $(CORE_DIR)/src/sound/k007232.c
+endif
+
+SOUND=$(strip $(findstring K051649@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K051649=1
+SOURCES_C += $(CORE_DIR)/src/sound/k051649.c
+endif
+
+SOUND=$(strip $(findstring K053260@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K053260=1
+SOURCES_C += $(CORE_DIR)/src/sound/k053260.c
+endif
+
+SOUND=$(strip $(findstring K054539@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K054539=1
+SOURCES_C += $(CORE_DIR)/src/sound/k054539.c
+endif
+
+SOUND=$(strip $(findstring RF5C68@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_RF5C68=1
+SOURCES_C += $(CORE_DIR)/src/sound/rf5c68.c
+endif
+
+SOUND=$(strip $(findstring CEM3394@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_CEM3394=1
+SOURCES_C += $(CORE_DIR)/src/sound/cem3394.c
+endif
+
+SOUND=$(strip $(findstring C140@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C140=1
+SOURCES_C += $(CORE_DIR)/src/sound/c140.c
+endif
+
+SOUND=$(strip $(findstring SPEAKER@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SPEAKER=1
+SOURCES_C += $(CORE_DIR)/src/sound/speaker.c
+endif
+
+SOUND=$(strip $(findstring WAVE@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_WAVE=1
+SOURCES_C += $(CORE_DIR)/src/sound/wave.c
+endif
+
+# List of CPU core (and, for a debug build, disassembler) object files
+
+CPU=$(strip $(findstring Z80@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z80=1
+SOURCES_C += $(CORE_DIR)/src/cpu/z80/z80.c
+endif
+
+CPU=$(strip $(findstring Z80GB@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z80GB=1
+SOURCES_C += $(CORE_DIR)/src/cpu/z80gb/z80gb.c
+endif
+
+CPU=$(strip $(findstring 8080@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_8080=1
+HAS_I8085=1
+endif
+
+CPU=$(strip $(findstring 8085A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_8085A=1
+HAS_I8085=1
+endif
+
+ifeq ($(HAS_I8085),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/i8085/i8085.c
+endif
+
+CPU=$(strip $(findstring M6502@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6502=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M65C02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65C02=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M65SC02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65SC02=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M65CE02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65CE02=1
+SOURCES_C += $(CORE_DIR)/src/cpu/m6502/m65ce02.c
+endif
+
+CPU=$(strip $(findstring M6509@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6509=1
+SOURCES_C += $(CORE_DIR)/src/cpu/m6502/m6509.c
+endif
+
+CPU=$(strip $(findstring M6510@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6510=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M6510T@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6510=1 -DHAS_M6510T=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M7501@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6510=1 -DHAS_M7501=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring M8502@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6510=1 -DHAS_M8502=1
+HAS_M6502=1
+endif
+
+ifeq ($(HAS_M6502),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/m6502/m6502.c
+endif
+
+CPU=$(strip $(findstring M4510@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M4510=1
+SOURCES_C += $(CORE_DIR)/src/cpu/m6502/m4510.c
+endif
+
+CPU=$(strip $(findstring N2A03@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_N2A03=1
+HAS_M6502=1
+endif
+
+CPU=$(strip $(findstring H6280@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_H6280=1
+SOURCES_C += $(CORE_DIR)/src/cpu/h6280/h6280.c
+endif
+
+CPU=$(strip $(findstring I86@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I86=1
+HAS_I86=1
+endif
+
+CPU=$(strip $(findstring I88@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I88=1
+HAS_I86=1
+endif
+
+CPU=$(strip $(findstring I186@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I186=1
+HAS_I86=1
+endif
+
+CPU=$(strip $(findstring I188@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I188=1
+HAS_I86=1
+endif
+
+CPU=$(strip $(findstring I286@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I286=1
+SOURCES_C += $(CORE_DIR)/src/cpu/i86/i286.c
+endif
+
+ifeq ($(HAS_I86),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/i86/i86.c
+endif
+
+CPU=$(strip $(findstring V20@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V20=1
+HAS_NEC=1
+endif
+
+CPU=$(strip $(findstring V30@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V30=1
+HAS_NEC=1
+endif
+
+CPU=$(strip $(findstring V33@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V33=1
+HAS_NEC=1
+endif
+
+ifeq ($(HAS_NEC),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/nec/nec.c
+endif
+
+CPU=$(strip $(findstring I8035@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8035=1
+HAS_I8039=1
+endif
+
+CPU=$(strip $(findstring I8039@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8039=1
+HAS_I8039=1
+endif
+
+CPU=$(strip $(findstring I8048@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8048=1
+HAS_I8039=1
+endif
+
+CPU=$(strip $(findstring N7751@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_N7751=1
+HAS_I8039=1
+endif
+
+ifeq ($(HAS_I8039),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/i8039/i8039.c
+endif
+
+CPU=$(strip $(findstring M6800@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6800=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring M6801@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6801=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring M6802@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6802=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring M6803@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6803=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring M6808@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6808=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring HD63701@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD63701=1
+HAS_M68K_COMMON=1
+endif
+
+CPU=$(strip $(findstring NSC8105@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_NSC8105=1
+HAS_M68K_COMMON=1
+endif
+
+ifeq ($(HAS_M68K_COMMON),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/m6800/m6800.c
+endif
+
+CPU=$(strip $(findstring M6805@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6805=1
+HAS_M6805=1
+endif
+
+CPU=$(strip $(findstring M68705@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68705=1
+endif
+
+CPU=$(strip $(findstring HD63705@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD63705=1
+CPUDEFS += -DHAS_M6805=1
+HAS_M6805=1
+endif
+
+ifeq ($(HAS_M6805),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/m6805/m6805.c
+endif
+
+CPU=$(strip $(findstring HD6309@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD6309=1
+HAS_M6809=1
+endif
+
+CPU=$(strip $(findstring M6809@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6809=1
+HAS_M6809=1
+endif
+
+ifeq ($(HAS_M6809),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/m6809/m6809.c
+endif
+
+CPU=$(strip $(findstring KONAMI@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_KONAMI=1
+SOURCES_C += $(CORE_DIR)/src/cpu/konami/konami.c
+endif
+
+CPU=$(strip $(findstring M68000@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68000=1
+HAS_M68KMAME=1
+endif
+
+CPU=$(strip $(findstring M68010@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68010=1
+HAS_M68KMAME=1
+endif
+
+CPU=$(strip $(findstring M68EC020@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68EC020=1
+HAS_M68KMAME=1
+endif
+
+CPU=$(strip $(findstring M68020@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68020=1
+HAS_M68KMAME=1
+endif
+
+ifeq ($(HAS_M68KMAME),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/m68000/m68kmame.c
+endif
+
+CPU=$(strip $(findstring T11@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_T11=1
+SOURCES_C += $(CORE_DIR)/src/cpu/t11/t11.c
+endif
+
+CPU=$(strip $(findstring S2650@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_S2650=1
+SOURCES_C += $(CORE_DIR)/src/cpu/s2650/s2650.c
+endif
+
+CPU=$(strip $(findstring TMS34010@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS34010=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms34010/tms34010.c
+endif
+
+CPU=$(strip $(findstring TMS9900@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9900=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9900.c
+endif
+
+CPU=$(strip $(findstring TMS9940@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9940=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9900.c
+endif
+
+CPU=$(strip $(findstring TMS9980@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9980=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9980a.c
+endif
+
+CPU=$(strip $(findstring TMS9985@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9985=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9980a.c
+endif
+
+CPU=$(strip $(findstring TMS9989@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9989=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9980a.c
+endif
+
+CPU=$(strip $(findstring TMS9995@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9995=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9995.c
+endif
+
+CPU=$(strip $(findstring TMS99105A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS99105A=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms9900/tms9995.c
+endif
+
+CPU=$(strip $(findstring TMS99105A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS99105A=1
+SOURCES_C += $(CORE_DIR)/cpu/tms9900/tms9995.c
+endif
+
+CPU=$(strip $(findstring Z8000@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z8000=1
+SOURCES_C += $(CORE_DIR)/src/cpu/z8000/z8000.c
+endif
+
+CPU=$(strip $(findstring TMS320C10@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS320C10=1
+SOURCES_C += $(CORE_DIR)/src/cpu/tms32010/tms32010.c
+endif
+
+CPU=$(strip $(findstring CCPU@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_CCPU=1
+SOURCES_C += $(CORE_DIR)/src/cpu/ccpu/ccpu.c \
+				 $(CORE_DIR)/src/vidhrdw/cinemat.c
+endif
+
+CPU=$(strip $(findstring ADSP2100@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ADSP2100=1
+HAS_ADSP2100=1
+endif
+
+CPU=$(strip $(findstring ADSP2105@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ADSP2105=1
+HAS_ADSP2100=1
+endif
+
+ifeq ($(HAS_ADSP2100),1)
+SOURCES_C += $(CORE_DIR)/src/cpu/adsp2100/adsp2100.c
+endif
+
+CPU=$(strip $(findstring PDP1@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_PDP1=1
+SOURCES_C += $(CORE_DIR)/src/cpu/pdp1/pdp1.c
+endif
+
+CPU=$(strip $(findstring MIPS@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_MIPS=1
+SOURCES_C += $(CORE_DIR)/src/cpu/mips/mips.c
+endif
+
+CPU=$(strip $(findstring SC61860@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_SC61860=1
+SOURCES_C += $(CORE_DIR)/src/cpu/sc61860/sc61860.c
+endif
+
+CPU=$(strip $(findstring ARM@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ARM=1
+SOURCES_C += $(CORE_DIR)/src/cpu/arm/arm.c
+endif
+
+ifneq ($(ARM),)
+	DEFS += -DIS_ARM=1
+	CPUDEFS += -DHAS_CYCLONE=1 -DHAS_DRZ80=1
+	SOURCES_ASM += $(CORE_DIR)/src/cpu/m68000_cyclone/cyclone.s \
+				  $(CORE_DIR)/src/cpu/m68000_cyclone/c68000.s \
+				  $(CORE_DIR)/src/cpu/z80_drz80/drz80.s \
+				  $(CORE_DIR)/src/cpu/z80_drz80/drz80_z80.s
+endif
+
+#CPUDEFS += -DHAS_ARMNEC
+#SOURCES_ASM += $(CORE_DIR)/src/cpu/nec_armnec/armV30.s \
+					 $(CORE_DIR)/src/cpu/nec_armnec/armV33.s \
+					 $(CORE_DIR)/src/cpu/nec_armnec/armnecintrf.s
+
+SOURCES_C += $(CORE_DIR)/src/libretro/libretro.c \
+				 $(CORE_DIR)/src/libretro/video.c \
+				 $(CORE_DIR)/src/libretro/blit.c \
+				 $(CORE_DIR)/src/libretro/sound.c \
+				 $(CORE_DIR)/src/libretro/input.c \
+				 $(CORE_DIR)/src/libretro/fileio.c \
+				 $(CORE_DIR)/src/libretro/config.c \
+				 $(CORE_DIR)/src/libretro/shared.c
+
+ifeq ($(WANT_LIBCO), 1)
+	DEFS += -DWANT_LIBCO -I$(CORE_DIR)/src/libretro/libretro-common/include
+	SOURCES_C += $(CORE_DIR)/src/libretro/libretro-common/libco/libco.c
+endif

@@ -4,11 +4,12 @@
 #include "osd_cpu.h"
 #include "inptport.h"
 
-
 /* The Win32 port requires this constant for variable arg routines. */
 #ifndef CLIB_DECL
 #define CLIB_DECL
 #endif
+
+#include <retro_inline.h>
 
 #ifdef __LP64__
 #define FPTR long   /* 64bit: sizeof(void *) is sizeof(long)  */

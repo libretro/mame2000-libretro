@@ -5,6 +5,7 @@ DISABLE_ERROR_LOGGING = 1
 IS_X86 = 0
 TARGET_NAME = mame2000
 
+CORE_DIR = .
 GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow -Werror=implicit-function-declaration
 
 ifeq ($(platform),)
@@ -40,7 +41,7 @@ endif
 ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
-   SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
+   SHARED := -shared -Wl,--version-script=link.T -Wl,-no-undefined
 ifneq ($(ARM), 1)
    IS_X86 = 1
 endif
@@ -153,7 +154,7 @@ else ifeq ($(platform), ctr)
 else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
-   SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
+   SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
    IS_X86 = 1
 endif
@@ -169,78 +170,47 @@ else
 CFLAGS += -O3
 endif
 
-
-# set this the operating system you're building for
-MAMEOS = libretro
-
-# CPU core include paths
-VPATH=src $(wildcard src/cpu/*)
-
 # compiler, linker and utilities
-MD = @mkdir -p
 RM = rm -f
-
-EMULATOR = $(TARGET)
-
-DEFS = -DGP2X -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" $(X86_DEFINES) -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -D__LIBRETRO__ $(ENDIANNESS_DEFINES)
-
 LIBS = -lm
-
 OBJ = obj
 
 ifeq ($(HAVE_RZLIB),)
 ZLIB_INCLUDE := -Isrc/zlib
 endif
 
-
-CFLAGS += -ffast-math $(fpic) $(PLATFORM_DEFINES) -Isrc -Isrc/$(MAMEOS) $(ZLIB_INCLUDE) $(GCC_DEFINES)
-
-OBJDIRS = $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
-	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw $(OBJ)/zlib
-
-all:	maketree $(EMULATOR)
+INCFLAGS :=
 
 # include the various .mak files
-include src/core.mak
-include src/mame.mak
-include src/rules.mak
-include src/sound.mak
-include src/$(MAMEOS)/$(MAMEOS).mak
+include Makefile.common
 
+DEFS += -ffast-math $(fpic) $(PLATFORM_DEFINES) $(ZLIB_INCLUDE) $(GCC_DEFINES) $(INCFLAGS)
 # combine the various definitions to one
-CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
+CDEFS += -DGP2X -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" $(X86_DEFINES) -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -D__LIBRETRO__ $(ENDIANNESS_DEFINES)$(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
-ifeq ($(HAVE_RZLIB),1)
-OBJS := $(COREOBJS) $(OSOBJS) $(DRVOBJS)
-else
-OBJS := $(ZLIBOBJS) $(COREOBJS) $(OSOBJS) $(DRVOBJS)
-endif
 
-$(EMULATOR): $(OBJS)
+OBJECTS := $(SOURCES_C:.c=.o) $(SOURCES_ASM:.s=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING), 1)
-	$(AR) rcs $@ $(OBJS)
+	$(AR) rcs $@ $(OBJECTS)
 else
 	@echo Linking $@...
-	$(CC) $(SHARED) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+	$(CC) $(SHARED) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $@
 endif
 
-$(OBJ)/%.o: src/%.c
-	@echo Compiling $<...
+%.o: %.c
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(OBJ)/%.o: src/%.s
-	@echo Compiling $<...
+%.o: %.s
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(OBJ)/%.o: src/%.S
-	@echo Compiling $<...
+%.o: %.S
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
-
-$(sort $(OBJDIRS)):
-	$(MD) $@
-
-maketree: $(sort $(OBJDIRS))
 
 clean:
-	$(RM) -r $(OBJ)
-	$(RM) $(EMULATOR)
+	rm -f $(OBJECTS) $(TARGET)
+
+.PHONY: clean
