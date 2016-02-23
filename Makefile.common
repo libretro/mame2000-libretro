@@ -3,6 +3,7 @@ SOURCES_C   :=
 CPUS        :=
 SOUNDS      :=
 
+DEFS        := -DGP2X -DALIGN_INTS -DALIGN_SHORTS -DINLINE="static __inline" $(X86_DEFINES) -DMAME_UNDERCLOCK -DMAME_FASTSOUND -DENABLE_AUTOFIRE -DBIGCASE -D__LIBRETRO__
 INCFLAGS    := -I$(CORE_DIR)/src -I$(CORE_DIR)/src/libretro -I$(CORE_DIR)/src/libretro/libretro-common/include
 
 # uncomment the following lines to include a CPU core

@@ -1828,9 +1828,9 @@ static int settraksettings(struct osd_bitmap *bitmap,int selected)
 				case 1:
 					strcat (label[i], ui_getstring (UI_reverse));
 					if (reverse)
-						sprintf(setting[i],ui_getstring (UI_on));
+						sprintf(setting[i],"%s", ui_getstring (UI_on));
 					else
-						sprintf(setting[i],ui_getstring (UI_off));
+						sprintf(setting[i],"%s", ui_getstring (UI_off));
 					if (i == sel) arrowize = 3;
 					break;
 				case 2:
@@ -2025,7 +2025,7 @@ int showcopyright(struct osd_bitmap *bitmap)
 
 	strcpy (buf, ui_getstring(UI_copyright1));
 	strcat (buf, "\n\n");
-	sprintf(buf2, ui_getstring(UI_copyright2), Machine->gamedrv->description);
+	sprintf(buf2, "%s%s", ui_getstring(UI_copyright2), Machine->gamedrv->description);
 	strcat (buf, buf2);
 	strcat (buf, "\n\n");
 	strcat (buf, ui_getstring(UI_copyright3));
