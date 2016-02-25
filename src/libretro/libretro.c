@@ -118,9 +118,49 @@ static retro_environment_t environ_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
 
+unsigned skip_disclaimer = 0;
+
+static void update_variables(void)
+{
+    struct retro_variable var;
+    
+    var.value = NULL;
+    var.key = "mame2000-skip_disclaimer";
+    
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    {
+        if(strcmp(var.value, "enabled") == 0)
+            skip_disclaimer = 1;
+        else
+            skip_disclaimer = 0;
+    }
+    else
+        skip_disclaimer = 0;
+    
+    var.value = NULL;
+    var.key = "mame2000-show_gameinfo";
+    
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    {
+        if(strcmp(var.value, "enabled") == 0)
+            global_showinfo = 1;
+        else
+            global_showinfo = 0;
+    }
+    else
+        global_showinfo = 0;
+}
+
 void retro_set_environment(retro_environment_t cb)
 {
+   static const struct retro_variable vars[] = {
+      { "mame2000-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+      { "mame2000-show_gameinfo", "Show Game Information; disabled|enabled" },
+      { NULL, NULL },
+   };
    environ_cb = cb;
+    
+   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
@@ -265,6 +305,7 @@ void retro_init(void)
    pthread_mutex_init(&libretro_mutex, NULL);
 #endif
    init_joy_list();
+   update_variables();
 }
 
 void retro_deinit(void)
@@ -338,7 +379,12 @@ void retro_run(void)
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 #endif
 
+   bool updated = false;
+    
    update_input();
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+      update_variables();
 
    video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
    if (samples_per_frame)
@@ -413,6 +459,9 @@ bool retro_load_game(const struct retro_game_info *info)
 
    /* enable samples - should be stored in "sample" subdirectory from roms */
    options.use_samples = 1;
+
+   /* skip disclaimer - skips 'nag screen' */
+   options.skip_disclaimer = skip_disclaimer;
 
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
