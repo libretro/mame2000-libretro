@@ -150,6 +150,18 @@ else ifeq ($(platform), ctr)
    ARM = 1
    STATIC_LINKING := 1
 
+# GCW0
+else ifeq ($(platform), gcw0)
+   TARGET := $(TARGET_NAME)_libretro.so
+   CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc
+   CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
+   AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
+   fpic := -fPIC
+   SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
+   
+   DISABLE_ERROR_LOGGING := 1
+   CFLAGS += -march=mips32 -mtune=mips32r2 -mhard-float
+
 # Windows
 else
    TARGET := $(TARGET_NAME)_libretro.dll
