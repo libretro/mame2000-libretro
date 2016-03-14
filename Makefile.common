@@ -1771,12 +1771,19 @@ CPUDEFS += -DHAS_ARM=1
 SOURCES_C += $(CORE_DIR)/src/cpu/arm/arm.c
 endif
 
-ifneq ($(ARM),)
+ifeq ($(ARM), 1)
 	DEFS += -DIS_ARM=1
-	CPUDEFS += -DHAS_CYCLONE=1 -DHAS_DRZ80=1
+endif
+
+ifeq ($(USE_CYCLONE), 1)
+	DEFS += -DHAS_CYCLONE=1
 	SOURCES_ASM += $(CORE_DIR)/src/cpu/m68000_cyclone/cyclone.s \
-				  $(CORE_DIR)/src/cpu/m68000_cyclone/c68000.s \
-				  $(CORE_DIR)/src/cpu/z80_drz80/drz80.s \
+				  $(CORE_DIR)/src/cpu/m68000_cyclone/c68000.s
+endif
+
+ifeq ($(USE_DRZ80), 1)
+	DEFS += -DHAS_DRZ80=1
+	SOURCES_ASM += $(CORE_DIR)/src/cpu/z80_drz80/drz80.s \
 				  $(CORE_DIR)/src/cpu/z80_drz80/drz80_z80.s
 endif
 
