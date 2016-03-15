@@ -176,6 +176,10 @@ X86_DEFINES = -Dasm="__asm__ __volatile__"
 CFLAGS +=  $(X86_DEFINES)
 endif
 
+ifeq ($(ARM), 1)
+   CFLAGS += -fsigned-char
+endif
+
 ifeq ($(DEBUG), 1)
 	CFLAGS += -O0 -g
 else
