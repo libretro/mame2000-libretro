@@ -130,7 +130,7 @@ else ifeq ($(platform), wii)
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    ENDIANNESS_DEFINES := -DMSB_FIRST
-   PLATFORM_DEFINES += -DGEKKO _DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
+   PLATFORM_DEFINES += -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
 
