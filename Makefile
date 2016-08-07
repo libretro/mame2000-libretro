@@ -6,7 +6,7 @@ IS_X86 = 0
 TARGET_NAME = mame2000
 
 CORE_DIR = .
-GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow -Werror=implicit-function-declaration
+GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
 
 ifeq ($(platform),)
 platform = unix
@@ -72,7 +72,7 @@ endif
 
 # PS3
 else ifeq ($(platform), ps3)
-   TARGET := $(TARGET_NAME)_libretro.a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    ENDIANNESS_DEFINES := -DMSB_FIRST
@@ -82,7 +82,7 @@ else ifeq ($(platform), ps3)
 
 # PS3 (SNC)
 else ifeq ($(platform), sncps3)
-   TARGET := $(TARGET_NAME)_libretro.a
+   TARGET := $(TARGET_NAME)_libretro_ps3.a
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    ENDIANNESS_DEFINES := -DMSB_FIRST
@@ -94,7 +94,7 @@ else ifeq ($(platform), sncps3)
 
 # Lightweight PS3 Homebrew SDK
 else ifeq ($(platform), psl1ght)
-   TARGET := $(TARGET_NAME)_libretro.a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$(EXE_EXT)
    AR = $(PS3DEV)/ppu/bin/ppu-ar$(EXE_EXT)
    ENDIANNESS_DEFINES := -DMSB_FIRST
@@ -116,7 +116,7 @@ else ifeq ($(platform), xenon)
 
 # Nintendo Game Cube
 else ifeq ($(platform), ngc)
-   TARGET := $(TARGET_NAME)_libretro.a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    ENDIANNESS_DEFINES := -DMSB_FIRST
