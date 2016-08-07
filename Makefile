@@ -126,7 +126,7 @@ else ifeq ($(platform), ngc)
 
 # Nintendo Wii
 else ifeq ($(platform), wii)
-   TARGET := $(TARGET_NAME)_libretro.a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    ENDIANNESS_DEFINES := -DMSB_FIRST
@@ -136,15 +136,23 @@ else ifeq ($(platform), wii)
 
 # CTR(3DS)
 else ifeq ($(platform), ctr)
-   TARGET := $(TARGET_NAME)_libretro_ctr.a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
-   CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
    AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
    CFLAGS += -DARM11 -D_3DS
    CFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard
    CFLAGS += -Wall -mword-relocations
    CFLAGS += -fomit-frame-pointer -ffast-math
-   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+   HAVE_RZLIB := 1
+   DISABLE_ERROR_LOGGING := 1
+   ARM = 1
+   STATIC_LINKING := 1
+
+# Vita
+else ifeq ($(platform), vita)
+	TARGET := $(TARGET_NAME)_libretro_$(platform).a
+	CC = arm-vita-eabi-gcc$(EXE_EXT)
+	AR = arm-vita-eabi-ar$(EXE_EXT)
    HAVE_RZLIB := 1
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
@@ -154,7 +162,6 @@ else ifeq ($(platform), ctr)
 else ifeq ($(platform), gcw0)
    TARGET := $(TARGET_NAME)_libretro.so
    CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc
-   CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
    AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
