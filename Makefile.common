@@ -123,6 +123,7 @@ SOUNDS+=QSOUND@
 # the core object files (without target specific objects;
 # those are added in the target.mak files)
 
+ifneq ($(HAVE_RZLIB), 1)
 SOURCES_C   += $(CORE_DIR)/src/zlib/adler32.c \
 				 $(CORE_DIR)/src/zlib/compress.c \
 				 $(CORE_DIR)/src/zlib/crc32.c \
@@ -135,6 +136,7 @@ SOURCES_C   += $(CORE_DIR)/src/zlib/adler32.c \
 				 $(CORE_DIR)/src/zlib/infback.c \
 				 $(CORE_DIR)/src/zlib/inftrees.c \
 				 $(CORE_DIR)/src/zlib/inffast.c
+endif
 
 SOURCES_C += $(CORE_DIR)/src/version.c \
 				$(CORE_DIR)/src/info.c \
