@@ -217,6 +217,7 @@ static void update_input(void)
 #undef JS
 #undef _B
 }
+
 #ifdef WANT_LIBCO
 void hook_audio_done(void)
 {
@@ -291,6 +292,7 @@ static void unlock_mame(void)
    pthread_mutex_unlock(&libretro_mutex);
 }
 #endif
+
 void retro_init(void)
 {
    IMAMEBASEPATH = (char *) malloc(1024);
