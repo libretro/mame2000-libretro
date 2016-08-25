@@ -127,6 +127,22 @@ else ifeq ($(platform), ngc)
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
 
+# QNX / BLackberry
+else ifeq ($(platform), qnx)
+   TARGET = $(TARGET_NAME)_libretro_$(platform).so
+
+   CFLAGS += -fPIC 
+   PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
+   LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
+
+ifneq ($(WANT_LIBCO), 1)
+	SHARED += -lpthread
+endif
+
+   CC = qcc -Vgcc_ntoarmv7le
+   AR = qcc -Vgcc_ntoarmv7le
+   LD = QCC -Vgcc_ntoarmv7le
+
 # Nintendo Wii
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro_$(platform).a
@@ -167,7 +183,7 @@ else ifeq ($(platform), gcw0)
    CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc
    AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
    fpic := -fPIC
-   SHARED := -shared -Wl,--version-script=src/libretro/link.T -Wl,-no-undefined
+   SHARED := -shared -Wl,--version-script=link.T -Wl,-no-undefined
    
    DISABLE_ERROR_LOGGING := 1
    CFLAGS += -march=mips32 -mtune=mips32r2 -mhard-float
