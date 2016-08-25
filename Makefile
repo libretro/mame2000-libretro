@@ -169,14 +169,18 @@ else ifeq ($(platform), ctr)
 
 # Vita
 else ifeq ($(platform), vita)
-	TARGET := $(TARGET_NAME)_libretro_$(platform).a
-	CC = arm-vita-eabi-gcc$(EXE_EXT)
-	AR = arm-vita-eabi-ar$(EXE_EXT)
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
+   CC = arm-vita-eabi-gcc$(EXE_EXT)
+   AR = arm-vita-eabi-ar$(EXE_EXT)
+   CFLAGS += -DVITA -mthumb
+   CFLAGS += -mfloat-abi=hard -fsingle-precision-constant
+   CFLAGS += -Wall -mword-relocations
+   CFLAGS += -fomit-frame-pointer -ffast-math
    HAVE_RZLIB := 1
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
    STATIC_LINKING := 1
-	WANT_LIBCO = 0
+   WANT_LIBCO := 0
 # GCW0
 else ifeq ($(platform), gcw0)
    TARGET := $(TARGET_NAME)_libretro.so
