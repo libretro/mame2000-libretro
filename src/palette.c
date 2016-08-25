@@ -382,9 +382,7 @@ logerror("shrinked palette uses %d colors\n",used);
 	return 0;
 }
 
-
-
-INLINE void palette_change_color_16_static(int color,unsigned char red,unsigned char green,unsigned char blue)
+static INLINE void palette_change_color_16_static(int color,unsigned char red,unsigned char green,unsigned char blue)
 {
 	if (color == palette_transparent_color)
 	{
@@ -417,7 +415,7 @@ INLINE void palette_change_color_16_static(int color,unsigned char red,unsigned 
 		old_used_colors[color] |= PALETTE_COLOR_NEEDS_REMAP;
 }
 
-INLINE void palette_change_color_16_palettized(int color,unsigned char red,unsigned char green,unsigned char blue)
+static INLINE void palette_change_color_16_palettized(int color,unsigned char red,unsigned char green,unsigned char blue)
 {
 	if (color == palette_transparent_color)
 	{
@@ -439,7 +437,7 @@ INLINE void palette_change_color_16_palettized(int color,unsigned char red,unsig
 	game_palette[3*color + 2] = blue;
 }
 
-INLINE void palette_change_color_8(int color,unsigned char red,unsigned char green,unsigned char blue)
+static INLINE void palette_change_color_8(int color,unsigned char red,unsigned char green,unsigned char blue)
 {
 	int pen;
 
@@ -1314,10 +1312,7 @@ WRITE_HANDLER( paletteram_BBGGRRII_w )
 	palette_change_color(offset,r,g,b);
 }
 
-
-
-
-INLINE void changecolor_xxxxBBBBGGGGRRRR(int color,int data)
+static INLINE void changecolor_xxxxBBBBGGGGRRRR(int color,int data)
 {
 	int r,g,b;
 
@@ -1367,8 +1362,7 @@ WRITE_HANDLER( paletteram_xxxxBBBBGGGGRRRR_word_w )
 	changecolor_xxxxBBBBGGGGRRRR(offset / 2,newword);
 }
 
-
-INLINE void changecolor_xxxxBBBBRRRRGGGG(int color,int data)
+static INLINE void changecolor_xxxxBBBBRRRRGGGG(int color,int data)
 {
 	int r,g,b;
 
@@ -1408,8 +1402,7 @@ WRITE_HANDLER( paletteram_xxxxBBBBRRRRGGGG_split2_w )
 	changecolor_xxxxBBBBRRRRGGGG(offset,paletteram[offset] | (paletteram_2[offset] << 8));
 }
 
-
-INLINE void changecolor_xxxxRRRRBBBBGGGG(int color,int data)
+static INLINE void changecolor_xxxxRRRRBBBBGGGG(int color,int data)
 {
 	int r,g,b;
 
@@ -1437,8 +1430,7 @@ WRITE_HANDLER( paletteram_xxxxRRRRBBBBGGGG_split2_w )
 	changecolor_xxxxRRRRBBBBGGGG(offset,paletteram[offset] | (paletteram_2[offset] << 8));
 }
 
-
-INLINE void changecolor_xxxxRRRRGGGGBBBB(int color,int data)
+static INLINE void changecolor_xxxxRRRRGGGGBBBB(int color,int data)
 {
 	int r,g,b;
 
@@ -1476,8 +1468,7 @@ WRITE_HANDLER( paletteram_xxxxRRRRGGGGBBBB_word_w )
 	changecolor_xxxxRRRRGGGGBBBB(offset / 2,newword);
 }
 
-
-INLINE void changecolor_RRRRGGGGBBBBxxxx(int color,int data)
+static INLINE void changecolor_RRRRGGGGBBBBxxxx(int color,int data)
 {
 	int r,g,b;
 
@@ -1521,8 +1512,7 @@ WRITE_HANDLER( paletteram_RRRRGGGGBBBBxxxx_word_w )
 	changecolor_RRRRGGGGBBBBxxxx(offset / 2,newword);
 }
 
-
-INLINE void changecolor_BBBBGGGGRRRRxxxx(int color,int data)
+static INLINE void changecolor_BBBBGGGGRRRRxxxx(int color,int data)
 {
 	int r,g,b;
 
@@ -1566,8 +1556,7 @@ WRITE_HANDLER( paletteram_BBBBGGGGRRRRxxxx_word_w )
 	changecolor_BBBBGGGGRRRRxxxx(offset / 2,newword);
 }
 
-
-INLINE void changecolor_xBBBBBGGGGGRRRRR(int color,int data)
+static INLINE void changecolor_xBBBBBGGGGGRRRRR(int color,int data)
 {
 	int r,g,b;
 
@@ -1605,8 +1594,7 @@ WRITE_HANDLER( paletteram_xBBBBBGGGGGRRRRR_word_w )
 	changecolor_xBBBBBGGGGGRRRRR(offset / 2,newword);
 }
 
-
-INLINE void changecolor_xRRRRRGGGGGBBBBB(int color,int data)
+static INLINE void changecolor_xRRRRRGGGGGBBBBB(int color,int data)
 {
 	int r,g,b;
 
@@ -1638,8 +1626,7 @@ WRITE_HANDLER( paletteram_xRRRRRGGGGGBBBBB_word_w )
 	changecolor_xRRRRRGGGGGBBBBB(offset / 2,newword);
 }
 
-
-INLINE void changecolor_xGGGGGRRRRRBBBBB(int color,int data)
+static INLINE void changecolor_xGGGGGRRRRRBBBBB(int color,int data)
 {
 	int r,g,b;
 
@@ -1665,8 +1652,7 @@ WRITE_HANDLER( paletteram_xGGGGGRRRRRBBBBB_word_w )
 	changecolor_xGGGGGRRRRRBBBBB(offset / 2,newword);
 }
 
-
-INLINE void changecolor_RRRRRGGGGGBBBBBx(int color,int data)
+static INLINE void changecolor_RRRRRGGGGGBBBBBx(int color,int data)
 {
 	int r,g,b;
 
@@ -1698,8 +1684,7 @@ WRITE_HANDLER( paletteram_RRRRRGGGGGBBBBBx_word_w )
 	changecolor_RRRRRGGGGGBBBBBx(offset / 2,newword);
 }
 
-
-INLINE void changecolor_IIIIRRRRGGGGBBBB(int color,int data)
+static INLINE void changecolor_IIIIRRRRGGGGBBBB(int color,int data)
 {
 	int i,r,g,b;
 
@@ -1725,8 +1710,7 @@ WRITE_HANDLER( paletteram_IIIIRRRRGGGGBBBB_word_w )
 	changecolor_IIIIRRRRGGGGBBBB(offset / 2,newword);
 }
 
-
-INLINE void changecolor_RRRRGGGGBBBBIIII(int color,int data)
+static INLINE void changecolor_RRRRGGGGBBBBIIII(int color,int data)
 {
 	int i,r,g,b;
 

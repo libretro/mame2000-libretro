@@ -137,14 +137,14 @@ void navalone_init_palette(unsigned char *sys_palette, unsigned short *sys_color
 }
 
 
-INLINE void geebee_plot(struct osd_bitmap *bitmap, int x, int y)
+static INLINE void geebee_plot(struct osd_bitmap *bitmap, int x, int y)
 {
 	struct rectangle r = Machine->visible_area;
 	if (x >= r.min_x && x <= r.max_x && y >= r.min_y && y <= r.max_y)
 		plot_pixel(bitmap,x,y,Machine->pens[1]);
 }
 
-INLINE void mark_dirty(int x, int y)
+static INLINE void mark_dirty(int x, int y)
 {
 	int cx, cy, offs;
 	cy = y / 8;

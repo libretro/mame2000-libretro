@@ -600,7 +600,7 @@ static void show_reg(int regbank )
 }
 #endif
 
-INLINE unsigned char fetch_rotated_pixel(int xind, int yind)
+static INLINE unsigned char fetch_rotated_pixel(int xind, int yind)
 {
 	unsigned char* gfxdata;
 	int ram_offset,pix_x,pix_y,tile;

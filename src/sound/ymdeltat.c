@@ -191,7 +191,7 @@ extern const INT32 ym_deltat_decode_tableB2[];
 }
 
 /**** ADPCM B (Delta-T control type) ****/
-INLINE void YM_DELTAT_ADPCM_CALC(YM_DELTAT *DELTAT)
+static INLINE void YM_DELTAT_ADPCM_CALC(YM_DELTAT *DELTAT)
 {
 	UINT32 step;
 	int data;

@@ -11,7 +11,6 @@
 
 /*#define FM_EMU*/
 #ifdef FM_EMU
-	#define INLINE static __inline__
 	#ifdef USE_MAME_TIMERS
 		#undef USE_MAME_TIMERS
 	#endif
@@ -760,7 +759,7 @@ static void init_chip_tables(YM2151 *chip)
 
 /*#define RESET_FEEDBACK_ON_KEYON*/
 
-INLINE void envelope_KONKOFF(OscilRec * op, int v)
+static INLINE void envelope_KONKOFF(OscilRec * op, int v)
 {
 	if (v&0x08)
 	{
@@ -883,7 +882,7 @@ static void timer_callback_chip_write_busy (int n)
 #endif
 
 
-INLINE void set_connect( OscilRec *om1, int v, int cha)
+static INLINE void set_connect( OscilRec *om1, int v, int cha)
 {
 	OscilRec *om2 = om1+8;
 	OscilRec *oc1 = om1+16;
@@ -957,7 +956,7 @@ INLINE void set_connect( OscilRec *om1, int v, int cha)
 }
 
 
-INLINE void refresh_EG( YM2151 *chip, OscilRec * op)
+static INLINE void refresh_EG( YM2151 *chip, OscilRec * op)
 {
 	unsigned int kc;
 	unsigned int v;
@@ -1520,7 +1519,7 @@ void YM2151ResetChip(int num)
 }
 
 
-INLINE void lfo_calc(void)
+static INLINE void lfo_calc(void)
 {
 unsigned int phase, lfx;
 
@@ -1549,7 +1548,7 @@ unsigned int phase, lfx;
 }
 
 
-INLINE void calc_lfo_pm(OscilRec *op)
+static INLINE void calc_lfo_pm(OscilRec *op)
 {
 signed int mod_ind, pom;
 
@@ -1583,7 +1582,7 @@ signed int mod_ind, pom;
 }
 
 
-INLINE signed int op_calc(OscilRec * OP, unsigned int env, signed int pm)
+static INLINE signed int op_calc(OscilRec * OP, unsigned int env, signed int pm)
 {
 	unsigned int p;
 
@@ -1595,7 +1594,7 @@ INLINE signed int op_calc(OscilRec * OP, unsigned int env, signed int pm)
 	return TL_TAB[p];
 }
 
-INLINE signed int op_calc1(OscilRec * OP, unsigned int env, signed int pm)
+static INLINE signed int op_calc1(OscilRec * OP, unsigned int env, signed int pm)
 {
 	unsigned int p;
 	signed int i;
@@ -1617,7 +1616,7 @@ INLINE signed int op_calc1(OscilRec * OP, unsigned int env, signed int pm)
 
 #define volume_calc(OP) (OP->TL + (((unsigned int)OP->volume)>>ENV_SH) + (AM & OP->AMSmask))
 
-INLINE void chan_calc(unsigned int chan)
+static INLINE void chan_calc(unsigned int chan)
 {
 OscilRec *OP;
 unsigned int env;
@@ -1670,7 +1669,8 @@ unsigned int AM;
 		chanout[chan] += op_calc(OP, env, c2);
 
 }
-INLINE void chan7_calc(void)
+
+static INLINE void chan7_calc(void)
 {
 OscilRec *OP;
 unsigned int env;
@@ -1737,7 +1737,7 @@ unsigned int AM;
 
 }
 
-INLINE void advance(void)
+static INLINE void advance(void)
 {
 OscilRec *op;
 int i;
@@ -1870,7 +1870,7 @@ int i;
 }
 
 #if 0
-INLINE signed int acc_calc(signed int value)
+static INLINE signed int acc_calc(signed int value)
 {
 	if (value>=0)
 	{

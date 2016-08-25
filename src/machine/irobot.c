@@ -61,6 +61,7 @@ UINT8 irobot_alphamap;
 static void irmb_run(void);
 
 
+#undef BYTE_XOR_LE
 /* mathbox and vector data is stored in big-endian format */
 #ifdef MSB_FIRST
 #define BYTE_XOR_LE(x)	(x)

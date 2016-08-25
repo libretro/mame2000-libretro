@@ -9,9 +9,6 @@
 
 #include "arm.h"
 
-#undef INLINE
-#define INLINE static
-
 struct ARM {
 	UINT32 queue[3];	/* instruction queue */
 	UINT32 psw; 		/* status word */
@@ -30,12 +27,12 @@ int arm_ICount;
 /****************************************************************************
  * Read a byte from given memory location
  ****************************************************************************/
-INLINE UINT32 ARM_RDMEM(UINT32 addr)
+static INLINE UINT32 ARM_RDMEM(UINT32 addr)
 {
 	return cpu_readmem26lew(addr & AMASK);
 }
 
-INLINE UINT32 ARM_RDMEM_32(UINT32 addr)
+static INLINE UINT32 ARM_RDMEM_32(UINT32 addr)
 {
 	UINT32 data = cpu_readmem26lew_dword(addr & AMASK);
 	/*logerror("ARM_RDMEM_32 (%08x) -> %08x\n", addr, data);*/
@@ -45,12 +42,12 @@ INLINE UINT32 ARM_RDMEM_32(UINT32 addr)
 /****************************************************************************
  * Write a byte to given memory location
  ****************************************************************************/
-INLINE void ARM_WRMEM(UINT32 addr, UINT32 val)
+static INLINE void ARM_WRMEM(UINT32 addr, UINT32 val)
 {
 	cpu_writemem26lew(addr & AMASK, val & 0xff);
 }
 
-INLINE void ARM_WRMEM_32(UINT32 addr, UINT32 val)
+static INLINE void ARM_WRMEM_32(UINT32 addr, UINT32 val)
 {
 	cpu_writemem26lew_dword(addr & AMASK, val);
 }
@@ -140,7 +137,7 @@ INLINE void ARM_WRMEM_32(UINT32 addr, UINT32 val)
  *  rrrr0 mm1 xxxx
  *	reg   mod Rs
  */
-INLINE UINT32 RS(void)
+static INLINE UINT32 RS(void)
 {
 	UINT32 m = OP & 0x70;
 	UINT32 s = (OP>>7) & 31;
@@ -489,7 +486,7 @@ static UINT32 imm12[4096] =
 /* immediate operand #2 */
 #define IM	imm12[OP & 0xfff]
 
-INLINE void swapregs(UINT32 *dst, UINT32 *src, int num_regs)
+static INLINE void swapregs(UINT32 *dst, UINT32 *src, int num_regs)
 {
 	while (num_regs-- > 0)
 	{
@@ -499,7 +496,7 @@ INLINE void swapregs(UINT32 *dst, UINT32 *src, int num_regs)
 	}
 }
 
-INLINE void fill_queue(void)
+static INLINE void fill_queue(void)
 {
 	change_pc26lew(PC);
 	/* pre-fetch the instruction queue */
@@ -510,7 +507,7 @@ INLINE void fill_queue(void)
 	PC = (PC + 4) & AMASK;
 }
 
-INLINE void shift_queue(void)
+static INLINE void shift_queue(void)
 {
 	/* move the instruction queue */
 	arm.ppc = PC;
@@ -521,7 +518,7 @@ INLINE void shift_queue(void)
 	PC = (PC + 4) & AMASK;
 }
 
-INLINE void PUT_PC(UINT32 val, int link)
+static INLINE void PUT_PC(UINT32 val, int link)
 {
 	switch( (PSW & S01) | ((val & S01) << 2) )
 	{
@@ -610,7 +607,7 @@ INLINE void PUT_PC(UINT32 val, int link)
  * which is a combination of the program counter
  * and the processor status word
  */
-INLINE void PUT_RD(UINT32 val)
+static INLINE void PUT_RD(UINT32 val)
 {
 	UINT32 rd = (OP>>12)&15;
 	if ( rd == 15 ) /* destination is R15 (PC) ? */

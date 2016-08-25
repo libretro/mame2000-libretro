@@ -1,7 +1,7 @@
 #ifdef WANT_LIBCO
 #include <libco.h>
 #else
-#include <pthread.h>
+#include <rthreads/rthreads.h>
 #endif
 #include <stdarg.h>
 #include <sys/time.h>
@@ -23,9 +23,9 @@ volatile static unsigned mame_sleep;
 static cothread_t core_thread;
 static cothread_t main_thread;
 #else
-static pthread_t run_thread = 0;
-static pthread_cond_t libretro_cond;
-static pthread_mutex_t libretro_mutex;
+static sthread_t *run_thread = NULL;
+static scond_t   *libretro_cond = NULL;
+static slock_t   *libretro_mutex = NULL;
 #endif
 
 int game_index = -1;
@@ -239,31 +239,32 @@ static void hook_check(void)
 {
    if (video_done && audio_done)
    {
-      pthread_cond_signal(&libretro_cond);
+      scond_signal(libretro_cond);
       if (mame_sleep && !retro_hook_quit)
-         pthread_cond_wait(&libretro_cond, &libretro_mutex);
+         scond_wait(libretro_cond, libretro_mutex);
       mame_sleep = 1;
    }
 }
 
 void hook_audio_done(void)
 {
-   pthread_mutex_lock(&libretro_mutex);
+   slock_lock(libretro_mutex);
    audio_done = 1;
    hook_check();
-   pthread_mutex_unlock(&libretro_mutex);
+   slock_unlock(libretro_mutex);
 }
 
 void hook_video_done(void)
 {
-   pthread_mutex_lock(&libretro_mutex);
+   slock_lock(libretro_mutex);
    if (video_done) // Audio doesn't seem to be running atm, so fake it ...
       audio_done = 1;
    video_done = 1;
    hook_check();
-   pthread_mutex_unlock(&libretro_mutex);
+   slock_unlock(libretro_mutex);
 }
 
+#ifdef WANT_LIBCO
 void *run_thread_proc(void *v)
 {
    (void)v;
@@ -275,21 +276,30 @@ void *run_thread_proc(void *v)
 
    return NULL;
 }
+#else
+void run_thread_proc(void *v)
+{
+   run_game(game_index);
+   thread_done = 1;
+   hook_audio_done();
+   hook_video_done();
+}
+#endif
 
 static void lock_mame(void)
 {
-   pthread_mutex_lock(&libretro_mutex);
+   slock_lock(libretro_mutex);
    while (!audio_done || !video_done)
-      pthread_cond_wait(&libretro_cond, &libretro_mutex);
-   pthread_mutex_unlock(&libretro_mutex);
+      scond_wait(libretro_cond, libretro_mutex);
+   slock_unlock(libretro_mutex);
 }
 
 static void unlock_mame(void)
 {
-   pthread_mutex_lock(&libretro_mutex);
+   slock_lock(libretro_mutex);
    mame_sleep = 0;
-   pthread_cond_signal(&libretro_cond);
-   pthread_mutex_unlock(&libretro_mutex);
+   scond_signal(libretro_cond);
+   slock_unlock(libretro_mutex);
 }
 #endif
 
@@ -303,8 +313,8 @@ void retro_init(void)
    gp2x_screen15 = (unsigned short *) malloc(640 * 480 * 2);
 #endif
 #ifndef WANT_LIBCO
-   pthread_cond_init(&libretro_cond, NULL);
-   pthread_mutex_init(&libretro_mutex, NULL);
+   libretro_cond  = scond_new();
+   libretro_mutex = slock_new();
 #endif
    init_joy_list();
    update_variables();
@@ -320,8 +330,8 @@ void retro_deinit(void)
    free(gp2x_screen15);
 #endif
 #ifndef WANT_LIBCO
-   pthread_cond_destroy(&libretro_cond);
-   pthread_mutex_destroy(&libretro_mutex);
+   scond_free(libretro_cond);
+   slock_free(libretro_mutex);
 #endif
 }
 
@@ -371,10 +381,6 @@ void retro_run(void)
 #ifdef WANT_LIBCO
    co_switch(core_thread);
 #else
-   if (run_thread == 0)
-   {
-   }
-
    lock_mame();
 
    if (thread_done)
@@ -536,7 +542,7 @@ bool retro_load_game(const struct retro_game_info *info)
    core_thread = co_create(0x10000, run_thread_proc);
    co_switch(core_thread);
 #else
-   pthread_create(&run_thread, NULL, run_thread_proc, NULL);
+   run_thread = sthread_create(run_thread_proc, NULL);
 #endif
 
    return true;
@@ -547,18 +553,18 @@ void retro_unload_game(void)
 #ifdef WANT_LIBCO
    co_delete(core_thread);
 #else
-   pthread_mutex_lock(&libretro_mutex);
+   slock_lock(libretro_mutex);
    // make sure we escape the copyright warning and game warning loops
    key[KEY_ESC] = 1;
    retro_hook_quit = 1;
    mame_sleep = 0;
-   pthread_cond_signal(&libretro_cond);
-   pthread_mutex_unlock(&libretro_mutex);
+   scond_signal(libretro_cond);
+   slock_unlock(libretro_mutex);
 
    if (run_thread)
-      pthread_join(run_thread, NULL);
+      sthread_join(run_thread);
 
-   run_thread = 0;
+   run_thread      = NULL;
    retro_hook_quit = 0;
 #endif
 }

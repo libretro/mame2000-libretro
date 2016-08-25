@@ -267,14 +267,12 @@ static void cps1_init_machine(void)
 #endif
 }
 
-
-
-INLINE int cps1_port(int offset)
+static INLINE int cps1_port(int offset)
 {
 	return READ_WORD(&cps1_output[offset]);
 }
 
-INLINE unsigned char *cps1_base(int offset,int boundary)
+static INLINE unsigned char *cps1_base(int offset,int boundary)
 {
 	int base=cps1_port(offset)*256;
 	/*
@@ -666,9 +664,7 @@ void cps1_draw_gfx_opaque16(
 	#undef IF_NOT_TRANSPARENT
 }
 
-
-
-INLINE void cps1_draw_scroll1(
+static INLINE void cps1_draw_scroll1(
 	struct osd_bitmap *dest,
 	unsigned int code, int color,
 	int flipx, int flipy,int sx, int sy, int tpens)
@@ -689,8 +685,7 @@ INLINE void cps1_draw_scroll1(
 	}
 }
 
-
-INLINE void cps1_draw_tile16(struct osd_bitmap *dest,
+static INLINE void cps1_draw_tile16(struct osd_bitmap *dest,
 	const struct GfxElement *gfx,
 	unsigned int code, int color,
 	int flipx, int flipy,int sx, int sy, int tpens)
@@ -711,7 +706,7 @@ INLINE void cps1_draw_tile16(struct osd_bitmap *dest,
 	}
 }
 
-INLINE void cps1_draw_tile16_pri(struct osd_bitmap *dest,
+static INLINE void cps1_draw_tile16_pri(struct osd_bitmap *dest,
 	const struct GfxElement *gfx,
 	unsigned int code, int color,
 	int flipx, int flipy,int sx, int sy, int tpens)
@@ -732,7 +727,7 @@ INLINE void cps1_draw_tile16_pri(struct osd_bitmap *dest,
 	}
 }
 
-INLINE void cps1_draw_tile32(struct osd_bitmap *dest,
+static INLINE void cps1_draw_tile32(struct osd_bitmap *dest,
 	const struct GfxElement *gfx,
 	unsigned int code, int color,
 	int flipx, int flipy,int sx, int sy, int tpens)
@@ -753,8 +748,7 @@ INLINE void cps1_draw_tile32(struct osd_bitmap *dest,
 	}
 }
 
-
-INLINE void cps1_draw_blank16(struct osd_bitmap *dest, int sx, int sy )
+static INLINE void cps1_draw_blank16(struct osd_bitmap *dest, int sx, int sy )
 {
 	int i,j;
 
@@ -799,9 +793,7 @@ INLINE void cps1_draw_blank16(struct osd_bitmap *dest, int sx, int sy )
 	}
 }
 
-
-
-INLINE void cps1_draw_tile16_bmp(struct osd_bitmap *dest,
+static INLINE void cps1_draw_tile16_bmp(struct osd_bitmap *dest,
 	const struct GfxElement *gfx,
 	unsigned int code, int color,
 	int flipx, int flipy,int sx, int sy)
@@ -889,7 +881,7 @@ void cps1_dump_video(void)
 #endif
 
 
-INLINE void cps1_get_video_base(void )
+static INLINE void cps1_get_video_base(void )
 {
 	int layercontrol;
 
@@ -1081,7 +1073,7 @@ void cps1_build_palette(void)
 
 ***************************************************************************/
 
-INLINE void cps1_palette_scroll1(unsigned short *base)
+static INLINE void cps1_palette_scroll1(unsigned short *base)
 {
 	int x,y, offs, offsx;
 
@@ -1505,7 +1497,7 @@ void cps1_render_sprites(struct osd_bitmap *bitmap)
 
 ***************************************************************************/
 
-INLINE void cps1_palette_scroll2(unsigned short *base)
+static INLINE void cps1_palette_scroll2(unsigned short *base)
 {
 	int offs, code, colour;
 	int basecode=cps1_game_config->bank_scroll2*0x04000;

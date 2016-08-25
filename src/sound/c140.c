@@ -146,7 +146,7 @@ WRITE_HANDLER( C140_w )
 }
 
 #ifndef clip_short_ret
-INLINE int limit(INT32 in)
+static INLINE int limit(INT32 in)
 {
 	if(in>0x7fff)		return 0x7fff;
 	else if(in<-0x8000)	return -0x8000;

@@ -16,8 +16,7 @@ static int magicram_control = 0xff;
 static int magicram_latch = 0xff;
 static int collision = 0;
 
-
-INLINE void copy_byte(int x, int y, int data, int col)
+static INLINE void copy_byte(int x, int y, int data, int col)
 {
 	UINT16 fore, back;
 
@@ -79,7 +78,7 @@ WRITE_HANDLER( berzerk_colorram_w )
 	}
 }
 
-INLINE unsigned char reverse_byte(unsigned char data)
+static INLINE unsigned char reverse_byte(unsigned char data)
 {
 	return ((data & 0x01) << 7) |
 		   ((data & 0x02) << 5) |
@@ -91,7 +90,7 @@ INLINE unsigned char reverse_byte(unsigned char data)
 		   ((data & 0x80) >> 7);
 }
 
-INLINE int shifter_flopper(unsigned char data)
+static INLINE int shifter_flopper(unsigned char data)
 {
 	int shift_amount, outval;
 

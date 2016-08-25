@@ -123,14 +123,14 @@ static unsigned char *vectorbank[NUM_BANKS];
 #define max(x,y) (((x)>(y))?(x):(y))
 
 
-INLINE void vector_timer (int deltax, int deltay)
+static INLINE void vector_timer (int deltax, int deltay)
 {
 	deltax = abs (deltax);
 	deltay = abs (deltay);
 	total_length += max (deltax, deltay) >> VEC_SHIFT;
 }
 
-INLINE void dvg_vector_timer (int scale)
+static INLINE void dvg_vector_timer (int scale)
 {
 	total_length += scale;
 }

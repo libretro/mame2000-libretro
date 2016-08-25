@@ -95,7 +95,7 @@ timer_tm getabsolutetime(void)
 /*
  *		adjust the current CPU's timer so that a new event will fire at the right time
  */
-INLINE void timer_adjust(timer_entry *timer, timer_tm time, timer_tm period)
+static INLINE void timer_adjust(timer_entry *timer, timer_tm time, timer_tm period)
 {
 	int newicount, diff;
 
@@ -123,7 +123,7 @@ INLINE void timer_adjust(timer_entry *timer, timer_tm time, timer_tm period)
 /*
  *		allocate a new timer
  */
-INLINE timer_entry *timer_new(void)
+static INLINE timer_entry *timer_new(void)
 {
 	timer_entry *timer;
 
@@ -140,7 +140,7 @@ INLINE timer_entry *timer_new(void)
 /*
  *		insert a new timer into the list at the appropriate location
  */
-INLINE void timer_list_insert(timer_entry *timer)
+static INLINE void timer_list_insert(timer_entry *timer)
 {
 	timer_entry *t=timer_head;
 	timer_entry *lt = NULL;
@@ -212,7 +212,7 @@ INLINE void timer_list_insert(timer_entry *timer)
 /*
  *		remove a timer from the linked list
  */
-INLINE void timer_list_remove(timer_entry *timer)
+static INLINE void timer_list_remove(timer_entry *timer)
 {
 	/* remove it from the list */
 	if (timer->prev)

@@ -195,7 +195,7 @@ void exidy_vh_stop(void)
  *
  *************************************/
 
-INLINE void latch_condition(int collision)
+static INLINE void latch_condition(int collision)
 {
 	collision ^= exidy_collision_invert;
 	int_condition = (input_port_2_r(0) & ~0x14) | (collision & exidy_collision_mask);

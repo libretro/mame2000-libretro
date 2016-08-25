@@ -28,7 +28,7 @@ typedef struct {
     state_var *list;
 }   state_handle;
 
-INLINE unsigned xtoul(char **p, int *size)
+static INLINE unsigned xtoul(char **p, int *size)
 {
 	unsigned val = 0, digit;
 
@@ -46,7 +46,7 @@ INLINE unsigned xtoul(char **p, int *size)
 	return val;
 }
 
-INLINE char *ultox(unsigned val, unsigned size)
+static INLINE char *ultox(unsigned val, unsigned size)
 {
 	static char buffer[32+1];
 	static char digit[] = "0123456789ABCDEF";
@@ -64,7 +64,7 @@ INLINE char *ultox(unsigned val, unsigned size)
  * my_stricmp
  * Compare strings case insensitive
  **************************************************************************/
-INLINE int my_stricmp( const char *dst, const char *src)
+static INLINE int my_stricmp( const char *dst, const char *src)
 {
 	while( *src && *dst )
 	{

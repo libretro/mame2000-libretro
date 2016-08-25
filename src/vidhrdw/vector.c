@@ -110,7 +110,7 @@ static int  (*vector_rp)(struct osd_bitmap *bitmap,int x,int y);
  * can be be replaced by an assembly routine in osinline.h
  */
 #ifndef vec_mult
-INLINE int vec_mult(int parm1, int parm2)
+static INLINE int vec_mult(int parm1, int parm2)
 {
 	int temp,result;
 
@@ -131,7 +131,7 @@ INLINE int vec_mult(int parm1, int parm2)
 
 /* can be be replaced by an assembly routine in osinline.h */
 #ifndef vec_div
-INLINE int vec_div(int parm1, int parm2)
+static INLINE int vec_div(int parm1, int parm2)
 {
 	if( (parm2>>12) )
 	{
@@ -394,7 +394,7 @@ void vector_vh_stop (void)
 /*
  * draws an anti-aliased pixel (blends pixel with background)
  */
-INLINE void vector_draw_aa_pixel (int x, int y, int col, int dirty)
+static INLINE void vector_draw_aa_pixel (int x, int y, int col, int dirty)
 {
 	if (x < xmin || x >= xmax)
 		return;

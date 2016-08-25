@@ -177,7 +177,7 @@ void cyberbal_vh_stop(void)
  *
  *************************************/
 
-INLINE void set_palette_entry(int entry, UINT16 value)
+static INLINE void set_palette_entry(int entry, UINT16 value)
 {
 	int r, g, b;
 

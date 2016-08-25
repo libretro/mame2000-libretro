@@ -448,7 +448,7 @@ struct CustomSound_interface williams_dcs_custom_interface =
 	INLINES
 ****************************************************************************/
 
-INLINE UINT16 get_cvsd_address(void)
+static INLINE UINT16 get_cvsd_address(void)
 {
 	if (cvsd.address)
 		return cvsd.address[0] * 256 + cvsd.address[1];
@@ -456,7 +456,7 @@ INLINE UINT16 get_cvsd_address(void)
 		return cpunum_get_reg(williams_cpunum, M6809_Y);
 }
 
-INLINE void set_cvsd_address(UINT16 address)
+static INLINE void set_cvsd_address(UINT16 address)
 {
 	if (cvsd.address)
 	{
@@ -467,7 +467,7 @@ INLINE void set_cvsd_address(UINT16 address)
 		cpunum_set_reg(williams_cpunum, M6809_Y, address);
 }
 
-INLINE UINT16 get_dac_address(void)
+static INLINE UINT16 get_dac_address(void)
 {
 	if (dac.address)
 		return dac.address[0] * 256 + dac.address[1];
@@ -475,7 +475,7 @@ INLINE UINT16 get_dac_address(void)
 		return cpunum_get_reg(williams_cpunum, M6809_Y);
 }
 
-INLINE void set_dac_address(UINT16 address)
+static INLINE void set_dac_address(UINT16 address)
 {
 	if (dac.address)
 	{
@@ -486,7 +486,7 @@ INLINE void set_dac_address(UINT16 address)
 		cpunum_set_reg(williams_cpunum, M6809_Y, address);
 }
 
-INLINE UINT8 *get_cvsd_bank_base(int data)
+static INLINE UINT8 *get_cvsd_bank_base(int data)
 {
 	UINT8 *RAM = memory_region(REGION_CPU1+williams_cpunum);
 	int bank = data & 3;
@@ -495,14 +495,14 @@ INLINE UINT8 *get_cvsd_bank_base(int data)
 	return &RAM[0x10000 + (bank * 0x20000) + (quarter * 0x8000)];
 }
 
-INLINE UINT8 *get_adpcm_bank_base(int data)
+static INLINE UINT8 *get_adpcm_bank_base(int data)
 {
 	UINT8 *RAM = memory_region(REGION_CPU1+williams_cpunum);
 	int bank = data & 7;
 	return &RAM[0x10000 + (bank * 0x8000)];
 }
 
-INLINE UINT8 *get_narc_master_bank_base(int data)
+static INLINE UINT8 *get_narc_master_bank_base(int data)
 {
 	UINT8 *RAM = memory_region(REGION_CPU1+williams_cpunum);
 	int bank = data & 3;
@@ -510,7 +510,7 @@ INLINE UINT8 *get_narc_master_bank_base(int data)
 	return &RAM[0x10000 + (bank * 0x8000)];
 }
 
-INLINE UINT8 *get_narc_slave_bank_base(int data)
+static INLINE UINT8 *get_narc_slave_bank_base(int data)
 {
 	UINT8 *RAM = memory_region(REGION_CPU1+williams_cpunum + 1);
 	int bank = data & 7;

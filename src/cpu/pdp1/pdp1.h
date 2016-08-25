@@ -4,15 +4,13 @@
 #include "memory.h"
 #include "osd_cpu.h"
 
+#include <retro_inline.h>
+
 enum {
 	PDP1_PC=1, PDP1_AC, PDP1_IO, PDP1_Y, PDP1_IB, PDP1_OV, PDP1_F,
 	PDP1_F1, PDP1_F2, PDP1_F3, PDP1_F4, PDP1_F5, PDP1_F6,
 	PDP1_S1, PDP1_S2, PDP1_S3, PDP1_S4, PDP1_S5, PDP1_S6
 };
-
-#ifndef INLINE
-#define INLINE static inline
-#endif
 
 /* PUBLIC FUNCTIONS */
 extern unsigned pdp1_get_pc(void);

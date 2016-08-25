@@ -580,7 +580,7 @@ static struct MemoryWriteAddress rambo3_writemem[] =
 	{ -1 }  /* end of table */
 };
 
-INLINE void taitob_changecolor_RRRRGGGGBBBBRGBx(int color,int data)
+static INLINE void taitob_changecolor_RRRRGGGGBBBBRGBx(int color,int data)
 {
 	int r,g,b;
 

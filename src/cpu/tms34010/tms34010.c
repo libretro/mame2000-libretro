@@ -452,11 +452,11 @@ static mem_read_handler rfield_functions_s[32] =
 
 
 /*###################################################################################################
-**	INLINE SHORTCUTS
+**	static INLINE SHORTCUTS
 **#################################################################################################*/
 
 /* set the field widths - shortcut */
-INLINE void SET_FW(void)
+static INLINE void SET_FW(void)
 {
 	FW_INC(0) = FW(0) ? FW(0) : 0x20;
 	FW_INC(1) = FW(1) ? FW(1) : 0x20;
@@ -476,7 +476,7 @@ INLINE void SET_FW(void)
 }
 
 /* Intialize Status to 0x0010 */
-INLINE void RESET_ST(void)
+static INLINE void RESET_ST(void)
 {
 	N_FLAG = C_FLAG = V_FLAG = P_FLAG = IE_FLAG = FE0_FLAG = FE1_FLAG = 0;
 	NOTZ_FLAG = 1;
@@ -486,7 +486,7 @@ INLINE void RESET_ST(void)
 }
 
 /* Combine indiviual flags into the Status Register */
-INLINE UINT32 GET_ST(void)
+static INLINE UINT32 GET_ST(void)
 {
     UINT32 ret=0;
     
@@ -517,7 +517,7 @@ INLINE UINT32 GET_ST(void)
 }
 
 /* Break up Status Register into indiviual flags */
-INLINE void SET_ST(UINT32 st)
+static INLINE void SET_ST(UINT32 st)
 {
 	N_FLAG    =    st & 0x80000000;
 	C_FLAG    =    st & 0x40000000;
@@ -536,40 +536,40 @@ INLINE void SET_ST(UINT32 st)
 }
 
 /* shortcuts for reading opcodes */
-INLINE UINT32 ROPCODE(void)
+static INLINE UINT32 ROPCODE(void)
 {
 	UINT32 pc = TOBYTE(PC);
 	PC += 2 << 3;
 	return cpu_readop16(pc);
 }
 
-INLINE INT16 PARAM_WORD(void)
+static INLINE INT16 PARAM_WORD(void)
 {
 	UINT32 pc = TOBYTE(PC);
 	PC += 2 << 3;
 	return cpu_readop_arg16(pc);
 }
 
-INLINE INT32 PARAM_LONG(void)
+static INLINE INT32 PARAM_LONG(void)
 {
 	UINT32 pc = TOBYTE(PC);
 	PC += 4 << 3;
 	return (UINT16)cpu_readop_arg16(pc) | (cpu_readop_arg16(pc + 2) << 16);
 }
 
-INLINE INT16 PARAM_WORD_NO_INC(void)
+static INLINE INT16 PARAM_WORD_NO_INC(void)
 {
 	return cpu_readop_arg16(TOBYTE(PC));
 }
 
-INLINE INT32 PARAM_LONG_NO_INC(void)
+static INLINE INT32 PARAM_LONG_NO_INC(void)
 {
 	UINT32 pc = TOBYTE(PC);
 	return (UINT16)cpu_readop_arg16(pc) | (cpu_readop_arg16(pc + 2) << 16);
 }
 
 /* read memory byte */
-INLINE READ_HANDLER( RBYTE )
+static INLINE READ_HANDLER( RBYTE )
 {
 	UINT32 ret;
 	RFIELDMAC_8;
@@ -577,31 +577,31 @@ INLINE READ_HANDLER( RBYTE )
 }
 
 /* write memory byte */
-INLINE WRITE_HANDLER( WBYTE )
+static INLINE WRITE_HANDLER( WBYTE )
 {
 	WFIELDMAC_8;
 }
 
 /* read memory long */
-INLINE READ_HANDLER( RLONG )
+static INLINE READ_HANDLER( RLONG )
 {
 	RFIELDMAC_32;
 }
 
 /* write memory long */
-INLINE WRITE_HANDLER( WLONG )
+static INLINE WRITE_HANDLER( WLONG )
 {
 	WFIELDMAC_32;
 }
 
 /* pushes/pops a value from the stack */
-INLINE void PUSH(UINT32 data)
+static INLINE void PUSH(UINT32 data)
 {
 	SP -= 0x20;
 	TMS34010_WRMEM_DWORD(TOBYTE(SP), data);
 }
 
-INLINE INT32 POP(void)
+static INLINE INT32 POP(void)
 {
 	INT32 ret = TMS34010_RDMEM_DWORD(TOBYTE(SP));
 	SP += 0x20;
@@ -1442,7 +1442,7 @@ static void set_raster_op(tms34010_regs *context)
 **	VIDEO TIMING HELPERS
 **#################################################################################################*/
 
-INLINE int scanline_to_vcount(tms34010_regs *context, int scanline)
+static INLINE int scanline_to_vcount(tms34010_regs *context, int scanline)
 {
 	if (Machine->visible_area.min_y == 0)
 		scanline += CONTEXT_IOREG(context, REG_VEBLNK);
@@ -1452,7 +1452,7 @@ INLINE int scanline_to_vcount(tms34010_regs *context, int scanline)
 }
 
 
-INLINE int vcount_to_scanline(tms34010_regs *context, int vcount)
+static INLINE int vcount_to_scanline(tms34010_regs *context, int vcount)
 {
 	if (Machine->visible_area.min_y == 0)
 		vcount -= CONTEXT_IOREG(context, REG_VEBLNK);

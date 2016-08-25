@@ -183,7 +183,7 @@ READ_HANDLER( suprloco_control_r )
 
 ***************************************************************************/
 
-INLINE void draw_pixel(struct osd_bitmap *bitmap,int x,int y,int color)
+static INLINE void draw_pixel(struct osd_bitmap *bitmap,int x,int y,int color)
 {
 	if (flip_screen)
 	{

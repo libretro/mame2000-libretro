@@ -19,6 +19,8 @@
 #include "daa_tab.h"
 #include "state.h"
 
+#include <retro_inline.h>
+
 #define FLAG_Z	0x80
 #define FLAG_N  0x40
 #define FLAG_H  0x20
@@ -144,7 +146,7 @@ void z80gb_exit(void)
 {
 }
 
-INLINE void z80gb_ProcessInterrupts (void)
+static INLINE void z80gb_ProcessInterrupts (void)
 {
 	if (CheckInterrupts && (Regs.w.enable & IME))
 	{

@@ -53,7 +53,7 @@ static INT16 *discharge;
 static INT16 vol_explosion[16];
 #define EXP(charge,n) (charge ? 0x7fff - discharge[0x7fff-n] : discharge[n])
 
-INLINE int explosion(int samplerate)
+static INLINE int explosion(int samplerate)
 {
 	static int counter, sample_counter;
 	static int out;
@@ -86,7 +86,7 @@ INLINE int explosion(int samplerate)
     return 0;
 }
 
-INLINE int thrust(int samplerate)
+static INLINE int thrust(int samplerate)
 {
 	static int counter, out, amp;
 
@@ -114,7 +114,7 @@ INLINE int thrust(int samplerate)
 	return 0;
 }
 
-INLINE int thump(int samplerate)
+static INLINE int thump(int samplerate)
 {
 	static int counter, out;
 
@@ -133,7 +133,7 @@ INLINE int thump(int samplerate)
 }
 
 
-INLINE int saucer(int samplerate)
+static INLINE int saucer(int samplerate)
 {
 	static int vco, vco_charge, vco_counter;
     static int out, counter;
@@ -202,7 +202,7 @@ INLINE int saucer(int samplerate)
 	return 0;
 }
 
-INLINE int saucerfire(int samplerate)
+static INLINE int saucerfire(int samplerate)
 {
 	static int vco, vco_counter;
 	static int amp, amp_counter;
@@ -277,7 +277,7 @@ INLINE int saucerfire(int samplerate)
 	return 0;
 }
 
-INLINE int shipfire(int samplerate)
+static INLINE int shipfire(int samplerate)
 {
 	static int vco, vco_counter;
 	static int amp, amp_counter;
@@ -353,7 +353,7 @@ INLINE int shipfire(int samplerate)
 	return 0;
 }
 
-INLINE int life(int samplerate)
+static INLINE int life(int samplerate)
 {
 	static int counter, out;
     if( sound_latch[LIFEEN] )

@@ -212,7 +212,7 @@ void m6502_set_reg (int regnum, unsigned val)
 	}
 }
 
-INLINE void m6502_take_irq(void)
+static INLINE void m6502_take_irq(void)
 {
 	if( !(P & F_I) )
 	{
@@ -425,7 +425,7 @@ void m65c02_reset (void *param)
 
 void m65c02_exit  (void) { m6502_exit(); }
 
-INLINE void m65c02_take_irq(void)
+static INLINE void m65c02_take_irq(void)
 {
 	if( !(P & F_I) )
 	{

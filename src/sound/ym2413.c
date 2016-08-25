@@ -104,19 +104,19 @@ int ym2413_instruments[0x13][ym2413_parameter_count]=
 	{  0x13,0x11,0x25,0x00,0xd7,0xb7,0xf4,0xf4,0x00,0x00,0x00 },    /* 18 Rhythm 3: */
 };
 
-INLINE void OPL_WRITE(int reg, int data)
+static INLINE void OPL_WRITE(int reg, int data)
 {
 	YM3812_control_port_0_w(0, reg);
 	YM3812_write_port_0_w(0, data);
 }
 
-INLINE void OPL_WRITE_DATA1(int offset, int channel, int data)
+static INLINE void OPL_WRITE_DATA1(int offset, int channel, int data)
 {
 	static const int order[ym2413_channels]={0x00,0x01,0x02,0x08,0x09,0x0a,0x10,0x11,0x12};
 	OPL_WRITE(offset+order[channel], data);
 }
 
-INLINE void OPL_WRITE_DATA2(int offset, int channel, int data)
+static INLINE void OPL_WRITE_DATA2(int offset, int channel, int data)
 {
 	static const int order[ym2413_channels]={0x03,0x04,0x05,0x0b,0x0c,0x0d,0x13,0x14,0x15};
 	OPL_WRITE(offset+order[channel], data);

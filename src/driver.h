@@ -1,6 +1,8 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 
+#include <retro_inline.h>
+
 #include "osd_cpu.h"
 #include "memory.h"
 #include "osdepend.h"

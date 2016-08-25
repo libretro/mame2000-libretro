@@ -45,6 +45,9 @@ ifeq ($(platform), unix)
 ifneq ($(ARM), 1)
    IS_X86 = 1
 endif
+ifneq ($(WANT_LIBCO), 1)
+	SHARED += -lpthread
+endif
 
 # OS X
 else ifeq ($(platform), osx)
@@ -157,7 +160,7 @@ else ifeq ($(platform), vita)
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
    STATIC_LINKING := 1
-
+	WANT_LIBCO = 0
 # GCW0
 else ifeq ($(platform), gcw0)
    TARGET := $(TARGET_NAME)_libretro.so

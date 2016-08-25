@@ -77,7 +77,7 @@ void TMS34061_stop(void)
 }
 
 
-INLINE WRITE_HANDLER( TMS34061_register_w )
+static INLINE WRITE_HANDLER( TMS34061_register_w )
 {
 	int status = 0;		// Unsupported
 
@@ -130,7 +130,7 @@ static void TMS34061_intcallback(int param)
 }
 
 
-INLINE READ_HANDLER( TMS34061_register_r )
+static INLINE READ_HANDLER( TMS34061_register_r )
 {
 	int ret;
 
@@ -174,7 +174,7 @@ INLINE READ_HANDLER( TMS34061_register_r )
 }
 
 
-INLINE void adjust_xyaddress(int offset, int x, int y)
+static INLINE void adjust_xyaddress(int offset, int x, int y)
 {
 	// This an implementation of table on Page 4-15 of the User's Guide
 	switch (offset & 0x06)
@@ -199,7 +199,7 @@ INLINE void adjust_xyaddress(int offset, int x, int y)
 	regs[REG_XYADDRESS] = ((y & 0xff) << 8) | (x & 0xff);
 }
 
-INLINE WRITE_HANDLER( TMS34061_xypixel_w )
+static INLINE WRITE_HANDLER( TMS34061_xypixel_w )
 {
 	// Currently only implements when the X-Y addresses are 8 bits each
 	// Case #7 on Page 4-18 in User's Guide
@@ -213,7 +213,7 @@ INLINE WRITE_HANDLER( TMS34061_xypixel_w )
 }
 
 
-INLINE READ_HANDLER( TMS34061_xypixel_r )
+static INLINE READ_HANDLER( TMS34061_xypixel_r )
 {
 	// Currently only implements when the X-Y addresses are 8 bits each
 	// Case #7 on Page 4-18 in User's Guide

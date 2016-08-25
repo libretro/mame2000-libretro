@@ -33,7 +33,7 @@ static int searchlight_enable = 0;
 
 #ifdef ALIGN_INTS /* GSL 980108 read/write nonaligned dword routine for ARM processor etc */
 
-INLINE UINT32 read_dword(void *address)
+static INLINE UINT32 read_dword(void *address)
 {
 	if ((long)address & 3)
 	{

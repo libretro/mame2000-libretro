@@ -26,6 +26,8 @@
 #include "sc61860.h"
 #include "sc.h"
 
+#include <retro_inline.h>
+
 typedef int bool;
 
 #define VERBOSE 0
@@ -193,7 +195,7 @@ void sc61860_set_reg (int regnum, unsigned val)
 	}
 }
 
-INLINE void sc61860_take_irq(void)
+static INLINE void sc61860_take_irq(void)
 {
 }
 

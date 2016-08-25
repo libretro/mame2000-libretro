@@ -1,3 +1,5 @@
+#include <retro_inline.h>
+
 /*
 
 HNZVC
@@ -15,7 +17,7 @@ HNZVC
 #ifdef NEW
 static void illegal( void )
 #else
-INLINE void illegal( void )
+static INLINE void illegal( void )
 #endif
 {
 	//logerror("KONAMI: illegal opcode at %04x\n",PC);
@@ -26,7 +28,7 @@ INLINE void illegal( void )
 #endif
 
 /* $00 NEG direct ?**** */
-INLINE void neg_di( void )
+static INLINE void neg_di( void )
 {
 	UINT16 r,t;
 	DIRBYTE(t);
@@ -41,7 +43,7 @@ INLINE void neg_di( void )
 /* $02 ILLEGAL */
 
 /* $03 COM direct -**01 */
-INLINE void com_di( void )
+static INLINE void com_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -53,7 +55,7 @@ INLINE void com_di( void )
 }
 
 /* $04 LSR direct -0*-* */
-INLINE void lsr_di( void )
+static INLINE void lsr_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -67,7 +69,7 @@ INLINE void lsr_di( void )
 /* $05 ILLEGAL */
 
 /* $06 ROR direct -**-* */
-INLINE void ror_di( void )
+static INLINE void ror_di( void )
 {
 	UINT8 t,r;
 	DIRBYTE(t);
@@ -80,7 +82,7 @@ INLINE void ror_di( void )
 }
 
 /* $07 ASR direct ?**-* */
-INLINE void asr_di( void )
+static INLINE void asr_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -92,7 +94,7 @@ INLINE void asr_di( void )
 }
 
 /* $08 ASL direct ?**** */
-INLINE void asl_di( void )
+static INLINE void asl_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -103,7 +105,7 @@ INLINE void asl_di( void )
 }
 
 /* $09 ROL direct -**** */
-INLINE void rol_di( void )
+static INLINE void rol_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -114,7 +116,7 @@ INLINE void rol_di( void )
 }
 
 /* $0A DEC direct -***- */
-INLINE void dec_di( void )
+static INLINE void dec_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -127,7 +129,7 @@ INLINE void dec_di( void )
 /* $0B ILLEGAL */
 
 /* $OC INC direct -***- */
-INLINE void inc_di( void )
+static INLINE void inc_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -138,7 +140,7 @@ INLINE void inc_di( void )
 }
 
 /* $OD TST direct -**0- */
-INLINE void tst_di( void )
+static INLINE void tst_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -147,7 +149,7 @@ INLINE void tst_di( void )
 }
 
 /* $0E JMP direct ----- */
-INLINE void jmp_di( void )
+static INLINE void jmp_di( void )
 {
     DIRECT;
 	PCD=EAD;
@@ -155,7 +157,7 @@ INLINE void jmp_di( void )
 }
 
 /* $0F CLR direct -0100 */
-INLINE void clr_di( void )
+static INLINE void clr_di( void )
 {
 	DIRECT;
 	WM(EAD,0);
@@ -172,13 +174,13 @@ INLINE void clr_di( void )
 /* $11 FLAG */
 
 /* $12 NOP inherent ----- */
-INLINE void nop( void )
+static INLINE void nop( void )
 {
 	;
 }
 
 /* $13 SYNC inherent ----- */
-INLINE void sync( void )
+static INLINE void sync( void )
 {
 	/* SYNC stops processing instructions until an interrupt request happens. */
 	/* This doesn't require the corresponding interrupt to be enabled: if it */
@@ -196,7 +198,7 @@ INLINE void sync( void )
 /* $15 ILLEGAL */
 
 /* $16 LBRA relative ----- */
-INLINE void lbra( void )
+static INLINE void lbra( void )
 {
 	IMMWORD(ea);
 	PC += EA;
@@ -208,7 +210,7 @@ INLINE void lbra( void )
 }
 
 /* $17 LBSR relative ----- */
-INLINE void lbsr( void )
+static INLINE void lbsr( void )
 {
 	IMMWORD(ea);
 	PUSHWORD(pPC);
@@ -220,7 +222,7 @@ INLINE void lbsr( void )
 
 #if 1
 /* $19 DAA inherent (A) -**0* */
-INLINE void daa( void )
+static INLINE void daa( void )
 {
 	UINT8 msn, lsn;
 	UINT16 t, cf = 0;
@@ -235,7 +237,7 @@ INLINE void daa( void )
 }
 #else
 /* $19 DAA inherent (A) -**0* */
-INLINE void daa( void )
+static INLINE void daa( void )
 {
 	UINT16 t;
 	t = A;
@@ -249,7 +251,7 @@ INLINE void daa( void )
 #endif
 
 /* $1A ORCC immediate ##### */
-INLINE void orcc( void )
+static INLINE void orcc( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -260,7 +262,7 @@ INLINE void orcc( void )
 /* $1B ILLEGAL */
 
 /* $1C ANDCC immediate ##### */
-INLINE void andcc( void )
+static INLINE void andcc( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -269,7 +271,7 @@ INLINE void andcc( void )
 }
 
 /* $1D SEX inherent -**0- */
-INLINE void sex( void )
+static INLINE void sex( void )
 {
 	UINT16 t;
 	t = SIGNED(B);
@@ -279,7 +281,7 @@ INLINE void sex( void )
 }
 
 /* $1E EXG inherent ----- */
-INLINE void exg( void )
+static INLINE void exg( void )
 {
 	UINT16 t1 = 0, t2 = 0;
 	UINT8 tb;
@@ -294,7 +296,7 @@ INLINE void exg( void )
 }
 
 /* $1F TFR inherent ----- */
-INLINE void tfr( void )
+static INLINE void tfr( void )
 {
 	UINT8 tb;
 	UINT16 t = 0;
@@ -310,7 +312,7 @@ INLINE void tfr( void )
 #endif
 
 /* $20 BRA relative ----- */
-INLINE void bra( void )
+static INLINE void bra( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -322,182 +324,182 @@ INLINE void bra( void )
 }
 
 /* $21 BRN relative ----- */
-INLINE void brn( void )
+static INLINE void brn( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
 }
 
 /* $1021 LBRN relative ----- */
-INLINE void lbrn( void )
+static INLINE void lbrn( void )
 {
 	IMMWORD(ea);
 }
 
 /* $22 BHI relative ----- */
-INLINE void bhi( void )
+static INLINE void bhi( void )
 {
 	BRANCH( !(CC & (CC_Z|CC_C)) );
 }
 
 /* $1022 LBHI relative ----- */
-INLINE void lbhi( void )
+static INLINE void lbhi( void )
 {
 	LBRANCH( !(CC & (CC_Z|CC_C)) );
 }
 
 /* $23 BLS relative ----- */
-INLINE void bls( void )
+static INLINE void bls( void )
 {
 	BRANCH( (CC & (CC_Z|CC_C)) );
 }
 
 /* $1023 LBLS relative ----- */
-INLINE void lbls( void )
+static INLINE void lbls( void )
 {
 	LBRANCH( (CC&(CC_Z|CC_C)) );
 }
 
 /* $24 BCC relative ----- */
-INLINE void bcc( void )
+static INLINE void bcc( void )
 {
 	BRANCH( !(CC&CC_C) );
 }
 
 /* $1024 LBCC relative ----- */
-INLINE void lbcc( void )
+static INLINE void lbcc( void )
 {
 	LBRANCH( !(CC&CC_C) );
 }
 
 /* $25 BCS relative ----- */
-INLINE void bcs( void )
+static INLINE void bcs( void )
 {
 	BRANCH( (CC&CC_C) );
 }
 
 /* $1025 LBCS relative ----- */
-INLINE void lbcs( void )
+static INLINE void lbcs( void )
 {
 	LBRANCH( (CC&CC_C) );
 }
 
 /* $26 BNE relative ----- */
-INLINE void bne( void )
+static INLINE void bne( void )
 {
 	BRANCH( !(CC&CC_Z) );
 }
 
 /* $1026 LBNE relative ----- */
-INLINE void lbne( void )
+static INLINE void lbne( void )
 {
 	LBRANCH( !(CC&CC_Z) );
 }
 
 /* $27 BEQ relative ----- */
-INLINE void beq( void )
+static INLINE void beq( void )
 {
 	BRANCH( (CC&CC_Z) );
 }
 
 /* $1027 LBEQ relative ----- */
-INLINE void lbeq( void )
+static INLINE void lbeq( void )
 {
 	LBRANCH( (CC&CC_Z) );
 }
 
 /* $28 BVC relative ----- */
-INLINE void bvc( void )
+static INLINE void bvc( void )
 {
 	BRANCH( !(CC&CC_V) );
 }
 
 /* $1028 LBVC relative ----- */
-INLINE void lbvc( void )
+static INLINE void lbvc( void )
 {
 	LBRANCH( !(CC&CC_V) );
 }
 
 /* $29 BVS relative ----- */
-INLINE void bvs( void )
+static INLINE void bvs( void )
 {
 	BRANCH( (CC&CC_V) );
 }
 
 /* $1029 LBVS relative ----- */
-INLINE void lbvs( void )
+static INLINE void lbvs( void )
 {
 	LBRANCH( (CC&CC_V) );
 }
 
 /* $2A BPL relative ----- */
-INLINE void bpl( void )
+static INLINE void bpl( void )
 {
 	BRANCH( !(CC&CC_N) );
 }
 
 /* $102A LBPL relative ----- */
-INLINE void lbpl( void )
+static INLINE void lbpl( void )
 {
 	LBRANCH( !(CC&CC_N) );
 }
 
 /* $2B BMI relative ----- */
-INLINE void bmi( void )
+static INLINE void bmi( void )
 {
 	BRANCH( (CC&CC_N) );
 }
 
 /* $102B LBMI relative ----- */
-INLINE void lbmi( void )
+static INLINE void lbmi( void )
 {
 	LBRANCH( (CC&CC_N) );
 }
 
 /* $2C BGE relative ----- */
-INLINE void bge( void )
+static INLINE void bge( void )
 {
 	BRANCH( !NXORV );
 }
 
 /* $102C LBGE relative ----- */
-INLINE void lbge( void )
+static INLINE void lbge( void )
 {
 	LBRANCH( !NXORV );
 }
 
 /* $2D BLT relative ----- */
-INLINE void blt( void )
+static INLINE void blt( void )
 {
 	BRANCH( NXORV );
 }
 
 /* $102D LBLT relative ----- */
-INLINE void lblt( void )
+static INLINE void lblt( void )
 {
 	LBRANCH( NXORV );
 }
 
 /* $2E BGT relative ----- */
-INLINE void bgt( void )
+static INLINE void bgt( void )
 {
 	BRANCH( !(NXORV || (CC&CC_Z)) );
 }
 
 /* $102E LBGT relative ----- */
-INLINE void lbgt( void )
+static INLINE void lbgt( void )
 {
 	LBRANCH( !(NXORV || (CC&CC_Z)) );
 }
 
 /* $2F BLE relative ----- */
-INLINE void ble( void )
+static INLINE void ble( void )
 {
 	BRANCH( (NXORV || (CC&CC_Z)) );
 }
 
 /* $102F LBLE relative ----- */
-INLINE void lble( void )
+static INLINE void lble( void )
 {
 	LBRANCH( (NXORV || (CC&CC_Z)) );
 }
@@ -507,7 +509,7 @@ INLINE void lble( void )
 #endif
 
 /* $30 LEAX indexed --*-- */
-INLINE void leax( void )
+static INLINE void leax( void )
 {
 	X = EA;
 	CLR_Z;
@@ -515,7 +517,7 @@ INLINE void leax( void )
 }
 
 /* $31 LEAY indexed --*-- */
-INLINE void leay( void )
+static INLINE void leay( void )
 {
 	Y = EA;
 	CLR_Z;
@@ -523,20 +525,20 @@ INLINE void leay( void )
 }
 
 /* $32 LEAS indexed ----- */
-INLINE void leas( void )
+static INLINE void leas( void )
 {
 	S = EA;
 	konami.int_state |= KONAMI_LDS;
 }
 
 /* $33 LEAU indexed ----- */
-INLINE void leau( void )
+static INLINE void leau( void )
 {
 	U = EA;
 }
 
 /* $34 PSHS inherent ----- */
-INLINE void pshs( void )
+static INLINE void pshs( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -551,7 +553,7 @@ INLINE void pshs( void )
 }
 
 /* 35 PULS inherent ----- */
-INLINE void puls( void )
+static INLINE void puls( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -569,7 +571,7 @@ INLINE void puls( void )
 }
 
 /* $36 PSHU inherent ----- */
-INLINE void pshu( void )
+static INLINE void pshu( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -584,7 +586,7 @@ INLINE void pshu( void )
 }
 
 /* 37 PULU inherent ----- */
-INLINE void pulu( void )
+static INLINE void pulu( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -604,20 +606,20 @@ INLINE void pulu( void )
 /* $38 ILLEGAL */
 
 /* $39 RTS inherent ----- */
-INLINE void rts( void )
+static INLINE void rts( void )
 {
 	PULLWORD(PCD);
 	change_pc(PCD);
 }
 
 /* $3A ABX inherent ----- */
-INLINE void abx( void )
+static INLINE void abx( void )
 {
 	X += B;
 }
 
 /* $3B RTI inherent ##### */
-INLINE void rti( void )
+static INLINE void rti( void )
 {
 	PULLBYTE(CC);
 	if( CC & CC_E ) /* entire state saved? */
@@ -636,7 +638,7 @@ INLINE void rti( void )
 }
 
 /* $3C CWAI inherent ----1 */
-INLINE void cwai( void )
+static INLINE void cwai( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -662,7 +664,7 @@ INLINE void cwai( void )
 }
 
 /* $3D MUL inherent --*-@ */
-INLINE void mul( void )
+static INLINE void mul( void )
 {
 	UINT16 t;
 	t = A * B;
@@ -673,7 +675,7 @@ INLINE void mul( void )
 /* $3E ILLEGAL */
 
 /* $3F SWI (SWI2 SWI3) absolute indirect ----- */
-INLINE void swi( void )
+static INLINE void swi( void )
 {
 	CC |= CC_E; 			/* HJB 980225: save entire state */
 	PUSHWORD(pPC);
@@ -690,7 +692,7 @@ INLINE void swi( void )
 }
 
 /* $103F SWI2 absolute indirect ----- */
-INLINE void swi2( void )
+static INLINE void swi2( void )
 {
 	CC |= CC_E; 			/* HJB 980225: save entire state */
 	PUSHWORD(pPC);
@@ -706,7 +708,7 @@ INLINE void swi2( void )
 }
 
 /* $113F SWI3 absolute indirect ----- */
-INLINE void swi3( void )
+static INLINE void swi3( void )
 {
 	CC |= CC_E; 			/* HJB 980225: save entire state */
 	PUSHWORD(pPC);
@@ -726,7 +728,7 @@ INLINE void swi3( void )
 #endif
 
 /* $40 NEGA inherent ?**** */
-INLINE void nega( void )
+static INLINE void nega( void )
 {
 	UINT16 r;
 	r = -A;
@@ -740,7 +742,7 @@ INLINE void nega( void )
 /* $42 ILLEGAL */
 
 /* $43 COMA inherent -**01 */
-INLINE void coma( void )
+static INLINE void coma( void )
 {
 	A = ~A;
 	CLR_NZV;
@@ -749,7 +751,7 @@ INLINE void coma( void )
 }
 
 /* $44 LSRA inherent -0*-* */
-INLINE void lsra( void )
+static INLINE void lsra( void )
 {
 	CLR_NZC;
 	CC |= (A & CC_C);
@@ -760,7 +762,7 @@ INLINE void lsra( void )
 /* $45 ILLEGAL */
 
 /* $46 RORA inherent -**-* */
-INLINE void rora( void )
+static INLINE void rora( void )
 {
 	UINT8 r;
 	r = (CC & CC_C) << 7;
@@ -772,7 +774,7 @@ INLINE void rora( void )
 }
 
 /* $47 ASRA inherent ?**-* */
-INLINE void asra( void )
+static INLINE void asra( void )
 {
 	CLR_NZC;
 	CC |= (A & CC_C);
@@ -781,7 +783,7 @@ INLINE void asra( void )
 }
 
 /* $48 ASLA inherent ?**** */
-INLINE void asla( void )
+static INLINE void asla( void )
 {
 	UINT16 r;
 	r = A << 1;
@@ -791,7 +793,7 @@ INLINE void asla( void )
 }
 
 /* $49 ROLA inherent -**** */
-INLINE void rola( void )
+static INLINE void rola( void )
 {
 	UINT16 t,r;
 	t = A;
@@ -801,7 +803,7 @@ INLINE void rola( void )
 }
 
 /* $4A DECA inherent -***- */
-INLINE void deca( void )
+static INLINE void deca( void )
 {
 	--A;
 	CLR_NZV;
@@ -811,7 +813,7 @@ INLINE void deca( void )
 /* $4B ILLEGAL */
 
 /* $4C INCA inherent -***- */
-INLINE void inca( void )
+static INLINE void inca( void )
 {
 	++A;
 	CLR_NZV;
@@ -819,7 +821,7 @@ INLINE void inca( void )
 }
 
 /* $4D TSTA inherent -**0- */
-INLINE void tsta( void )
+static INLINE void tsta( void )
 {
 	CLR_NZV;
 	SET_NZ8(A);
@@ -828,7 +830,7 @@ INLINE void tsta( void )
 /* $4E ILLEGAL */
 
 /* $4F CLRA inherent -0100 */
-INLINE void clra( void )
+static INLINE void clra( void )
 {
 	A = 0;
 	CLR_NZVC; SEZ;
@@ -839,7 +841,7 @@ INLINE void clra( void )
 #endif
 
 /* $50 NEGB inherent ?**** */
-INLINE void negb( void )
+static INLINE void negb( void )
 {
 	UINT16 r;
 	r = -B;
@@ -853,7 +855,7 @@ INLINE void negb( void )
 /* $52 ILLEGAL */
 
 /* $53 COMB inherent -**01 */
-INLINE void comb( void )
+static INLINE void comb( void )
 {
 	B = ~B;
 	CLR_NZV;
@@ -862,7 +864,7 @@ INLINE void comb( void )
 }
 
 /* $54 LSRB inherent -0*-* */
-INLINE void lsrb( void )
+static INLINE void lsrb( void )
 {
 	CLR_NZC;
 	CC |= (B & CC_C);
@@ -873,7 +875,7 @@ INLINE void lsrb( void )
 /* $55 ILLEGAL */
 
 /* $56 RORB inherent -**-* */
-INLINE void rorb( void )
+static INLINE void rorb( void )
 {
 	UINT8 r;
 	r = (CC & CC_C) << 7;
@@ -885,7 +887,7 @@ INLINE void rorb( void )
 }
 
 /* $57 ASRB inherent ?**-* */
-INLINE void asrb( void )
+static INLINE void asrb( void )
 {
 	CLR_NZC;
 	CC |= (B & CC_C);
@@ -894,7 +896,7 @@ INLINE void asrb( void )
 }
 
 /* $58 ASLB inherent ?**** */
-INLINE void aslb( void )
+static INLINE void aslb( void )
 {
 	UINT16 r;
 	r = B << 1;
@@ -904,7 +906,7 @@ INLINE void aslb( void )
 }
 
 /* $59 ROLB inherent -**** */
-INLINE void rolb( void )
+static INLINE void rolb( void )
 {
 	UINT16 t,r;
 	t = B;
@@ -916,7 +918,7 @@ INLINE void rolb( void )
 }
 
 /* $5A DECB inherent -***- */
-INLINE void decb( void )
+static INLINE void decb( void )
 {
 	--B;
 	CLR_NZV;
@@ -926,7 +928,7 @@ INLINE void decb( void )
 /* $5B ILLEGAL */
 
 /* $5C INCB inherent -***- */
-INLINE void incb( void )
+static INLINE void incb( void )
 {
 	++B;
 	CLR_NZV;
@@ -934,7 +936,7 @@ INLINE void incb( void )
 }
 
 /* $5D TSTB inherent -**0- */
-INLINE void tstb( void )
+static INLINE void tstb( void )
 {
 	CLR_NZV;
 	SET_NZ8(B);
@@ -943,7 +945,7 @@ INLINE void tstb( void )
 /* $5E ILLEGAL */
 
 /* $5F CLRB inherent -0100 */
-INLINE void clrb( void )
+static INLINE void clrb( void )
 {
 	B = 0;
 	CLR_NZVC; SEZ;
@@ -954,7 +956,7 @@ INLINE void clrb( void )
 #endif
 
 /* $60 NEG indexed ?**** */
-INLINE void neg_ix( void )
+static INLINE void neg_ix( void )
 {
 	UINT16 r,t;
 	t = RM(EAD);
@@ -969,7 +971,7 @@ INLINE void neg_ix( void )
 /* $62 ILLEGAL */
 
 /* $63 COM indexed -**01 */
-INLINE void com_ix( void )
+static INLINE void com_ix( void )
 {
 	UINT8 t;
 	t = ~RM(EAD);
@@ -980,7 +982,7 @@ INLINE void com_ix( void )
 }
 
 /* $64 LSR indexed -0*-* */
-INLINE void lsr_ix( void )
+static INLINE void lsr_ix( void )
 {
 	UINT8 t;
 	t = RM(EAD);
@@ -993,7 +995,7 @@ INLINE void lsr_ix( void )
 /* $65 ILLEGAL */
 
 /* $66 ROR indexed -**-* */
-INLINE void ror_ix( void )
+static INLINE void ror_ix( void )
 {
 	UINT8 t,r;
 	t = RM(EAD);
@@ -1005,7 +1007,7 @@ INLINE void ror_ix( void )
 }
 
 /* $67 ASR indexed ?**-* */
-INLINE void asr_ix( void )
+static INLINE void asr_ix( void )
 {
 	UINT8 t;
 	t = RM(EAD);
@@ -1017,7 +1019,7 @@ INLINE void asr_ix( void )
 }
 
 /* $68 ASL indexed ?**** */
-INLINE void asl_ix( void )
+static INLINE void asl_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1028,7 +1030,7 @@ INLINE void asl_ix( void )
 }
 
 /* $69 ROL indexed -**** */
-INLINE void rol_ix( void )
+static INLINE void rol_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1040,7 +1042,7 @@ INLINE void rol_ix( void )
 }
 
 /* $6A DEC indexed -***- */
-INLINE void dec_ix( void )
+static INLINE void dec_ix( void )
 {
 	UINT8 t;
 	t = RM(EAD) - 1;
@@ -1051,7 +1053,7 @@ INLINE void dec_ix( void )
 /* $6B ILLEGAL */
 
 /* $6C INC indexed -***- */
-INLINE void inc_ix( void )
+static INLINE void inc_ix( void )
 {
 	UINT8 t;
 	t = RM(EAD) + 1;
@@ -1060,7 +1062,7 @@ INLINE void inc_ix( void )
 }
 
 /* $6D TST indexed -**0- */
-INLINE void tst_ix( void )
+static INLINE void tst_ix( void )
 {
 	UINT8 t;
 	t = RM(EAD);
@@ -1069,14 +1071,14 @@ INLINE void tst_ix( void )
 }
 
 /* $6E JMP indexed ----- */
-INLINE void jmp_ix( void )
+static INLINE void jmp_ix( void )
 {
 	PCD=EAD;
 	change_pc(PCD);
 }
 
 /* $6F CLR indexed -0100 */
-INLINE void clr_ix( void )
+static INLINE void clr_ix( void )
 {
 	WM(EAD,0);
 	CLR_NZVC; SEZ;
@@ -1087,7 +1089,7 @@ INLINE void clr_ix( void )
 #endif
 
 /* $70 NEG extended ?**** */
-INLINE void neg_ex( void )
+static INLINE void neg_ex( void )
 {
 	UINT16 r,t;
 	EXTBYTE(t); r=-t;
@@ -1100,7 +1102,7 @@ INLINE void neg_ex( void )
 /* $72 ILLEGAL */
 
 /* $73 COM extended -**01 */
-INLINE void com_ex( void )
+static INLINE void com_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); t = ~t;
@@ -1109,7 +1111,7 @@ INLINE void com_ex( void )
 }
 
 /* $74 LSR extended -0*-* */
-INLINE void lsr_ex( void )
+static INLINE void lsr_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); CLR_NZC; CC |= (t & CC_C);
@@ -1120,7 +1122,7 @@ INLINE void lsr_ex( void )
 /* $75 ILLEGAL */
 
 /* $76 ROR extended -**-* */
-INLINE void ror_ex( void )
+static INLINE void ror_ex( void )
 {
 	UINT8 t,r;
 	EXTBYTE(t); r=(CC & CC_C) << 7;
@@ -1130,7 +1132,7 @@ INLINE void ror_ex( void )
 }
 
 /* $77 ASR extended ?**-* */
-INLINE void asr_ex( void )
+static INLINE void asr_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); CLR_NZC; CC |= (t & CC_C);
@@ -1140,7 +1142,7 @@ INLINE void asr_ex( void )
 }
 
 /* $78 ASL extended ?**** */
-INLINE void asl_ex( void )
+static INLINE void asl_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t); r=t<<1;
@@ -1149,7 +1151,7 @@ INLINE void asl_ex( void )
 }
 
 /* $79 ROL extended -**** */
-INLINE void rol_ex( void )
+static INLINE void rol_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t); r = (CC & CC_C) | (t << 1);
@@ -1158,7 +1160,7 @@ INLINE void rol_ex( void )
 }
 
 /* $7A DEC extended -***- */
-INLINE void dec_ex( void )
+static INLINE void dec_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); --t;
@@ -1169,7 +1171,7 @@ INLINE void dec_ex( void )
 /* $7B ILLEGAL */
 
 /* $7C INC extended -***- */
-INLINE void inc_ex( void )
+static INLINE void inc_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); ++t;
@@ -1178,14 +1180,14 @@ INLINE void inc_ex( void )
 }
 
 /* $7D TST extended -**0- */
-INLINE void tst_ex( void )
+static INLINE void tst_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t); CLR_NZV; SET_NZ8(t);
 }
 
 /* $7E JMP extended ----- */
-INLINE void jmp_ex( void )
+static INLINE void jmp_ex( void )
 {
 	EXTENDED;
 	PCD=EAD;
@@ -1193,7 +1195,7 @@ INLINE void jmp_ex( void )
 }
 
 /* $7F CLR extended -0100 */
-INLINE void clr_ex( void )
+static INLINE void clr_ex( void )
 {
 	EXTENDED;
 	WM(EAD,0);
@@ -1206,7 +1208,7 @@ INLINE void clr_ex( void )
 #endif
 
 /* $80 SUBA immediate ?**** */
-INLINE void suba_im( void )
+static INLINE void suba_im( void )
 {
 	UINT16 t,r;
 	IMMBYTE(t);
@@ -1217,7 +1219,7 @@ INLINE void suba_im( void )
 }
 
 /* $81 CMPA immediate ?**** */
-INLINE void cmpa_im( void )
+static INLINE void cmpa_im( void )
 {
 	UINT16	  t,r;
 	IMMBYTE(t);
@@ -1227,7 +1229,7 @@ INLINE void cmpa_im( void )
 }
 
 /* $82 SBCA immediate ?**** */
-INLINE void sbca_im( void )
+static INLINE void sbca_im( void )
 {
 	UINT16	  t,r;
 	IMMBYTE(t);
@@ -1238,7 +1240,7 @@ INLINE void sbca_im( void )
 }
 
 /* $83 SUBD (CMPD CMPU) immediate -**** */
-INLINE void subd_im( void )
+static INLINE void subd_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1251,7 +1253,7 @@ INLINE void subd_im( void )
 }
 
 /* $1083 CMPD immediate -**** */
-INLINE void cmpd_im( void )
+static INLINE void cmpd_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1263,7 +1265,7 @@ INLINE void cmpd_im( void )
 }
 
 /* $1183 CMPU immediate -**** */
-INLINE void cmpu_im( void )
+static INLINE void cmpu_im( void )
 {
 	UINT32 r, d;
 	PAIR b;
@@ -1275,7 +1277,7 @@ INLINE void cmpu_im( void )
 }
 
 /* $84 ANDA immediate -**0- */
-INLINE void anda_im( void )
+static INLINE void anda_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -1285,7 +1287,7 @@ INLINE void anda_im( void )
 }
 
 /* $85 BITA immediate -**0- */
-INLINE void bita_im( void )
+static INLINE void bita_im( void )
 {
 	UINT8 t,r;
 	IMMBYTE(t);
@@ -1295,7 +1297,7 @@ INLINE void bita_im( void )
 }
 
 /* $86 LDA immediate -**0- */
-INLINE void lda_im( void )
+static INLINE void lda_im( void )
 {
 	IMMBYTE(A);
 	CLR_NZV;
@@ -1304,7 +1306,7 @@ INLINE void lda_im( void )
 
 /* is this a legal instruction? */
 /* $87 STA immediate -**0- */
-INLINE void sta_im( void )
+static INLINE void sta_im( void )
 {
 	CLR_NZV;
 	SET_NZ8(A);
@@ -1313,7 +1315,7 @@ INLINE void sta_im( void )
 }
 
 /* $88 EORA immediate -**0- */
-INLINE void eora_im( void )
+static INLINE void eora_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -1323,7 +1325,7 @@ INLINE void eora_im( void )
 }
 
 /* $89 ADCA immediate ***** */
-INLINE void adca_im( void )
+static INLINE void adca_im( void )
 {
 	UINT16 t,r;
 	IMMBYTE(t);
@@ -1335,7 +1337,7 @@ INLINE void adca_im( void )
 }
 
 /* $8A ORA immediate -**0- */
-INLINE void ora_im( void )
+static INLINE void ora_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -1345,7 +1347,7 @@ INLINE void ora_im( void )
 }
 
 /* $8B ADDA immediate ***** */
-INLINE void adda_im( void )
+static INLINE void adda_im( void )
 {
 	UINT16 t,r;
 	IMMBYTE(t);
@@ -1357,7 +1359,7 @@ INLINE void adda_im( void )
 }
 
 /* $8C CMPX (CMPY CMPS) immediate -**** */
-INLINE void cmpx_im( void )
+static INLINE void cmpx_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1369,7 +1371,7 @@ INLINE void cmpx_im( void )
 }
 
 /* $108C CMPY immediate -**** */
-INLINE void cmpy_im( void )
+static INLINE void cmpy_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1381,7 +1383,7 @@ INLINE void cmpy_im( void )
 }
 
 /* $118C CMPS immediate -**** */
-INLINE void cmps_im( void )
+static INLINE void cmps_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1393,7 +1395,7 @@ INLINE void cmps_im( void )
 }
 
 /* $8D BSR ----- */
-INLINE void bsr( void )
+static INLINE void bsr( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -1403,7 +1405,7 @@ INLINE void bsr( void )
 }
 
 /* $8E LDX (LDY) immediate -**0- */
-INLINE void ldx_im( void )
+static INLINE void ldx_im( void )
 {
 	IMMWORD(pX);
 	CLR_NZV;
@@ -1411,7 +1413,7 @@ INLINE void ldx_im( void )
 }
 
 /* $108E LDY immediate -**0- */
-INLINE void ldy_im( void )
+static INLINE void ldy_im( void )
 {
 	IMMWORD(pY);
 	CLR_NZV;
@@ -1420,7 +1422,7 @@ INLINE void ldy_im( void )
 
 /* is this a legal instruction? */
 /* $8F STX (STY) immediate -**0- */
-INLINE void stx_im( void )
+static INLINE void stx_im( void )
 {
 	CLR_NZV;
 	SET_NZ16(X);
@@ -1430,7 +1432,7 @@ INLINE void stx_im( void )
 
 /* is this a legal instruction? */
 /* $108F STY immediate -**0- */
-INLINE void sty_im( void )
+static INLINE void sty_im( void )
 {
 	CLR_NZV;
 	SET_NZ16(Y);
@@ -1443,7 +1445,7 @@ INLINE void sty_im( void )
 #endif
 
 /* $90 SUBA direct ?**** */
-INLINE void suba_di( void )
+static INLINE void suba_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -1454,7 +1456,7 @@ INLINE void suba_di( void )
 }
 
 /* $91 CMPA direct ?**** */
-INLINE void cmpa_di( void )
+static INLINE void cmpa_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -1464,7 +1466,7 @@ INLINE void cmpa_di( void )
 }
 
 /* $92 SBCA direct ?**** */
-INLINE void sbca_di( void )
+static INLINE void sbca_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -1475,7 +1477,7 @@ INLINE void sbca_di( void )
 }
 
 /* $93 SUBD (CMPD CMPU) direct -**** */
-INLINE void subd_di( void )
+static INLINE void subd_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1488,7 +1490,7 @@ INLINE void subd_di( void )
 }
 
 /* $1093 CMPD direct -**** */
-INLINE void cmpd_di( void )
+static INLINE void cmpd_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1500,7 +1502,7 @@ INLINE void cmpd_di( void )
 }
 
 /* $1193 CMPU direct -**** */
-INLINE void cmpu_di( void )
+static INLINE void cmpu_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1512,7 +1514,7 @@ INLINE void cmpu_di( void )
 }
 
 /* $94 ANDA direct -**0- */
-INLINE void anda_di( void )
+static INLINE void anda_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -1522,7 +1524,7 @@ INLINE void anda_di( void )
 }
 
 /* $95 BITA direct -**0- */
-INLINE void bita_di( void )
+static INLINE void bita_di( void )
 {
 	UINT8 t,r;
 	DIRBYTE(t);
@@ -1532,7 +1534,7 @@ INLINE void bita_di( void )
 }
 
 /* $96 LDA direct -**0- */
-INLINE void lda_di( void )
+static INLINE void lda_di( void )
 {
 	DIRBYTE(A);
 	CLR_NZV;
@@ -1540,7 +1542,7 @@ INLINE void lda_di( void )
 }
 
 /* $97 STA direct -**0- */
-INLINE void sta_di( void )
+static INLINE void sta_di( void )
 {
 	CLR_NZV;
 	SET_NZ8(A);
@@ -1549,7 +1551,7 @@ INLINE void sta_di( void )
 }
 
 /* $98 EORA direct -**0- */
-INLINE void eora_di( void )
+static INLINE void eora_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -1559,7 +1561,7 @@ INLINE void eora_di( void )
 }
 
 /* $99 ADCA direct ***** */
-INLINE void adca_di( void )
+static INLINE void adca_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -1571,7 +1573,7 @@ INLINE void adca_di( void )
 }
 
 /* $9A ORA direct -**0- */
-INLINE void ora_di( void )
+static INLINE void ora_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -1581,7 +1583,7 @@ INLINE void ora_di( void )
 }
 
 /* $9B ADDA direct ***** */
-INLINE void adda_di( void )
+static INLINE void adda_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -1593,7 +1595,7 @@ INLINE void adda_di( void )
 }
 
 /* $9C CMPX (CMPY CMPS) direct -**** */
-INLINE void cmpx_di( void )
+static INLINE void cmpx_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1605,7 +1607,7 @@ INLINE void cmpx_di( void )
 }
 
 /* $109C CMPY direct -**** */
-INLINE void cmpy_di( void )
+static INLINE void cmpy_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1617,7 +1619,7 @@ INLINE void cmpy_di( void )
 }
 
 /* $119C CMPS direct -**** */
-INLINE void cmps_di( void )
+static INLINE void cmps_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1629,7 +1631,7 @@ INLINE void cmps_di( void )
 }
 
 /* $9D JSR direct ----- */
-INLINE void jsr_di( void )
+static INLINE void jsr_di( void )
 {
 	DIRECT;
 	PUSHWORD(pPC);
@@ -1638,7 +1640,7 @@ INLINE void jsr_di( void )
 }
 
 /* $9E LDX (LDY) direct -**0- */
-INLINE void ldx_di( void )
+static INLINE void ldx_di( void )
 {
 	DIRWORD(pX);
 	CLR_NZV;
@@ -1646,7 +1648,7 @@ INLINE void ldx_di( void )
 }
 
 /* $109E LDY direct -**0- */
-INLINE void ldy_di( void )
+static INLINE void ldy_di( void )
 {
 	DIRWORD(pY);
 	CLR_NZV;
@@ -1654,7 +1656,7 @@ INLINE void ldy_di( void )
 }
 
 /* $9F STX (STY) direct -**0- */
-INLINE void stx_di( void )
+static INLINE void stx_di( void )
 {
 	CLR_NZV;
 	SET_NZ16(X);
@@ -1663,7 +1665,7 @@ INLINE void stx_di( void )
 }
 
 /* $109F STY direct -**0- */
-INLINE void sty_di( void )
+static INLINE void sty_di( void )
 {
 	CLR_NZV;
 	SET_NZ16(Y);
@@ -1677,7 +1679,7 @@ INLINE void sty_di( void )
 
 
 /* $a0 SUBA indexed ?**** */
-INLINE void suba_ix( void )
+static INLINE void suba_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1688,7 +1690,7 @@ INLINE void suba_ix( void )
 }
 
 /* $a1 CMPA indexed ?**** */
-INLINE void cmpa_ix( void )
+static INLINE void cmpa_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1698,7 +1700,7 @@ INLINE void cmpa_ix( void )
 }
 
 /* $a2 SBCA indexed ?**** */
-INLINE void sbca_ix( void )
+static INLINE void sbca_ix( void )
 {
 	UINT16	  t,r;
 	t = RM(EAD);
@@ -1709,7 +1711,7 @@ INLINE void sbca_ix( void )
 }
 
 /* $a3 SUBD (CMPD CMPU) indexed -**** */
-INLINE void subd_ix( void )
+static INLINE void subd_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1722,7 +1724,7 @@ INLINE void subd_ix( void )
 }
 
 /* $10a3 CMPD indexed -**** */
-INLINE void cmpd_ix( void )
+static INLINE void cmpd_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1734,7 +1736,7 @@ INLINE void cmpd_ix( void )
 }
 
 /* $11a3 CMPU indexed -**** */
-INLINE void cmpu_ix( void )
+static INLINE void cmpu_ix( void )
 {
 	UINT32 r;
 	PAIR b;
@@ -1745,7 +1747,7 @@ INLINE void cmpu_ix( void )
 }
 
 /* $a4 ANDA indexed -**0- */
-INLINE void anda_ix( void )
+static INLINE void anda_ix( void )
 {
 	A &= RM(EAD);
 	CLR_NZV;
@@ -1753,7 +1755,7 @@ INLINE void anda_ix( void )
 }
 
 /* $a5 BITA indexed -**0- */
-INLINE void bita_ix( void )
+static INLINE void bita_ix( void )
 {
 	UINT8 r;
 	r = A & RM(EAD);
@@ -1762,7 +1764,7 @@ INLINE void bita_ix( void )
 }
 
 /* $a6 LDA indexed -**0- */
-INLINE void lda_ix( void )
+static INLINE void lda_ix( void )
 {
 	A = RM(EAD);
 	CLR_NZV;
@@ -1770,7 +1772,7 @@ INLINE void lda_ix( void )
 }
 
 /* $a7 STA indexed -**0- */
-INLINE void sta_ix( void )
+static INLINE void sta_ix( void )
 {
 	CLR_NZV;
 	SET_NZ8(A);
@@ -1778,7 +1780,7 @@ INLINE void sta_ix( void )
 }
 
 /* $a8 EORA indexed -**0- */
-INLINE void eora_ix( void )
+static INLINE void eora_ix( void )
 {
 	A ^= RM(EAD);
 	CLR_NZV;
@@ -1786,7 +1788,7 @@ INLINE void eora_ix( void )
 }
 
 /* $a9 ADCA indexed ***** */
-INLINE void adca_ix( void )
+static INLINE void adca_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1798,7 +1800,7 @@ INLINE void adca_ix( void )
 }
 
 /* $aA ORA indexed -**0- */
-INLINE void ora_ix( void )
+static INLINE void ora_ix( void )
 {
 	A |= RM(EAD);
 	CLR_NZV;
@@ -1806,7 +1808,7 @@ INLINE void ora_ix( void )
 }
 
 /* $aB ADDA indexed ***** */
-INLINE void adda_ix( void )
+static INLINE void adda_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -1818,7 +1820,7 @@ INLINE void adda_ix( void )
 }
 
 /* $aC CMPX (CMPY CMPS) indexed -**** */
-INLINE void cmpx_ix( void )
+static INLINE void cmpx_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1830,7 +1832,7 @@ INLINE void cmpx_ix( void )
 }
 
 /* $10aC CMPY indexed -**** */
-INLINE void cmpy_ix( void )
+static INLINE void cmpy_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1842,7 +1844,7 @@ INLINE void cmpy_ix( void )
 }
 
 /* $11aC CMPS indexed -**** */
-INLINE void cmps_ix( void )
+static INLINE void cmps_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1854,7 +1856,7 @@ INLINE void cmps_ix( void )
 }
 
 /* $aD JSR indexed ----- */
-INLINE void jsr_ix( void )
+static INLINE void jsr_ix( void )
 {
 	PUSHWORD(pPC);
 	PCD=EAD;
@@ -1862,7 +1864,7 @@ INLINE void jsr_ix( void )
 }
 
 /* $aE LDX (LDY) indexed -**0- */
-INLINE void ldx_ix( void )
+static INLINE void ldx_ix( void )
 {
 	X=RM16(EAD);
 	CLR_NZV;
@@ -1870,7 +1872,7 @@ INLINE void ldx_ix( void )
 }
 
 /* $10aE LDY indexed -**0- */
-INLINE void ldy_ix( void )
+static INLINE void ldy_ix( void )
 {
 	Y=RM16(EAD);
 	CLR_NZV;
@@ -1878,7 +1880,7 @@ INLINE void ldy_ix( void )
 }
 
 /* $aF STX (STY) indexed -**0- */
-INLINE void stx_ix( void )
+static INLINE void stx_ix( void )
 {
 	CLR_NZV;
 	SET_NZ16(X);
@@ -1886,7 +1888,7 @@ INLINE void stx_ix( void )
 }
 
 /* $10aF STY indexed -**0- */
-INLINE void sty_ix( void )
+static INLINE void sty_ix( void )
 {
 	CLR_NZV;
 	SET_NZ16(Y);
@@ -1898,7 +1900,7 @@ INLINE void sty_ix( void )
 #endif
 
 /* $b0 SUBA extended ?**** */
-INLINE void suba_ex( void )
+static INLINE void suba_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -1909,7 +1911,7 @@ INLINE void suba_ex( void )
 }
 
 /* $b1 CMPA extended ?**** */
-INLINE void cmpa_ex( void )
+static INLINE void cmpa_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -1919,7 +1921,7 @@ INLINE void cmpa_ex( void )
 }
 
 /* $b2 SBCA extended ?**** */
-INLINE void sbca_ex( void )
+static INLINE void sbca_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -1930,7 +1932,7 @@ INLINE void sbca_ex( void )
 }
 
 /* $b3 SUBD (CMPD CMPU) extended -**** */
-INLINE void subd_ex( void )
+static INLINE void subd_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1943,7 +1945,7 @@ INLINE void subd_ex( void )
 }
 
 /* $10b3 CMPD extended -**** */
-INLINE void cmpd_ex( void )
+static INLINE void cmpd_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1955,7 +1957,7 @@ INLINE void cmpd_ex( void )
 }
 
 /* $11b3 CMPU extended -**** */
-INLINE void cmpu_ex( void )
+static INLINE void cmpu_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -1967,7 +1969,7 @@ INLINE void cmpu_ex( void )
 }
 
 /* $b4 ANDA extended -**0- */
-INLINE void anda_ex( void )
+static INLINE void anda_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -1977,7 +1979,7 @@ INLINE void anda_ex( void )
 }
 
 /* $b5 BITA extended -**0- */
-INLINE void bita_ex( void )
+static INLINE void bita_ex( void )
 {
 	UINT8 t,r;
 	EXTBYTE(t);
@@ -1986,7 +1988,7 @@ INLINE void bita_ex( void )
 }
 
 /* $b6 LDA extended -**0- */
-INLINE void lda_ex( void )
+static INLINE void lda_ex( void )
 {
 	EXTBYTE(A);
 	CLR_NZV;
@@ -1994,7 +1996,7 @@ INLINE void lda_ex( void )
 }
 
 /* $b7 STA extended -**0- */
-INLINE void sta_ex( void )
+static INLINE void sta_ex( void )
 {
 	CLR_NZV;
 	SET_NZ8(A);
@@ -2003,7 +2005,7 @@ INLINE void sta_ex( void )
 }
 
 /* $b8 EORA extended -**0- */
-INLINE void eora_ex( void )
+static INLINE void eora_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2013,7 +2015,7 @@ INLINE void eora_ex( void )
 }
 
 /* $b9 ADCA extended ***** */
-INLINE void adca_ex( void )
+static INLINE void adca_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t);
@@ -2025,7 +2027,7 @@ INLINE void adca_ex( void )
 }
 
 /* $bA ORA extended -**0- */
-INLINE void ora_ex( void )
+static INLINE void ora_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2035,7 +2037,7 @@ INLINE void ora_ex( void )
 }
 
 /* $bB ADDA extended ***** */
-INLINE void adda_ex( void )
+static INLINE void adda_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t);
@@ -2047,7 +2049,7 @@ INLINE void adda_ex( void )
 }
 
 /* $bC CMPX (CMPY CMPS) extended -**** */
-INLINE void cmpx_ex( void )
+static INLINE void cmpx_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2059,7 +2061,7 @@ INLINE void cmpx_ex( void )
 }
 
 /* $10bC CMPY extended -**** */
-INLINE void cmpy_ex( void )
+static INLINE void cmpy_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2071,7 +2073,7 @@ INLINE void cmpy_ex( void )
 }
 
 /* $11bC CMPS extended -**** */
-INLINE void cmps_ex( void )
+static INLINE void cmps_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2083,7 +2085,7 @@ INLINE void cmps_ex( void )
 }
 
 /* $bD JSR extended ----- */
-INLINE void jsr_ex( void )
+static INLINE void jsr_ex( void )
 {
 	EXTENDED;
 	PUSHWORD(pPC);
@@ -2092,7 +2094,7 @@ INLINE void jsr_ex( void )
 }
 
 /* $bE LDX (LDY) extended -**0- */
-INLINE void ldx_ex( void )
+static INLINE void ldx_ex( void )
 {
 	EXTWORD(pX);
 	CLR_NZV;
@@ -2100,7 +2102,7 @@ INLINE void ldx_ex( void )
 }
 
 /* $10bE LDY extended -**0- */
-INLINE void ldy_ex( void )
+static INLINE void ldy_ex( void )
 {
 	EXTWORD(pY);
 	CLR_NZV;
@@ -2108,7 +2110,7 @@ INLINE void ldy_ex( void )
 }
 
 /* $bF STX (STY) extended -**0- */
-INLINE void stx_ex( void )
+static INLINE void stx_ex( void )
 {
 	CLR_NZV;
 	SET_NZ16(X);
@@ -2117,7 +2119,7 @@ INLINE void stx_ex( void )
 }
 
 /* $10bF STY extended -**0- */
-INLINE void sty_ex( void )
+static INLINE void sty_ex( void )
 {
 	CLR_NZV;
 	SET_NZ16(Y);
@@ -2131,7 +2133,7 @@ INLINE void sty_ex( void )
 #endif
 
 /* $c0 SUBB immediate ?**** */
-INLINE void subb_im( void )
+static INLINE void subb_im( void )
 {
 	UINT16	  t,r;
 	IMMBYTE(t);
@@ -2142,7 +2144,7 @@ INLINE void subb_im( void )
 }
 
 /* $c1 CMPB immediate ?**** */
-INLINE void cmpb_im( void )
+static INLINE void cmpb_im( void )
 {
 	UINT16	  t,r;
 	IMMBYTE(t);
@@ -2151,7 +2153,7 @@ INLINE void cmpb_im( void )
 }
 
 /* $c2 SBCB immediate ?**** */
-INLINE void sbcb_im( void )
+static INLINE void sbcb_im( void )
 {
 	UINT16	  t,r;
 	IMMBYTE(t);
@@ -2162,7 +2164,7 @@ INLINE void sbcb_im( void )
 }
 
 /* $c3 ADDD immediate -**** */
-INLINE void addd_im( void )
+static INLINE void addd_im( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2175,7 +2177,7 @@ INLINE void addd_im( void )
 }
 
 /* $c4 ANDB immediate -**0- */
-INLINE void andb_im( void )
+static INLINE void andb_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -2185,7 +2187,7 @@ INLINE void andb_im( void )
 }
 
 /* $c5 BITB immediate -**0- */
-INLINE void bitb_im( void )
+static INLINE void bitb_im( void )
 {
 	UINT8 t,r;
 	IMMBYTE(t);
@@ -2195,7 +2197,7 @@ INLINE void bitb_im( void )
 }
 
 /* $c6 LDB immediate -**0- */
-INLINE void ldb_im( void )
+static INLINE void ldb_im( void )
 {
 	IMMBYTE(B);
 	CLR_NZV;
@@ -2204,7 +2206,7 @@ INLINE void ldb_im( void )
 
 /* is this a legal instruction? */
 /* $c7 STB immediate -**0- */
-INLINE void stb_im( void )
+static INLINE void stb_im( void )
 {
 	CLR_NZV;
 	SET_NZ8(B);
@@ -2213,7 +2215,7 @@ INLINE void stb_im( void )
 }
 
 /* $c8 EORB immediate -**0- */
-INLINE void eorb_im( void )
+static INLINE void eorb_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -2223,7 +2225,7 @@ INLINE void eorb_im( void )
 }
 
 /* $c9 ADCB immediate ***** */
-INLINE void adcb_im( void )
+static INLINE void adcb_im( void )
 {
 	UINT16 t,r;
 	IMMBYTE(t);
@@ -2235,7 +2237,7 @@ INLINE void adcb_im( void )
 }
 
 /* $cA ORB immediate -**0- */
-INLINE void orb_im( void )
+static INLINE void orb_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -2245,7 +2247,7 @@ INLINE void orb_im( void )
 }
 
 /* $cB ADDB immediate ***** */
-INLINE void addb_im( void )
+static INLINE void addb_im( void )
 {
 	UINT16 t,r;
 	IMMBYTE(t);
@@ -2257,7 +2259,7 @@ INLINE void addb_im( void )
 }
 
 /* $cC LDD immediate -**0- */
-INLINE void ldd_im( void )
+static INLINE void ldd_im( void )
 {
 	IMMWORD(pD);
 	CLR_NZV;
@@ -2266,7 +2268,7 @@ INLINE void ldd_im( void )
 
 /* is this a legal instruction? */
 /* $cD STD immediate -**0- */
-INLINE void std_im( void )
+static INLINE void std_im( void )
 {
 	CLR_NZV;
 	SET_NZ16(D);
@@ -2275,7 +2277,7 @@ INLINE void std_im( void )
 }
 
 /* $cE LDU (LDS) immediate -**0- */
-INLINE void ldu_im( void )
+static INLINE void ldu_im( void )
 {
 	IMMWORD(pU);
 	CLR_NZV;
@@ -2283,7 +2285,7 @@ INLINE void ldu_im( void )
 }
 
 /* $10cE LDS immediate -**0- */
-INLINE void lds_im( void )
+static INLINE void lds_im( void )
 {
 	IMMWORD(pS);
 	CLR_NZV;
@@ -2293,7 +2295,7 @@ INLINE void lds_im( void )
 
 /* is this a legal instruction? */
 /* $cF STU (STS) immediate -**0- */
-INLINE void stu_im( void )
+static INLINE void stu_im( void )
 {
 	CLR_NZV;
 	SET_NZ16(U);
@@ -2303,7 +2305,7 @@ INLINE void stu_im( void )
 
 /* is this a legal instruction? */
 /* $10cF STS immediate -**0- */
-INLINE void sts_im( void )
+static INLINE void sts_im( void )
 {
 	CLR_NZV;
 	SET_NZ16(S);
@@ -2317,7 +2319,7 @@ INLINE void sts_im( void )
 #endif
 
 /* $d0 SUBB direct ?**** */
-INLINE void subb_di( void )
+static INLINE void subb_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -2328,7 +2330,7 @@ INLINE void subb_di( void )
 }
 
 /* $d1 CMPB direct ?**** */
-INLINE void cmpb_di( void )
+static INLINE void cmpb_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -2338,7 +2340,7 @@ INLINE void cmpb_di( void )
 }
 
 /* $d2 SBCB direct ?**** */
-INLINE void sbcb_di( void )
+static INLINE void sbcb_di( void )
 {
 	UINT16	  t,r;
 	DIRBYTE(t);
@@ -2349,7 +2351,7 @@ INLINE void sbcb_di( void )
 }
 
 /* $d3 ADDD direct -**** */
-INLINE void addd_di( void )
+static INLINE void addd_di( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2362,7 +2364,7 @@ INLINE void addd_di( void )
 }
 
 /* $d4 ANDB direct -**0- */
-INLINE void andb_di( void )
+static INLINE void andb_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -2372,7 +2374,7 @@ INLINE void andb_di( void )
 }
 
 /* $d5 BITB direct -**0- */
-INLINE void bitb_di( void )
+static INLINE void bitb_di( void )
 {
 	UINT8 t,r;
 	DIRBYTE(t);
@@ -2382,7 +2384,7 @@ INLINE void bitb_di( void )
 }
 
 /* $d6 LDB direct -**0- */
-INLINE void ldb_di( void )
+static INLINE void ldb_di( void )
 {
 	DIRBYTE(B);
 	CLR_NZV;
@@ -2390,7 +2392,7 @@ INLINE void ldb_di( void )
 }
 
 /* $d7 STB direct -**0- */
-INLINE void stb_di( void )
+static INLINE void stb_di( void )
 {
 	CLR_NZV;
 	SET_NZ8(B);
@@ -2399,7 +2401,7 @@ INLINE void stb_di( void )
 }
 
 /* $d8 EORB direct -**0- */
-INLINE void eorb_di( void )
+static INLINE void eorb_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -2409,7 +2411,7 @@ INLINE void eorb_di( void )
 }
 
 /* $d9 ADCB direct ***** */
-INLINE void adcb_di( void )
+static INLINE void adcb_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -2421,7 +2423,7 @@ INLINE void adcb_di( void )
 }
 
 /* $dA ORB direct -**0- */
-INLINE void orb_di( void )
+static INLINE void orb_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -2431,7 +2433,7 @@ INLINE void orb_di( void )
 }
 
 /* $dB ADDB direct ***** */
-INLINE void addb_di( void )
+static INLINE void addb_di( void )
 {
 	UINT16 t,r;
 	DIRBYTE(t);
@@ -2443,7 +2445,7 @@ INLINE void addb_di( void )
 }
 
 /* $dC LDD direct -**0- */
-INLINE void ldd_di( void )
+static INLINE void ldd_di( void )
 {
 	DIRWORD(pD);
 	CLR_NZV;
@@ -2451,7 +2453,7 @@ INLINE void ldd_di( void )
 }
 
 /* $dD STD direct -**0- */
-INLINE void std_di( void )
+static INLINE void std_di( void )
 {
 	CLR_NZV;
 	SET_NZ16(D);
@@ -2460,7 +2462,7 @@ INLINE void std_di( void )
 }
 
 /* $dE LDU (LDS) direct -**0- */
-INLINE void ldu_di( void )
+static INLINE void ldu_di( void )
 {
 	DIRWORD(pU);
 	CLR_NZV;
@@ -2468,7 +2470,7 @@ INLINE void ldu_di( void )
 }
 
 /* $10dE LDS direct -**0- */
-INLINE void lds_di( void )
+static INLINE void lds_di( void )
 {
 	DIRWORD(pS);
 	CLR_NZV;
@@ -2477,7 +2479,7 @@ INLINE void lds_di( void )
 }
 
 /* $dF STU (STS) direct -**0- */
-INLINE void stu_di( void )
+static INLINE void stu_di( void )
 {
 	CLR_NZV;
 	SET_NZ16(U);
@@ -2486,7 +2488,7 @@ INLINE void stu_di( void )
 }
 
 /* $10dF STS direct -**0- */
-INLINE void sts_di( void )
+static INLINE void sts_di( void )
 {
 	CLR_NZV;
 	SET_NZ16(S);
@@ -2500,7 +2502,7 @@ INLINE void sts_di( void )
 
 
 /* $e0 SUBB indexed ?**** */
-INLINE void subb_ix( void )
+static INLINE void subb_ix( void )
 {
 	UINT16	  t,r;
 	t = RM(EAD);
@@ -2511,7 +2513,7 @@ INLINE void subb_ix( void )
 }
 
 /* $e1 CMPB indexed ?**** */
-INLINE void cmpb_ix( void )
+static INLINE void cmpb_ix( void )
 {
 	UINT16	  t,r;
 	t = RM(EAD);
@@ -2521,7 +2523,7 @@ INLINE void cmpb_ix( void )
 }
 
 /* $e2 SBCB indexed ?**** */
-INLINE void sbcb_ix( void )
+static INLINE void sbcb_ix( void )
 {
 	UINT16	  t,r;
 	t = RM(EAD);
@@ -2532,7 +2534,7 @@ INLINE void sbcb_ix( void )
 }
 
 /* $e3 ADDD indexed -**** */
-INLINE void addd_ix( void )
+static INLINE void addd_ix( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2545,7 +2547,7 @@ INLINE void addd_ix( void )
 }
 
 /* $e4 ANDB indexed -**0- */
-INLINE void andb_ix( void )
+static INLINE void andb_ix( void )
 {
 	B &= RM(EAD);
 	CLR_NZV;
@@ -2553,7 +2555,7 @@ INLINE void andb_ix( void )
 }
 
 /* $e5 BITB indexed -**0- */
-INLINE void bitb_ix( void )
+static INLINE void bitb_ix( void )
 {
 	UINT8 r;
 	r = B & RM(EAD);
@@ -2562,7 +2564,7 @@ INLINE void bitb_ix( void )
 }
 
 /* $e6 LDB indexed -**0- */
-INLINE void ldb_ix( void )
+static INLINE void ldb_ix( void )
 {
 	B = RM(EAD);
 	CLR_NZV;
@@ -2570,7 +2572,7 @@ INLINE void ldb_ix( void )
 }
 
 /* $e7 STB indexed -**0- */
-INLINE void stb_ix( void )
+static INLINE void stb_ix( void )
 {
 	CLR_NZV;
 	SET_NZ8(B);
@@ -2578,7 +2580,7 @@ INLINE void stb_ix( void )
 }
 
 /* $e8 EORB indexed -**0- */
-INLINE void eorb_ix( void )
+static INLINE void eorb_ix( void )
 {
 	B ^= RM(EAD);
 	CLR_NZV;
@@ -2586,7 +2588,7 @@ INLINE void eorb_ix( void )
 }
 
 /* $e9 ADCB indexed ***** */
-INLINE void adcb_ix( void )
+static INLINE void adcb_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -2598,7 +2600,7 @@ INLINE void adcb_ix( void )
 }
 
 /* $eA ORB indexed -**0- */
-INLINE void orb_ix( void )
+static INLINE void orb_ix( void )
 {
 	B |= RM(EAD);
 	CLR_NZV;
@@ -2606,7 +2608,7 @@ INLINE void orb_ix( void )
 }
 
 /* $eb ADDB indexed ***** */
-INLINE void addb_ix( void )
+static INLINE void addb_ix( void )
 {
 	UINT16 t,r;
 	t = RM(EAD);
@@ -2618,14 +2620,14 @@ INLINE void addb_ix( void )
 }
 
 /* $ec LDD indexed -**0- */
-INLINE void ldd_ix( void )
+static INLINE void ldd_ix( void )
 {
 	D=RM16(EAD);
 	CLR_NZV; SET_NZ16(D);
 }
 
 /* $eD STD indexed -**0- */
-INLINE void std_ix( void )
+static INLINE void std_ix( void )
 {
 	CLR_NZV;
 	SET_NZ16(D);
@@ -2633,7 +2635,7 @@ INLINE void std_ix( void )
 }
 
 /* $eE LDU (LDS) indexed -**0- */
-INLINE void ldu_ix( void )
+static INLINE void ldu_ix( void )
 {
 	U=RM16(EAD);
 	CLR_NZV;
@@ -2641,7 +2643,7 @@ INLINE void ldu_ix( void )
 }
 
 /* $10eE LDS indexed -**0- */
-INLINE void lds_ix( void )
+static INLINE void lds_ix( void )
 {
 	S=RM16(EAD);
 	CLR_NZV;
@@ -2650,7 +2652,7 @@ INLINE void lds_ix( void )
 }
 
 /* $eF STU (STS) indexed -**0- */
-INLINE void stu_ix( void )
+static INLINE void stu_ix( void )
 {
 	CLR_NZV;
 	SET_NZ16(U);
@@ -2658,7 +2660,7 @@ INLINE void stu_ix( void )
 }
 
 /* $10eF STS indexed -**0- */
-INLINE void sts_ix( void )
+static INLINE void sts_ix( void )
 {
 	CLR_NZV;
 	SET_NZ16(S);
@@ -2670,7 +2672,7 @@ INLINE void sts_ix( void )
 #endif
 
 /* $f0 SUBB extended ?**** */
-INLINE void subb_ex( void )
+static INLINE void subb_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -2681,7 +2683,7 @@ INLINE void subb_ex( void )
 }
 
 /* $f1 CMPB extended ?**** */
-INLINE void cmpb_ex( void )
+static INLINE void cmpb_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -2691,7 +2693,7 @@ INLINE void cmpb_ex( void )
 }
 
 /* $f2 SBCB extended ?**** */
-INLINE void sbcb_ex( void )
+static INLINE void sbcb_ex( void )
 {
 	UINT16	  t,r;
 	EXTBYTE(t);
@@ -2702,7 +2704,7 @@ INLINE void sbcb_ex( void )
 }
 
 /* $f3 ADDD extended -**** */
-INLINE void addd_ex( void )
+static INLINE void addd_ex( void )
 {
 	UINT32 r,d;
 	PAIR b;
@@ -2715,7 +2717,7 @@ INLINE void addd_ex( void )
 }
 
 /* $f4 ANDB extended -**0- */
-INLINE void andb_ex( void )
+static INLINE void andb_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2725,7 +2727,7 @@ INLINE void andb_ex( void )
 }
 
 /* $f5 BITB extended -**0- */
-INLINE void bitb_ex( void )
+static INLINE void bitb_ex( void )
 {
 	UINT8 t,r;
 	EXTBYTE(t);
@@ -2735,7 +2737,7 @@ INLINE void bitb_ex( void )
 }
 
 /* $f6 LDB extended -**0- */
-INLINE void ldb_ex( void )
+static INLINE void ldb_ex( void )
 {
 	EXTBYTE(B);
 	CLR_NZV;
@@ -2743,7 +2745,7 @@ INLINE void ldb_ex( void )
 }
 
 /* $f7 STB extended -**0- */
-INLINE void stb_ex( void )
+static INLINE void stb_ex( void )
 {
 	CLR_NZV;
 	SET_NZ8(B);
@@ -2752,7 +2754,7 @@ INLINE void stb_ex( void )
 }
 
 /* $f8 EORB extended -**0- */
-INLINE void eorb_ex( void )
+static INLINE void eorb_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2762,7 +2764,7 @@ INLINE void eorb_ex( void )
 }
 
 /* $f9 ADCB extended ***** */
-INLINE void adcb_ex( void )
+static INLINE void adcb_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t);
@@ -2774,7 +2776,7 @@ INLINE void adcb_ex( void )
 }
 
 /* $fA ORB extended -**0- */
-INLINE void orb_ex( void )
+static INLINE void orb_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2784,7 +2786,7 @@ INLINE void orb_ex( void )
 }
 
 /* $fB ADDB extended ***** */
-INLINE void addb_ex( void )
+static INLINE void addb_ex( void )
 {
 	UINT16 t,r;
 	EXTBYTE(t);
@@ -2796,7 +2798,7 @@ INLINE void addb_ex( void )
 }
 
 /* $fC LDD extended -**0- */
-INLINE void ldd_ex( void )
+static INLINE void ldd_ex( void )
 {
 	EXTWORD(pD);
 	CLR_NZV;
@@ -2804,7 +2806,7 @@ INLINE void ldd_ex( void )
 }
 
 /* $fD STD extended -**0- */
-INLINE void std_ex( void )
+static INLINE void std_ex( void )
 {
 	CLR_NZV;
 	SET_NZ16(D);
@@ -2813,7 +2815,7 @@ INLINE void std_ex( void )
 }
 
 /* $fE LDU (LDS) extended -**0- */
-INLINE void ldu_ex( void )
+static INLINE void ldu_ex( void )
 {
 	EXTWORD(pU);
 	CLR_NZV;
@@ -2821,7 +2823,7 @@ INLINE void ldu_ex( void )
 }
 
 /* $10fE LDS extended -**0- */
-INLINE void lds_ex( void )
+static INLINE void lds_ex( void )
 {
 	EXTWORD(pS);
 	CLR_NZV;
@@ -2830,7 +2832,7 @@ INLINE void lds_ex( void )
 }
 
 /* $fF STU (STS) extended -**0- */
-INLINE void stu_ex( void )
+static INLINE void stu_ex( void )
 {
 	CLR_NZV;
 	SET_NZ16(U);
@@ -2839,7 +2841,7 @@ INLINE void stu_ex( void )
 }
 
 /* $10fF STS extended -**0- */
-INLINE void sts_ex( void )
+static INLINE void sts_ex( void )
 {
 	CLR_NZV;
 	SET_NZ16(S);
@@ -2847,7 +2849,7 @@ INLINE void sts_ex( void )
 	WM16(EAD,&pS);
 }
 
-INLINE void setline_im( void )
+static INLINE void setline_im( void )
 {
 	UINT8 t;
 	IMMBYTE(t);
@@ -2856,7 +2858,7 @@ INLINE void setline_im( void )
 		(*konami_cpu_setlines_callback)( t );
 }
 
-INLINE void setline_ix( void )
+static INLINE void setline_ix( void )
 {
 	UINT8 t;
 	t = RM(EA);
@@ -2865,7 +2867,7 @@ INLINE void setline_ix( void )
 		(*konami_cpu_setlines_callback)( t );
 }
 
-INLINE void setline_di( void )
+static INLINE void setline_di( void )
 {
 	UINT8 t;
 	DIRBYTE(t);
@@ -2874,7 +2876,7 @@ INLINE void setline_di( void )
 		(*konami_cpu_setlines_callback)( t );
 }
 
-INLINE void setline_ex( void )
+static INLINE void setline_ex( void )
 {
 	UINT8 t;
 	EXTBYTE(t);
@@ -2883,7 +2885,7 @@ INLINE void setline_ex( void )
 		(*konami_cpu_setlines_callback)( t );
 }
 
-INLINE void bmove( void )
+static INLINE void bmove( void )
 {
 	UINT8	t;
 
@@ -2897,7 +2899,7 @@ INLINE void bmove( void )
 	}
 }
 
-INLINE void move( void )
+static INLINE void move( void )
 {
 	UINT8	t;
 
@@ -2909,14 +2911,14 @@ INLINE void move( void )
 }
 
 /* CLRD inherent -0100 */
-INLINE void clrd( void )
+static INLINE void clrd( void )
 {
 	D = 0;
 	CLR_NZVC; SEZ;
 }
 
 /* CLRW indexed -0100 */
-INLINE void clrw_ix( void )
+static INLINE void clrw_ix( void )
 {
 	PAIR t;
 	t.d = 0;
@@ -2925,7 +2927,7 @@ INLINE void clrw_ix( void )
 }
 
 /* CLRW direct -0100 */
-INLINE void clrw_di( void )
+static INLINE void clrw_di( void )
 {
 	PAIR t;
 	t.d = 0;
@@ -2936,7 +2938,7 @@ INLINE void clrw_di( void )
 }
 
 /* CLRW extended -0100 */
-INLINE void clrw_ex( void )
+static INLINE void clrw_ex( void )
 {
 	PAIR t;
 	t.d = 0;
@@ -2946,7 +2948,7 @@ INLINE void clrw_ex( void )
 }
 
 /* LSRD immediate -0*-* */
-INLINE void lsrd( void )
+static INLINE void lsrd( void )
 {
 	UINT8 t;
 
@@ -2961,7 +2963,7 @@ INLINE void lsrd( void )
 }
 
 /* RORD immediate -**-* */
-INLINE void rord( void )
+static INLINE void rord( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -2979,7 +2981,7 @@ INLINE void rord( void )
 }
 
 /* ASRD immediate ?**-* */
-INLINE void asrd( void )
+static INLINE void asrd( void )
 {
 	UINT8 t;
 
@@ -2994,7 +2996,7 @@ INLINE void asrd( void )
 }
 
 /* ASLD immediate ?**** */
-INLINE void asld( void )
+static INLINE void asld( void )
 {
 	UINT32	r;
 	UINT8	t;
@@ -3010,7 +3012,7 @@ INLINE void asld( void )
 }
 
 /* ROLD immediate -**-* */
-INLINE void rold( void )
+static INLINE void rold( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3028,7 +3030,7 @@ INLINE void rold( void )
 }
 
 /* DECB,JNZ relative ----- */
-INLINE void decbjnz( void )
+static INLINE void decbjnz( void )
 {
 	--B;
 	CLR_NZV;
@@ -3037,7 +3039,7 @@ INLINE void decbjnz( void )
 }
 
 /* DECX,JNZ relative ----- */
-INLINE void decxjnz( void )
+static INLINE void decxjnz( void )
 {
 	--X;
 	CLR_NZV;
@@ -3045,7 +3047,7 @@ INLINE void decxjnz( void )
 	BRANCH( !(CC&CC_Z) );
 }
 
-INLINE void bset( void )
+static INLINE void bset( void )
 {
 	UINT8	t;
 
@@ -3058,7 +3060,7 @@ INLINE void bset( void )
 	}
 }
 
-INLINE void bset2( void )
+static INLINE void bset2( void )
 {
 	while( U != 0 ) {
 		WM16(XD,&pD);
@@ -3069,7 +3071,7 @@ INLINE void bset2( void )
 }
 
 /* LMUL inherent --*-@ */
-INLINE void lmul( void )
+static INLINE void lmul( void )
 {
 	UINT32 t;
 	t = X * Y;
@@ -3079,7 +3081,7 @@ INLINE void lmul( void )
 }
 
 /* DIVX inherent --*-@ */
-INLINE void divx( void )
+static INLINE void divx( void )
 {
 	UINT16 t;
 	UINT8 r;
@@ -3100,7 +3102,7 @@ INLINE void divx( void )
 }
 
 /* INCD inherent -***- */
-INLINE void incd( void )
+static INLINE void incd( void )
 {
 	UINT32 r;
 	r = D + 1;
@@ -3110,7 +3112,7 @@ INLINE void incd( void )
 }
 
 /* INCW direct -***- */
-INLINE void incw_di( void )
+static INLINE void incw_di( void )
 {
 	PAIR t,r;
 	DIRWORD(t);
@@ -3122,7 +3124,7 @@ INLINE void incw_di( void )
 }
 
 /* INCW indexed -***- */
-INLINE void incw_ix( void )
+static INLINE void incw_ix( void )
 {
 	PAIR t,r;
 	t.d=RM16(EAD);
@@ -3134,7 +3136,7 @@ INLINE void incw_ix( void )
 }
 
 /* INCW extended -***- */
-INLINE void incw_ex( void )
+static INLINE void incw_ex( void )
 {
 	PAIR t, r;
 	EXTWORD(t);
@@ -3145,7 +3147,7 @@ INLINE void incw_ex( void )
 }
 
 /* DECD inherent -***- */
-INLINE void decd( void )
+static INLINE void decd( void )
 {
 	UINT32 r;
 	r = D - 1;
@@ -3155,7 +3157,7 @@ INLINE void decd( void )
 }
 
 /* DECW direct -***- */
-INLINE void decw_di( void )
+static INLINE void decw_di( void )
 {
 	PAIR t,r;
 	DIRWORD(t);
@@ -3167,7 +3169,7 @@ INLINE void decw_di( void )
 }
 
 /* DECW indexed -***- */
-INLINE void decw_ix( void )
+static INLINE void decw_ix( void )
 {
 	PAIR t, r;
 	t.d=RM16(EAD);
@@ -3178,7 +3180,7 @@ INLINE void decw_ix( void )
 }
 
 /* DECW extended -***- */
-INLINE void decw_ex( void )
+static INLINE void decw_ex( void )
 {
 	PAIR t, r;
 	EXTWORD(t);
@@ -3189,14 +3191,14 @@ INLINE void decw_ex( void )
 }
 
 /* TSTD inherent -**0- */
-INLINE void tstd( void )
+static INLINE void tstd( void )
 {
 	CLR_NZV;
 	SET_NZ16(D);
 }
 
 /* TSTW direct -**0- */
-INLINE void tstw_di( void )
+static INLINE void tstw_di( void )
 {
 	PAIR t;
 	CLR_NZV;
@@ -3205,7 +3207,7 @@ INLINE void tstw_di( void )
 }
 
 /* TSTW indexed -**0- */
-INLINE void tstw_ix( void )
+static INLINE void tstw_ix( void )
 {
 	PAIR t;
 	CLR_NZV;
@@ -3214,7 +3216,7 @@ INLINE void tstw_ix( void )
 }
 
 /* TSTW extended -**0- */
-INLINE void tstw_ex( void )
+static INLINE void tstw_ex( void )
 {
 	PAIR t;
 	CLR_NZV;
@@ -3223,7 +3225,7 @@ INLINE void tstw_ex( void )
 }
 
 /* LSRW direct -0*-* */
-INLINE void lsrw_di( void )
+static INLINE void lsrw_di( void )
 {
 	PAIR t;
 	DIRWORD(t);
@@ -3235,7 +3237,7 @@ INLINE void lsrw_di( void )
 }
 
 /* LSRW indexed -0*-* */
-INLINE void lsrw_ix( void )
+static INLINE void lsrw_ix( void )
 {
 	PAIR t;
 	t.d=RM16(EAD);
@@ -3247,7 +3249,7 @@ INLINE void lsrw_ix( void )
 }
 
 /* LSRW extended -0*-* */
-INLINE void lsrw_ex( void )
+static INLINE void lsrw_ex( void )
 {
 	PAIR t;
 	EXTWORD(t);
@@ -3259,7 +3261,7 @@ INLINE void lsrw_ex( void )
 }
 
 /* RORW direct -**-* */
-INLINE void rorw_di( void )
+static INLINE void rorw_di( void )
 {
 	PAIR t,r;
 	DIRWORD(t);
@@ -3272,7 +3274,7 @@ INLINE void rorw_di( void )
 }
 
 /* RORW indexed -**-* */
-INLINE void rorw_ix( void )
+static INLINE void rorw_ix( void )
 {
 	PAIR t,r;
 	t.d=RM16(EAD);
@@ -3285,7 +3287,7 @@ INLINE void rorw_ix( void )
 }
 
 /* RORW extended -**-* */
-INLINE void rorw_ex( void )
+static INLINE void rorw_ex( void )
 {
 	PAIR t,r;
 	EXTWORD(t);
@@ -3298,7 +3300,7 @@ INLINE void rorw_ex( void )
 }
 
 /* ASRW direct ?**-* */
-INLINE void asrw_di( void )
+static INLINE void asrw_di( void )
 {
 	PAIR t;
 	DIRWORD(t);
@@ -3310,7 +3312,7 @@ INLINE void asrw_di( void )
 }
 
 /* ASRW indexed ?**-* */
-INLINE void asrw_ix( void )
+static INLINE void asrw_ix( void )
 {
 	PAIR t;
 	t.d=RM16(EAD);
@@ -3322,7 +3324,7 @@ INLINE void asrw_ix( void )
 }
 
 /* ASRW extended ?**-* */
-INLINE void asrw_ex( void )
+static INLINE void asrw_ex( void )
 {
 	PAIR t;
 	EXTWORD(t);
@@ -3334,7 +3336,7 @@ INLINE void asrw_ex( void )
 }
 
 /* ASLW direct ?**** */
-INLINE void aslw_di( void )
+static INLINE void aslw_di( void )
 {
 	PAIR t,r;
 	DIRWORD(t);
@@ -3345,7 +3347,7 @@ INLINE void aslw_di( void )
 }
 
 /* ASLW indexed ?**** */
-INLINE void aslw_ix( void )
+static INLINE void aslw_ix( void )
 {
 	PAIR t,r;
 	t.d=RM16(EAD);
@@ -3356,7 +3358,7 @@ INLINE void aslw_ix( void )
 }
 
 /* ASLW extended ?**** */
-INLINE void aslw_ex( void )
+static INLINE void aslw_ex( void )
 {
 	PAIR t,r;
 	EXTWORD(t);
@@ -3367,7 +3369,7 @@ INLINE void aslw_ex( void )
 }
 
 /* ROLW direct -**** */
-INLINE void rolw_di( void )
+static INLINE void rolw_di( void )
 {
 	PAIR t,r;
 	DIRWORD(t);
@@ -3378,7 +3380,7 @@ INLINE void rolw_di( void )
 }
 
 /* ROLW indexed -**** */
-INLINE void rolw_ix( void )
+static INLINE void rolw_ix( void )
 {
 	PAIR t,r;
 	t.d=RM16(EAD);
@@ -3389,7 +3391,7 @@ INLINE void rolw_ix( void )
 }
 
 /* ROLW extended -**** */
-INLINE void rolw_ex( void )
+static INLINE void rolw_ex( void )
 {
 	PAIR t,r;
 	EXTWORD(t);
@@ -3400,7 +3402,7 @@ INLINE void rolw_ex( void )
 }
 
 /* NEGD inherent ?**** */
-INLINE void negd( void )
+static INLINE void negd( void )
 {
 	UINT32 r;
 	r = -D;
@@ -3410,7 +3412,7 @@ INLINE void negd( void )
 }
 
 /* NEGW direct ?**** */
-INLINE void negw_di( void )
+static INLINE void negw_di( void )
 {
 	PAIR r,t;
 	DIRWORD(t);
@@ -3421,7 +3423,7 @@ INLINE void negw_di( void )
 }
 
 /* NEGW indexed ?**** */
-INLINE void negw_ix( void )
+static INLINE void negw_ix( void )
 {
 	PAIR r,t;
 	t.d=RM16(EAD);
@@ -3432,7 +3434,7 @@ INLINE void negw_ix( void )
 }
 
 /* NEGW extended ?**** */
-INLINE void negw_ex( void )
+static INLINE void negw_ex( void )
 {
 	PAIR r,t;
 	EXTWORD(t);
@@ -3443,7 +3445,7 @@ INLINE void negw_ex( void )
 }
 
 /* ABSA inherent ?**** */
-INLINE void absa( void )
+static INLINE void absa( void )
 {
 	UINT16 r;
 	if (A & 0x80)
@@ -3456,7 +3458,7 @@ INLINE void absa( void )
 }
 
 /* ABSB inherent ?**** */
-INLINE void absb( void )
+static INLINE void absb( void )
 {
 	UINT16 r;
 	if (B & 0x80)
@@ -3469,7 +3471,7 @@ INLINE void absb( void )
 }
 
 /* ABSD inherent ?**** */
-INLINE void absd( void )
+static INLINE void absd( void )
 {
 	UINT32 r;
 	if (D & 0x8000)
@@ -3482,7 +3484,7 @@ INLINE void absd( void )
 }
 
 /* LSRD direct -0*-* */
-INLINE void lsrd_di( void )
+static INLINE void lsrd_di( void )
 {
 	UINT8 t;
 
@@ -3497,7 +3499,7 @@ INLINE void lsrd_di( void )
 }
 
 /* RORD direct -**-* */
-INLINE void rord_di( void )
+static INLINE void rord_di( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3515,7 +3517,7 @@ INLINE void rord_di( void )
 }
 
 /* ASRD direct ?**-* */
-INLINE void asrd_di( void )
+static INLINE void asrd_di( void )
 {
 	UINT8 t;
 
@@ -3530,7 +3532,7 @@ INLINE void asrd_di( void )
 }
 
 /* ASLD direct ?**** */
-INLINE void asld_di( void )
+static INLINE void asld_di( void )
 {
 	UINT32	r;
 	UINT8	t;
@@ -3546,7 +3548,7 @@ INLINE void asld_di( void )
 }
 
 /* ROLD direct -**-* */
-INLINE void rold_di( void )
+static INLINE void rold_di( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3564,7 +3566,7 @@ INLINE void rold_di( void )
 }
 
 /* LSRD indexed -0*-* */
-INLINE void lsrd_ix( void )
+static INLINE void lsrd_ix( void )
 {
 	UINT8 t;
 
@@ -3579,7 +3581,7 @@ INLINE void lsrd_ix( void )
 }
 
 /* RORD indexed -**-* */
-INLINE void rord_ix( void )
+static INLINE void rord_ix( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3597,7 +3599,7 @@ INLINE void rord_ix( void )
 }
 
 /* ASRD indexed ?**-* */
-INLINE void asrd_ix( void )
+static INLINE void asrd_ix( void )
 {
 	UINT8 t;
 
@@ -3612,7 +3614,7 @@ INLINE void asrd_ix( void )
 }
 
 /* ASLD indexed ?**** */
-INLINE void asld_ix( void )
+static INLINE void asld_ix( void )
 {
 	UINT32	r;
 	UINT8	t;
@@ -3628,7 +3630,7 @@ INLINE void asld_ix( void )
 }
 
 /* ROLD indexed -**-* */
-INLINE void rold_ix( void )
+static INLINE void rold_ix( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3646,7 +3648,7 @@ INLINE void rold_ix( void )
 }
 
 /* LSRD extended -0*-* */
-INLINE void lsrd_ex( void )
+static INLINE void lsrd_ex( void )
 {
 	UINT8 t;
 
@@ -3661,7 +3663,7 @@ INLINE void lsrd_ex( void )
 }
 
 /* RORD extended -**-* */
-INLINE void rord_ex( void )
+static INLINE void rord_ex( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3679,7 +3681,7 @@ INLINE void rord_ex( void )
 }
 
 /* ASRD extended ?**-* */
-INLINE void asrd_ex( void )
+static INLINE void asrd_ex( void )
 {
 	UINT8 t;
 
@@ -3694,7 +3696,7 @@ INLINE void asrd_ex( void )
 }
 
 /* ASLD extended ?**** */
-INLINE void asld_ex( void )
+static INLINE void asld_ex( void )
 {
 	UINT32	r;
 	UINT8	t;
@@ -3710,7 +3712,7 @@ INLINE void asld_ex( void )
 }
 
 /* ROLD extended -**-* */
-INLINE void rold_ex( void )
+static INLINE void rold_ex( void )
 {
 	UINT16 r;
 	UINT8  t;
@@ -3727,7 +3729,7 @@ INLINE void rold_ex( void )
 	}
 }
 
-INLINE void opcode2( void )
+static INLINE void opcode2( void )
 {
 	UINT8 ireg2 = ROP_ARG(PCD);
 	PC++;

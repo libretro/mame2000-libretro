@@ -523,7 +523,8 @@ unsigned pdp1_dasm (char *buffer, unsigned pc)
 }
 
 static int etime = 0;
-INLINE void ea (void)
+
+static INLINE void ea (void)
 {
 	while (1)
 	{

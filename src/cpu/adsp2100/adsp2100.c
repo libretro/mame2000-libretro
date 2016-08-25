@@ -197,25 +197,25 @@ static void check_irqs(void);
 **	MEMORY ACCESSORS
 **#################################################################################################*/
 
-INLINE UINT16 RWORD_DATA(UINT16 addr)
+static INLINE UINT16 RWORD_DATA(UINT16 addr)
 {
 	addr = (addr & 0x3fff) << 1;
 	return ADSP2100_RDMEM_WORD(ADSP2100_DATA_OFFSET + addr);
 }
 
-INLINE void WWORD_DATA(UINT16 addr, UINT16 data)
+static INLINE void WWORD_DATA(UINT16 addr, UINT16 data)
 {
 	addr = (addr & 0x3fff) << 1;
 	ADSP2100_WRMEM_WORD(ADSP2100_DATA_OFFSET + addr, data);
 }
 
-INLINE UINT32 RWORD_PGM(UINT16 addr)
+static INLINE UINT32 RWORD_PGM(UINT16 addr)
 {
 	addr = (addr & 0x3fff) << 2;
 	return *(UINT32 *)&OP_ROM[ADSP2100_PGM_OFFSET + addr] & 0x00ffffff;
 }
 
-INLINE void WWORD_PGM(UINT16 addr, UINT32 data)
+static INLINE void WWORD_PGM(UINT16 addr, UINT32 data)
 {
 	addr = (addr & 0x3fff) << 2;
 	*(UINT32 *)&OP_ROM[ADSP2100_PGM_OFFSET + addr] = data;

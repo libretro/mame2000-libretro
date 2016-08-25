@@ -119,7 +119,7 @@ static	void illegal(void)
 #endif
 }
 
-INLINE void execute_one(int opcode)
+static INLINE void execute_one(int opcode)
 {
 	switch (opcode)
 	{

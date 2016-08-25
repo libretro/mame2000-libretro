@@ -85,12 +85,11 @@ static void K053260_reset( void ) {
 	}
 }
 
-INLINE int limit( int val, int max, int min ) {
+static INLINE int limit( int val, int max, int min ) {
 	if ( val > max )
 		val = max;
 	else if ( val < min )
 		val = min;
-
 	return val;
 }
 
@@ -302,7 +301,7 @@ void K053260_sh_stop( void ) {
 	K053260_chip.timer = 0;
 }
 
-INLINE void check_bounds( int channel ) {
+static INLINE void check_bounds( int channel ) {
 	int channel_start = ( K053260_channel[channel].bank << 16 ) + K053260_channel[channel].start;
 	int channel_end = channel_start + K053260_channel[channel].size - 1;
 

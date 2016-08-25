@@ -20,6 +20,7 @@
 #include "cpuintrf.h"
 #include "tms32010.h"
 
+#include <retro_inline.h>
 
 #define M_RDROM(A)		TMS320C10_ROM_RDMEM(A)
 #define M_WRTROM(A,V)	TMS320C10_ROM_WRMEM(A,V)
@@ -32,9 +33,6 @@
 
 #define ADDR_MASK		TMS320C10_ADDR_MASK
 
-#ifndef INLINE
-#define INLINE static inline
-#endif
 typedef struct
 {
 	UINT16	PREPC;		/* previous program counter */
@@ -81,10 +79,10 @@ UINT16			 memaccess;
 
 
 
-INLINE void CLR(UINT16 flag) { R.STR &= ~flag; R.STR |= 0x1efe; }
-INLINE void SET(UINT16 flag) { R.STR |=  flag; R.STR |= 0x1efe; }
+static INLINE void CLR(UINT16 flag) { R.STR &= ~flag; R.STR |= 0x1efe; }
+static INLINE void SET(UINT16 flag) { R.STR |=  flag; R.STR |= 0x1efe; }
 
-INLINE void getdata(UINT8 shift,UINT8 signext)
+static INLINE void getdata(UINT8 shift,UINT8 signext)
 {
 	if (opcode_minor & 0x80) memaccess = ind;
 	else memaccess = dma;
@@ -105,7 +103,7 @@ INLINE void getdata(UINT8 shift,UINT8 signext)
 		}
 	}
 }
-INLINE void getdata_lar(void)
+static INLINE void getdata_lar(void)
 {
 	if (opcode_minor & 0x80) memaccess = ind;
 	else memaccess = dma;
@@ -126,7 +124,7 @@ INLINE void getdata_lar(void)
 	}
 }
 
-INLINE void putdata(UINT16 data)
+static INLINE void putdata(UINT16 data)
 {
 	if (opcode_minor & 0x80) memaccess = ind;
 	else memaccess = dma;
@@ -146,7 +144,7 @@ INLINE void putdata(UINT16 data)
 		M_WRTRAM(memaccess,(R.AR[data])); }
 	else M_WRTRAM(memaccess,(data&0xffff));
 }
-INLINE void putdata_sst(UINT16 data)
+static INLINE void putdata_sst(UINT16 data)
 {
 	if (opcode_minor & 0x80) memaccess = ind;
 	else memaccess = dmapage1;

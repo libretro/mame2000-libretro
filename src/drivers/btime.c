@@ -102,8 +102,7 @@ static WRITE_HANDLER( sound_command_w );
 READ_HANDLER( mmonkey_protection_r );
 WRITE_HANDLER( mmonkey_protection_w );
 
-
-INLINE int swap_bits_5_6(int data)
+static INLINE int swap_bits_5_6(int data)
 {
 	return (data & 0x9f) | ((data & 0x20) << 1) | ((data & 0x40) >> 1);
 }

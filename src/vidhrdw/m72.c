@@ -132,7 +132,7 @@ static void majtitle_get_bg_tile_info(int tile_index)
 /* (videoram[4*tile_index+2] & 0x10) is used, but it's not clear for what (priority?) */
 }
 
-INLINE void hharry_get_tile_info(int gfxnum,unsigned char *videoram,int tile_index)
+static INLINE void hharry_get_tile_info(int gfxnum,unsigned char *videoram,int tile_index)
 {
 	unsigned char attr = videoram[4*tile_index+1];
 	SET_TILE_INFO(gfxnum,videoram[4*tile_index] + ((attr & 0x3f) << 8),videoram[4*tile_index+2] & 0x0f)
@@ -287,7 +287,7 @@ READ_HANDLER( m72_palette2_r )
 	return paletteram_2[offset];
 }
 
-INLINE void changecolor(int color,int r,int g,int b)
+static INLINE void changecolor(int color,int r,int g,int b)
 {
 	r = (r << 3) | (r >> 2);
 	g = (g << 3) | (g >> 2);

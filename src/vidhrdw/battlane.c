@@ -188,7 +188,7 @@ void battlane_vh_stop(void)
 
 ***************************************************************************/
 
-INLINE void battlane_build_palette(void)
+static INLINE void battlane_build_palette(void)
 {
 	int offset;
     unsigned char *PALETTE =

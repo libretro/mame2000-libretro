@@ -76,7 +76,9 @@
 #include "state.h"
 #include "m6809.h"
 
-INLINE void fetch_effective_address( void );
+#include <retro_inline.h>
+
+static INLINE void fetch_effective_address( void );
 
 /* 6809 Registers */
 typedef struct
@@ -344,12 +346,12 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 
 /* macros for setting/getting registers in TFR/EXG instructions */
 
-INLINE UINT32 RM16( UINT32 Addr )
+static INLINE UINT32 RM16( UINT32 Addr )
 {
 	return (RM(Addr) << 8) | (RM((Addr+1)&0xffff));
 }
 
-INLINE void WM16( UINT32 Addr, PAIR *p )
+static INLINE void WM16( UINT32 Addr, PAIR *p )
 {
 	WM( Addr, p->b.h );
 	WM( (Addr+1)&0xffff, p->b.l );
@@ -979,7 +981,7 @@ int m6809_execute(int cycles)	/* NS 970908 */
     return cycles - m6809_ICount;   /* NS 970908 */
 }
 
-INLINE void fetch_effective_address( void )
+static INLINE void fetch_effective_address( void )
 {
       __label__ 
     l_0x00, l_0x01, l_0x02, l_0x03, l_0x04, l_0x05, l_0x06, l_0x07, l_0x08, l_0x09,

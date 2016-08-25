@@ -75,7 +75,7 @@
 #endif
 
 /* call this whenever mstat changes */
-INLINE void mstat_changed(void)
+static INLINE void mstat_changed(void)
 {
 	core = &adsp2100.r[adsp2100.mstat & MSTAT_BANK];
 	if (adsp2100.mstat & MSTAT_STICKYV)
@@ -105,7 +105,7 @@ INLINE void mstat_changed(void)
 	PC stack handlers
 ===========================================================================*/
 
-INLINE UINT16 pc_stack_top(void)
+static INLINE UINT16 pc_stack_top(void)
 {
 	if (adsp2100.pc_sp > 0)
 		return adsp2100.pc_stack[adsp2100.pc_sp - 1];
@@ -113,7 +113,7 @@ INLINE UINT16 pc_stack_top(void)
 		return adsp2100.pc_stack[0];
 }
 
-INLINE void set_pc_stack_top(UINT16 top)
+static INLINE void set_pc_stack_top(UINT16 top)
 {
 	if (adsp2100.pc_sp > 0)
 		adsp2100.pc_stack[adsp2100.pc_sp - 1] = top;
@@ -121,7 +121,7 @@ INLINE void set_pc_stack_top(UINT16 top)
 		adsp2100.pc_stack[0] = top;
 }
 
-INLINE void pc_stack_push(void)
+static INLINE void pc_stack_push(void)
 {
 	if (adsp2100.pc_sp < PC_STACK_DEPTH)
 	{
@@ -133,7 +133,7 @@ INLINE void pc_stack_push(void)
 		adsp2100.sstat |= PC_OVER;
 }
 
-INLINE void pc_stack_push_val(UINT16 val)
+static INLINE void pc_stack_push_val(UINT16 val)
 {
 	if (adsp2100.pc_sp < PC_STACK_DEPTH)
 	{
@@ -145,7 +145,7 @@ INLINE void pc_stack_push_val(UINT16 val)
 		adsp2100.sstat |= PC_OVER;
 }
 
-INLINE void pc_stack_pop(void)
+static INLINE void pc_stack_pop(void)
 {
 	if (adsp2100.pc_sp > 0)
 	{
@@ -156,7 +156,7 @@ INLINE void pc_stack_pop(void)
 	adsp2100.pc = adsp2100.pc_stack[adsp2100.pc_sp];
 }
 
-INLINE UINT16 pc_stack_pop_val(void)
+static INLINE UINT16 pc_stack_pop_val(void)
 {
 	if (adsp2100.pc_sp > 0)
 	{
@@ -172,7 +172,7 @@ INLINE UINT16 pc_stack_pop_val(void)
 	CNTR stack handlers
 ===========================================================================*/
 
-INLINE UINT16 cntr_stack_top(void)
+static INLINE UINT16 cntr_stack_top(void)
 {
 	if (adsp2100.cntr_sp > 0)
 		return adsp2100.cntr_stack[adsp2100.cntr_sp - 1];
@@ -180,7 +180,7 @@ INLINE UINT16 cntr_stack_top(void)
 		return adsp2100.cntr_stack[0];
 }
 
-INLINE void cntr_stack_push(void)
+static INLINE void cntr_stack_push(void)
 {
 	if (adsp2100.cntr_sp < CNTR_STACK_DEPTH)
 	{
@@ -192,7 +192,7 @@ INLINE void cntr_stack_push(void)
 		adsp2100.sstat |= COUNT_OVER;
 }
 
-INLINE void cntr_stack_pop(void)
+static INLINE void cntr_stack_pop(void)
 {
 	if (adsp2100.cntr_sp > 0)
 	{
@@ -208,7 +208,7 @@ INLINE void cntr_stack_pop(void)
 	LOOP stack handlers
 ===========================================================================*/
 
-INLINE UINT32 loop_stack_top(void)
+static INLINE UINT32 loop_stack_top(void)
 {
 	if (adsp2100.loop_sp > 0)
 		return adsp2100.loop_stack[adsp2100.loop_sp - 1];
@@ -216,7 +216,7 @@ INLINE UINT32 loop_stack_top(void)
 		return adsp2100.loop_stack[0];
 }
 
-INLINE void loop_stack_push(UINT32 value)
+static INLINE void loop_stack_push(UINT32 value)
 {
 	if (adsp2100.loop_sp < LOOP_STACK_DEPTH)
 	{
@@ -230,7 +230,7 @@ INLINE void loop_stack_push(UINT32 value)
 		adsp2100.sstat |= LOOP_OVER;
 }
 
-INLINE void loop_stack_pop(void)
+static INLINE void loop_stack_pop(void)
 {
 	if (adsp2100.loop_sp > 0)
 	{
@@ -254,7 +254,7 @@ INLINE void loop_stack_pop(void)
 	STAT stack handlers
 ===========================================================================*/
 
-INLINE void stat_stack_push(void)
+static INLINE void stat_stack_push(void)
 {
 	if (adsp2100.stat_sp < STAT_STACK_DEPTH)
 	{
@@ -268,7 +268,7 @@ INLINE void stat_stack_push(void)
 		adsp2100.sstat |= STATUS_OVER;
 }
 
-INLINE void stat_stack_pop(void)
+static INLINE void stat_stack_pop(void)
 {
 	if (adsp2100.stat_sp > 0)
 	{
@@ -287,7 +287,7 @@ INLINE void stat_stack_pop(void)
 	condition code checking
 ===========================================================================*/
 
-INLINE int CONDITION(int c)
+static INLINE int CONDITION(int c)
 {
 	if (c != 14)
 		return condition_table[((c) << 8) | adsp2100.astat];
@@ -490,7 +490,7 @@ static INT32 (*rd_reg[4][16])(void) =
 	Modulus addressing logic
 ===========================================================================*/
 
-INLINE void modify_address(UINT32 ireg, UINT32 mreg)
+static INLINE void modify_address(UINT32 ireg, UINT32 mreg)
 {
 	UINT32 base = adsp2100.base[ireg];
 	UINT32 i = adsp2100.i[ireg];
@@ -508,7 +508,7 @@ INLINE void modify_address(UINT32 ireg, UINT32 mreg)
 	Data memory accessors
 ===========================================================================*/
 
-INLINE void data_write_dag1(UINT32 op, INT32 val)
+static INLINE void data_write_dag1(UINT32 op, INT32 val)
 {
 	UINT32 ireg = (op >> 2) & 3;
 	UINT32 mreg = op & 3;
@@ -531,7 +531,7 @@ INLINE void data_write_dag1(UINT32 op, INT32 val)
 }
 		
 
-INLINE UINT16 data_read_dag1(UINT32 op)
+static INLINE UINT16 data_read_dag1(UINT32 op)
 {
 	UINT32 ireg = (op >> 2) & 3;
 	UINT32 mreg = op & 3;
@@ -556,7 +556,7 @@ INLINE UINT16 data_read_dag1(UINT32 op)
 	return res;
 }
 
-INLINE void data_write_dag2(UINT32 op, INT32 val)
+static INLINE void data_write_dag2(UINT32 op, INT32 val)
 {
 	UINT32 ireg = 4 + ((op >> 2) & 3);
 	UINT32 mreg = 4 + (op & 3);
@@ -573,7 +573,7 @@ INLINE void data_write_dag2(UINT32 op, INT32 val)
 }
 		
 
-INLINE UINT16 data_read_dag2(UINT32 op)
+static INLINE UINT16 data_read_dag2(UINT32 op)
 {
 	UINT32 ireg = 4 + ((op >> 2) & 3);
 	UINT32 mreg = 4 + (op & 3);
@@ -595,7 +595,7 @@ INLINE UINT16 data_read_dag2(UINT32 op)
 	Program memory accessors
 ===========================================================================*/
 
-INLINE void pgm_write_dag2(UINT32 op, INT32 val)
+static INLINE void pgm_write_dag2(UINT32 op, INT32 val)
 {
 	UINT32 ireg = 4 + ((op >> 2) & 3);
 	UINT32 mreg = 4 + (op & 3);
@@ -612,7 +612,7 @@ INLINE void pgm_write_dag2(UINT32 op, INT32 val)
 }
 		
 
-INLINE UINT16 pgm_read_dag2(UINT32 op)
+static INLINE UINT16 pgm_read_dag2(UINT32 op)
 {
 	UINT32 ireg = 4 + ((op >> 2) & 3);
 	UINT32 mreg = 4 + (op & 3);

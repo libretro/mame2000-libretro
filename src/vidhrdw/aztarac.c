@@ -14,7 +14,7 @@ UINT8 *aztarac_vectorram;
 
 static int xcenter, ycenter;
 
-INLINE void read_vectorram (int addr, int *x, int *y, int *c)
+static INLINE void read_vectorram (int addr, int *x, int *y, int *c)
 {
     addr <<= 1;
     *c = READ_WORD (&aztarac_vectorram[addr]) & 0xffff;
@@ -24,7 +24,7 @@ INLINE void read_vectorram (int addr, int *x, int *y, int *c)
     if (*y & 0x200) *y |= 0xfffffc00;
 }
 
-INLINE void aztarac_vector (int x, int y, int color, int intensity)
+static INLINE void aztarac_vector (int x, int y, int color, int intensity)
 {
     if (translucency) intensity *= 0.8;
     vector_add_point (xcenter + (x << VEC_SHIFT), ycenter - (y << VEC_SHIFT), color, intensity);

@@ -177,7 +177,7 @@ void SEGAPCMResetChip( void )
 /*    update SEGAPCM                            */
 /************************************************/
 
-INLINE int ILimit(int v, int max, int min) { return v > max ? max : (v < min ? min : v); }
+static INLINE int ILimit(int v, int max, int min) { return v > max ? max : (v < min ? min : v); }
 
 static void SEGAPCMUpdate( int num, INT16 **buffer, int length )
 {

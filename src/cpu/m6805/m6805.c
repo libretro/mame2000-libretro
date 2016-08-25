@@ -230,13 +230,13 @@ static unsigned char cycles1[] =
 /* pre-clear a PAIR union; clearing h2 and h3 only might be faster? */
 #define CLEAR_PAIR(p)   p->d = 0
 
-INLINE void rd_s_handler_b( UINT8 *b )
+static INLINE void rd_s_handler_b( UINT8 *b )
 {
 	*b = RM( S );
 	SP_INC;
 }
 
-INLINE void rd_s_handler_w( PAIR *p )
+static INLINE void rd_s_handler_w( PAIR *p )
 {
 	CLEAR_PAIR(p);
 	p->b.h = RM( S );
@@ -245,13 +245,13 @@ INLINE void rd_s_handler_w( PAIR *p )
 	SP_INC;
 }
 
-INLINE void wr_s_handler_b( UINT8 *b )
+static INLINE void wr_s_handler_b( UINT8 *b )
 {
 	SP_DEC;
 	WM( S, *b );
 }
 
-INLINE void wr_s_handler_w( PAIR *p )
+static INLINE void wr_s_handler_w( PAIR *p )
 {
     SP_DEC;
 	WM( S, p->b.l );
@@ -259,7 +259,7 @@ INLINE void wr_s_handler_w( PAIR *p )
 	WM( S, p->b.h );
 }
 
-INLINE void RM16( UINT32 Addr, PAIR *p )
+static INLINE void RM16( UINT32 Addr, PAIR *p )
 {
 	CLEAR_PAIR(p);
     p->b.h = RM(Addr);
@@ -267,7 +267,7 @@ INLINE void RM16( UINT32 Addr, PAIR *p )
 	p->b.l = RM(Addr);
 }
 
-INLINE void WM16( UINT32 Addr, PAIR *p )
+static INLINE void WM16( UINT32 Addr, PAIR *p )
 {
 	WM( Addr, p->b.h );
 	if( ++Addr > AMASK ) Addr = 0;

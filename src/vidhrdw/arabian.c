@@ -180,10 +180,7 @@ void arabian_vh_stop(void)
 	bitmap_free(tmpbitmap);
 }
 
-
-
-
-INLINE void blit_byte(UINT8 x, UINT8 y, int val, int val2, UINT8 plane)
+static INLINE void blit_byte(UINT8 x, UINT8 y, int val, int val2, UINT8 plane)
 {
 	int p1,p2,p3,p4;
 

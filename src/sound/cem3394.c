@@ -370,7 +370,7 @@ void cem3394_sh_stop(void)
 }
 
 
-INLINE float compute_db(float voltage)
+static INLINE float compute_db(float voltage)
 {
 	/* assumes 0.0 == full off, 4.0 == full on, with linear taper, as described in the datasheet */
 
@@ -396,7 +396,7 @@ INLINE float compute_db(float voltage)
 }
 
 
-INLINE UINT32 compute_db_volume(float voltage)
+static INLINE UINT32 compute_db_volume(float voltage)
 {
 	float temp;
 

@@ -17,6 +17,8 @@
 #include "cpuintrf.h"
 #include "t11.h"
 
+#include <retro_inline.h>
+
 /* T-11 Registers */
 typedef struct
 {
@@ -47,7 +49,7 @@ int	t11_ICount=50000;
 #define PSW t11.psw.b.l
 
 /* shortcuts for reading opcodes */
-INLINE int ROPCODE(void)
+static INLINE int ROPCODE(void)
 {
 	int pc = PCD;
 	PC += 2;
@@ -59,24 +61,24 @@ INLINE int ROPCODE(void)
 #define WBYTE(addr,data) T11_WRMEM((addr), (data))
 
 /* shortcuts for reading/writing memory words */
-INLINE int RWORD(int addr)
+static INLINE int RWORD(int addr)
 {
 	return T11_RDMEM_WORD(addr & 0xfffe);
 }
 
-INLINE void WWORD(int addr, int data)
+static INLINE void WWORD(int addr, int data)
 {
 	T11_WRMEM_WORD(addr & 0xfffe, data);
 }
 
 /* pushes/pops a value from the stack */
-INLINE void PUSH(int val)
+static INLINE void PUSH(int val)
 {
 	SP -= 2;
 	WWORD(SPD, val);
 }
 
-INLINE int POP(void)
+static INLINE int POP(void)
 {
 	int result = RWORD(SPD);
 	SP += 2;

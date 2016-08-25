@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <retro_inline.h>
+
 typedef unsigned InputCode;
 
 struct KeyboardInfo
@@ -113,7 +115,8 @@ INT8 code_read_hex_async(void);
 
 typedef InputCode InputSeq[SEQ_MAX];
 
-INLINE InputCode seq_get_1(InputSeq* a) {
+static INLINE InputCode seq_get_1(InputSeq* a)
+{
 	return (*a)[0];
 }
 

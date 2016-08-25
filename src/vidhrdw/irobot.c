@@ -248,7 +248,7 @@ void irobot_poly_clear(void) {
         osd_clearbitmap(polybitmap1);
 }
 
-INLINE void irobot_draw_pixel (int x, int y, int col)
+static INLINE void irobot_draw_pixel (int x, int y, int col)
 {
     if (x < ir_xmin || x >= ir_xmax)
 		return;

@@ -10,6 +10,8 @@
 #include "state.h"
 #include "mips.h"
 
+#include <retro_inline.h>
+
 #define EXC_INT 	0
 #define EXC_TLBL	2
 #define EXC_TLBS	3
@@ -100,7 +102,7 @@ void mips_stop( void )
 {
 }
 
-INLINE void mips_set_nextpc( UINT32 adr )
+static INLINE void mips_set_nextpc( UINT32 adr )
 {
 	THISPC = NEXTPC;
 	THISOP = mcc.nextop;
@@ -117,7 +119,7 @@ INLINE void mips_set_nextpc( UINT32 adr )
 	}
 }
 
-INLINE void mips_advance_pc( void )
+static INLINE void mips_advance_pc( void )
 {
 	THISPC = NEXTPC;
 	THISOP = mcc.nextop;

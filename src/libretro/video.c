@@ -222,16 +222,12 @@ static void init_dirty(char dirty)
 	memset(dirty_new, dirty, MAX_GFX_WIDTH/16 * MAX_GFX_HEIGHT/16);
 }
 
-INLINE void swap_dirty(void)
+static INLINE void swap_dirty(void)
 {
-    char *tmp;
-
-	tmp = dirty_old;
+   char *tmp = dirty_old;
 	dirty_old = dirty_new;
 	dirty_new = tmp;
 }
-
-
 
 /*
  * This function tries to find the best display mode.
@@ -753,7 +749,7 @@ static void update_screen_dummy(struct osd_bitmap *bitmap)
 	logerror("msdos/video.c: undefined update_screen() function for %d x %d!\n",xmultiply,ymultiply);
 }
 
-INLINE void pan_display(void)
+static INLINE void pan_display(void)
 {
 	int pan_changed = 0;
 

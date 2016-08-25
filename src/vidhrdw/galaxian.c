@@ -654,8 +654,7 @@ WRITE_HANDLER( jumpbug_gfxbank_w )
 	set_vh_global_attribute( &jumpbug_gfxbank[offset], data & 1 );
 }
 
-
-INLINE void plot_star(struct osd_bitmap *bitmap, int x, int y, int code)
+static INLINE void plot_star(struct osd_bitmap *bitmap, int x, int y, int code)
 {
 	int backcol, pixel;
 

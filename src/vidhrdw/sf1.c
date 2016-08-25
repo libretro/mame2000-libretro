@@ -114,7 +114,7 @@ void sf1_active_w(int data)
 
 ***************************************************************************/
 
-INLINE int sf1_invert(int nb)
+static INLINE int sf1_invert(int nb)
 {
 	static int delta[4] = {0x00, 0x18, 0x18, 0x00};
 	return nb^delta[(nb>>3)&3];

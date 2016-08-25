@@ -15,8 +15,6 @@
  * If your compiler doesn't know about inlined functions, uncomment this *
  *************************************************************************/
 
-/* #define INLINE static */
-
 #include "osd_cpu.h"
 #include "cpuintrf.h"
 

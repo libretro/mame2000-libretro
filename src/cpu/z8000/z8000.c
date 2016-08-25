@@ -25,6 +25,8 @@
 #include "z8000.h"
 #include "z8000cpu.h"
 
+#include <retro_inline.h>
+
 #define VERBOSE 0
 
 
@@ -165,25 +167,25 @@ static UINT64   *pRQ[16] = {
     &Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],
     &Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3]};
 
-INLINE UINT16 RDOP(void)
+static INLINE UINT16 RDOP(void)
 {
 	UINT16 res = cpu_readop16(PC);
     PC += 2;
     return res;
 }
 
-INLINE UINT8 RDMEM_B(UINT16 addr)
+static INLINE UINT8 RDMEM_B(UINT16 addr)
 {
 	return cpu_readmem16bew(addr);
 }
 
-INLINE UINT16 RDMEM_W(UINT16 addr)
+static INLINE UINT16 RDMEM_W(UINT16 addr)
 {
 	addr &= ~1;
 	return cpu_readmem16bew_word(addr);
 }
 
-INLINE UINT32 RDMEM_L(UINT16 addr)
+static INLINE UINT32 RDMEM_L(UINT16 addr)
 {
 	UINT32 result;
 	addr &= ~1;
@@ -191,25 +193,25 @@ INLINE UINT32 RDMEM_L(UINT16 addr)
 	return result + cpu_readmem16bew_word(addr + 2);
 }
 
-INLINE void WRMEM_B(UINT16 addr, UINT8 value)
+static INLINE void WRMEM_B(UINT16 addr, UINT8 value)
 {
 	cpu_writemem16bew(addr, value);
 }
 
-INLINE void WRMEM_W(UINT16 addr, UINT16 value)
+static INLINE void WRMEM_W(UINT16 addr, UINT16 value)
 {
 	addr &= ~1;
 	cpu_writemem16bew_word(addr, value);
 }
 
-INLINE void WRMEM_L(UINT16 addr, UINT32 value)
+static INLINE void WRMEM_L(UINT16 addr, UINT32 value)
 {
 	addr &= ~1;
 	cpu_writemem16bew_word(addr, value >> 16);
 	cpu_writemem16bew_word((UINT16)(addr + 2), value & 0xffff);
 }
 
-INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
+static INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
 {
 	if( mode == 0 )
 	{
@@ -222,7 +224,7 @@ INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
 	}
 }
 
-INLINE UINT16 RDPORT_W(int mode, UINT16 addr)
+static INLINE UINT16 RDPORT_W(int mode, UINT16 addr)
 {
 	if( mode == 0 )
 	{
@@ -236,7 +238,7 @@ INLINE UINT16 RDPORT_W(int mode, UINT16 addr)
 	}
 }
 
-INLINE UINT32 RDPORT_L(int mode, UINT16 addr)
+static INLINE UINT32 RDPORT_L(int mode, UINT16 addr)
 {
 	if( mode == 0 )
 	{
@@ -252,7 +254,7 @@ INLINE UINT32 RDPORT_L(int mode, UINT16 addr)
 	}
 }
 
-INLINE void WRPORT_B(int mode, UINT16 addr, UINT8 value)
+static INLINE void WRPORT_B(int mode, UINT16 addr, UINT8 value)
 {
 	if( mode == 0 )
 	{
@@ -264,7 +266,7 @@ INLINE void WRPORT_B(int mode, UINT16 addr, UINT8 value)
     }
 }
 
-INLINE void WRPORT_W(int mode, UINT16 addr, UINT16 value)
+static INLINE void WRPORT_W(int mode, UINT16 addr, UINT16 value)
 {
 	if( mode == 0 )
 	{
@@ -277,7 +279,7 @@ INLINE void WRPORT_W(int mode, UINT16 addr, UINT16 value)
     }
 }
 
-INLINE void WRPORT_L(int mode, UINT16 addr, UINT32 value)
+static INLINE void WRPORT_L(int mode, UINT16 addr, UINT32 value)
 {
 	if( mode == 0 )
 	{
@@ -295,7 +297,7 @@ INLINE void WRPORT_L(int mode, UINT16 addr, UINT32 value)
 #include "z8000ops.c"
 #include "z8000tbl.c"
 
-INLINE void set_irq(int type)
+static INLINE void set_irq(int type)
 {
     switch ((type >> 8) & 255)
     {
@@ -339,7 +341,7 @@ INLINE void set_irq(int type)
 }
 
 
-INLINE void Interrupt(void)
+static INLINE void Interrupt(void)
 {
     UINT16 fcw = FCW;
 

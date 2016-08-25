@@ -48,7 +48,7 @@ static UINT8 is_raw[TRANSPARENCY_MODES];
 
 
 
-INLINE int readbit(const UINT8 *src,int bitnum)
+static INLINE int readbit(const UINT8 *src,int bitnum)
 {
 	return (src[bitnum / 8] >> (7 - bitnum % 8)) & 1;
 }
@@ -180,7 +180,7 @@ void freegfx(struct GfxElement *gfx)
 
 
 
-INLINE void blockmove_NtoN_transpen_noremap8(
+static INLINE void blockmove_NtoN_transpen_noremap8(
 		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT8 *dstdata,int dstmodulo,
 		int transpen)
@@ -305,7 +305,7 @@ INLINE void blockmove_NtoN_transpen_noremap8(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap_flipx8(
+static INLINE void blockmove_NtoN_transpen_noremap_flipx8(
 		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT8 *dstdata,int dstmodulo,
 		int transpen)
@@ -368,7 +368,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx8(
 }
 
 
-INLINE void blockmove_NtoN_transpen_noremap16(
+static INLINE void blockmove_NtoN_transpen_noremap16(
 		const UINT16 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT16 *dstdata,int dstmodulo,
 		int transpen)
@@ -396,7 +396,7 @@ INLINE void blockmove_NtoN_transpen_noremap16(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap_flipx16(
+static INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 		const UINT16 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT16 *dstdata,int dstmodulo,
 		int transpen)
@@ -427,7 +427,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 
 
 #define DATA_TYPE UINT8
-#define DECLARE(function,args,body) INLINE void function##8 args body
+#define DECLARE(function,args,body) static INLINE void function##8 args body
 #define BLOCKMOVE(function,flipx,args) \
 	if (flipx) blockmove_##function##_flipx##8 args ; \
 	else blockmove_##function##8 args
@@ -437,7 +437,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 #undef BLOCKMOVE
 
 #define DATA_TYPE UINT16
-#define DECLARE(function,args,body) INLINE void function##16 args body
+#define DECLARE(function,args,body) static INLINE void function##16 args body
 #define BLOCKMOVE(function,flipx,args) \
 	if (flipx) blockmove_##function##_flipx##16 args ; \
 	else blockmove_##function##16 args
@@ -472,7 +472,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 
 ***************************************************************************/
 
-INLINE void common_drawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
+static INLINE void common_drawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
 		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 		const struct rectangle *clip,int transparency,int transparent_color,
 		struct osd_bitmap *pri_buffer,UINT32 pri_mask)
@@ -1100,7 +1100,7 @@ void fillbitmap(struct osd_bitmap *dest,int pen,const struct rectangle *clip)
 }
 
 
-INLINE void common_drawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
+static INLINE void common_drawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
 		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 		const struct rectangle *clip,int transparency,int transparent_color,
 		int scalex, int scaley,struct osd_bitmap *pri_buffer,UINT32 pri_mask)

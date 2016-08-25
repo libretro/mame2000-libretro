@@ -4,6 +4,8 @@
 #include "osd_cpu.h"
 #include "mess/machine/gb.h"
 
+#include <retro_inline.h>
+
 extern int z80gb_ICount;
 
 enum {
@@ -106,14 +108,14 @@ extern unsigned z80gb_dasm(char *buffer, unsigned pc);
 #define mem_ReadByte(A)    ((UINT8)cpu_readmem16(A))
 #define mem_WriteByte(A,V) (cpu_writemem16(A,V))
 
-INLINE UINT16 mem_ReadWord (UINT32 address)
+static INLINE UINT16 mem_ReadWord (UINT32 address)
 {
 	UINT16 value = (UINT16) mem_ReadByte ((address + 1) & 0xffff) << 8;
 	value |= mem_ReadByte (address);
 	return value;
 }
 
-INLINE void mem_WriteWord (UINT32 address, UINT16 value)
+static INLINE void mem_WriteWord (UINT32 address, UINT16 value)
 {
   mem_WriteByte (address, value & 0xFF);
   mem_WriteByte ((address + 1) & 0xffff, value >> 8);

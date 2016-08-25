@@ -56,7 +56,7 @@ static int tone2_level;
 
 static UINT32 *poly18 = NULL;
 
-INLINE int tone1_vco1(int samplerate)
+static INLINE int tone1_vco1(int samplerate)
 {
     static int output, counter, level;
 	/*
@@ -121,7 +121,7 @@ INLINE int tone1_vco1(int samplerate)
 	return output;
 }
 
-INLINE int tone1_vco2(int samplerate)
+static INLINE int tone1_vco2(int samplerate)
 {
 	static int output, counter, level;
 
@@ -172,7 +172,7 @@ INLINE int tone1_vco2(int samplerate)
 	return output;
 }
 
-INLINE int tone1_vco(int samplerate, int vco1, int vco2)
+static INLINE int tone1_vco(int samplerate, int vco1, int vco2)
 {
 	static int counter, level, rate, charge;
 	int voltage;
@@ -287,7 +287,7 @@ INLINE int tone1_vco(int samplerate, int vco1, int vco2)
 	return 24000*1/3 + 24000*2/3 * voltage / 32768;
 }
 
-INLINE int tone1(int samplerate)
+static INLINE int tone1(int samplerate)
 {
 	static int counter, divisor, output;
 	int vco1 = tone1_vco1(samplerate);
@@ -311,7 +311,7 @@ INLINE int tone1(int samplerate)
 	return output ? tone1_level : -tone1_level;
 }
 
-INLINE int tone2_vco(int samplerate)
+static INLINE int tone2_vco(int samplerate)
 {
 	static int counter, level;
 
@@ -383,7 +383,7 @@ INLINE int tone2_vco(int samplerate)
 	return 10212 * level / 32768;
 }
 
-INLINE int tone2(int samplerate)
+static INLINE int tone2(int samplerate)
 {
 	static int counter, divisor, output;
 	int frequency = tone2_vco(samplerate);
@@ -404,7 +404,7 @@ INLINE int tone2(int samplerate)
 	return output ? tone2_level : -tone2_level;
 }
 
-INLINE int update_c24(int samplerate)
+static INLINE int update_c24(int samplerate)
 {
 	static int counter, level;
 	/*
@@ -448,7 +448,7 @@ INLINE int update_c24(int samplerate)
 	return VMAX - level;
 }
 
-INLINE int update_c25(int samplerate)
+static INLINE int update_c25(int samplerate)
 {
 	static int counter, level;
 	/*
@@ -493,7 +493,7 @@ INLINE int update_c25(int samplerate)
 }
 
 
-INLINE int noise(int samplerate)
+static INLINE int noise(int samplerate)
 {
 	static int counter, polyoffs, polybit, lowpass_counter, lowpass_polybit;
 	int vc24 = update_c24(samplerate);

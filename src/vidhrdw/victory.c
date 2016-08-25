@@ -615,7 +615,7 @@ Registers:
  *
  *************************************/
 
-INLINE void count_states(int states)
+static INLINE void count_states(int states)
 {
 	if (!micro.timer)
 	{

@@ -2,6 +2,8 @@
 #ifndef __OSINLINE__
 #define __OSINLINE__
 
+#include <retro_inline.h>
+
 /* What goes herein depends heavily on the OS. */
 
 #define DIRTY_H 256
@@ -12,7 +14,7 @@ extern char *dirty_new;
 
 #if (IS_ARM)
 #define vec_mult _vec_mult
-INLINE int _vec_mult(int x, int y)
+static INLINE int _vec_mult(int x, int y)
 {
     int res_hi, res_lo;
 
@@ -48,7 +50,7 @@ INLINE int _vec_mult(int x, int y)
 #define _clip_short(x) { int sign = x >> 31; if (sign != (x >> 15)) x = sign ^ ((1 << 15) - 1); }
 
 #define clip_short_ret _clip_short_ret
-INLINE int _clip_short_ret(int x) { _clip_short(x); return x; }
+static INLINE int _clip_short_ret(int x) { _clip_short(x); return x; }
 
 
 #endif /* __OSINLINE__ */

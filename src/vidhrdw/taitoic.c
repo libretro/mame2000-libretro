@@ -199,7 +199,7 @@ static int TC0100SCN_bg_gfx[TC0100SCN_MAX_CHIPS],TC0100SCN_tx_gfx[TC0100SCN_MAX_
 
 
 
-INLINE void common_get_bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
+static INLINE void common_get_bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 {
 	int code = (READ_WORD(&ram[4*tile_index + 2]) & 0x7fff) + (taitof2_scrbank << 15);
 	int attr = READ_WORD(&ram[4*tile_index]);
@@ -207,7 +207,7 @@ INLINE void common_get_bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 	tile_info.flags = TILE_FLIPYX((attr & 0xc000) >> 14);
 }
 
-INLINE void common_get_tx_tile_info(UINT8 *ram,int gfxnum,int tile_index)
+static INLINE void common_get_tx_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 {
 	int attr = READ_WORD(&ram[2*tile_index]);
 	SET_TILE_INFO(gfxnum,attr & 0xff,(attr & 0x3f00) >> 6);
@@ -741,7 +741,7 @@ static int TC0480SCP_y_offs;
 int TC0480SCP_pri_reg;   // read externally in vidhrdw\taito_f2.c
 
 
-INLINE void common_get_tc0480bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
+static INLINE void common_get_tc0480bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 {
 	int code = (READ_WORD(&ram[4*tile_index + 2]) & 0x7fff);
 	int attr = READ_WORD(&ram[4*tile_index]);
@@ -749,7 +749,7 @@ INLINE void common_get_tc0480bg_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 	tile_info.flags = TILE_FLIPYX((attr & 0xc000) >> 14);
 }
 
-INLINE void common_get_tc0480tx_tile_info(UINT8 *ram,int gfxnum,int tile_index)
+static INLINE void common_get_tc0480tx_tile_info(UINT8 *ram,int gfxnum,int tile_index)
 {
 	int attr = READ_WORD(&ram[2*tile_index]);
 	SET_TILE_INFO(gfxnum,attr & 0xff,((attr & 0x3f00) >> 8) + TC0480SCP_tile_colbase);   // >> 8 not 6 as 4bpp

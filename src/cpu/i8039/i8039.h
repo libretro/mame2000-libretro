@@ -10,10 +10,6 @@
 #ifndef _I8039_H
 #define _I8039_H
 
-#ifndef INLINE
-#define INLINE static inline
-#endif
-
 #include "osd_cpu.h"
 
 enum { I8039_PC=1, I8039_SP, I8039_PSW, I8039_A, I8039_IRQ_STATE,

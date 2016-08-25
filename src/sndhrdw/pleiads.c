@@ -54,7 +54,7 @@ static int opamp_resistor;
 /*****************************************************************************
  * Tone #1 is a fixed 8 kHz signal divided by 1 to 15.
  *****************************************************************************/
-INLINE int tone1(int samplerate)
+static INLINE int tone1(int samplerate)
 {
 	static int counter, divisor, output;
 
@@ -79,7 +79,7 @@ INLINE int tone1(int samplerate)
  * It's labelled IC96 in Pop Flamer, 4D(??) in Naughty Boy.
  * C68 controls the frequencies of tones #2 and #3 (V/C inputs)
  *****************************************************************************/
-INLINE int update_pb4(int samplerate)
+static INLINE int update_pb4(int samplerate)
 {
 	static int counter, level;
 
@@ -115,7 +115,7 @@ INLINE int update_pb4(int samplerate)
 	return level;
 }
 
-INLINE int tone23(int samplerate)
+static INLINE int tone23(int samplerate)
 {
 	static int counter2, output2, counter3, output3;
 	int level = VMAX - update_pb4(samplerate);
@@ -158,7 +158,7 @@ INLINE int tone23(int samplerate)
  * The tone signal gates two signals (bits 5 of latches A and C), but
  * these are also swept between two levels (C52 and C53 in Pop Flamer).
  *****************************************************************************/
-INLINE int update_c_pc4(int samplerate)
+static INLINE int update_c_pc4(int samplerate)
 {
 	#define PC4_MIN (int)(VMAX * 7 / 50)
 
@@ -196,7 +196,7 @@ INLINE int update_c_pc4(int samplerate)
 	return level;
 }
 
-INLINE int update_c_pc5(int samplerate)
+static INLINE int update_c_pc5(int samplerate)
 {
 	static int counter, level;
 
@@ -232,7 +232,7 @@ INLINE int update_c_pc5(int samplerate)
 	return level;
 }
 
-INLINE int update_c_pa5(int samplerate)
+static INLINE int update_c_pa5(int samplerate)
 {
 	static int counter, level;
 
@@ -268,7 +268,7 @@ INLINE int update_c_pa5(int samplerate)
 	return level;
 }
 
-INLINE int tone4(int samplerate)
+static INLINE int tone4(int samplerate)
 {
 	static int counter, output;
 	int level = update_c_pc4(samplerate);
@@ -306,7 +306,7 @@ INLINE int tone4(int samplerate)
  * bit 4 of latch A. The output of the first shift register can be zapped(?)
  * by some control line (IC87 in Pop Flamer: not yet implemented)
  *****************************************************************************/
-INLINE int update_c_pa6(int samplerate)
+static INLINE int update_c_pa6(int samplerate)
 {
 	static int counter, level;
 
@@ -345,7 +345,7 @@ INLINE int update_c_pa6(int samplerate)
 }
 
 
-INLINE int noise(int samplerate)
+static INLINE int noise(int samplerate)
 {
 	static int counter, polyoffs;
 	int c_pa6_level = update_c_pa6(samplerate);
