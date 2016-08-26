@@ -383,8 +383,8 @@ void retro_run(void)
 #else
    lock_mame();
 
-   if (thread_done)
-      environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
+//   if (thread_done)
+//      environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 #endif
 
    bool updated = false;
