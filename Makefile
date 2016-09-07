@@ -181,6 +181,15 @@ else ifeq ($(platform), vita)
    ARM = 1
    STATIC_LINKING := 1
    WANT_LIBCO := 0
+
+# Emscripten
+else ifeq ($(platform), emscripten)
+   TARGET := $(TARGET_NAME)_libretro_$(platform).bc
+   HAVE_RZLIB := 1
+   DISABLE_ERROR_LOGGING := 1
+   STATIC_LINKING := 1
+   WANT_LIBCO := 0
+
 # GCW0
 else ifeq ($(platform), gcw0)
    TARGET := $(TARGET_NAME)_libretro.so
