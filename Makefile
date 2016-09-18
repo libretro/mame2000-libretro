@@ -176,11 +176,12 @@ else ifeq ($(platform), vita)
    CFLAGS += -mfloat-abi=hard -fsingle-precision-constant
    CFLAGS += -Wall -mword-relocations
    CFLAGS += -fomit-frame-pointer -ffast-math
+   CFLAGS += -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables 
+   CFLAGS += -ftree-vectorize -funroll-loops
    HAVE_RZLIB := 1
    DISABLE_ERROR_LOGGING := 1
    ARM = 1
    STATIC_LINKING := 1
-   WANT_LIBCO := 0
 
 # Emscripten
 else ifeq ($(platform), emscripten)

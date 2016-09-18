@@ -145,7 +145,6 @@ SOURCES_C += $(CORE_DIR)/src/version.c \
 				$(CORE_DIR)/src/audit.c \
 				$(CORE_DIR)/src/datafile.c \
 				$(CORE_DIR)/src/state.c \
-				$(CORE_DIR)/src/png.c \
 				$(CORE_DIR)/src/artwork.c \
 				$(CORE_DIR)/src/unzip.c \
 				$(CORE_DIR)/src/profiler.c \
@@ -178,6 +177,11 @@ SOURCES_C += $(CORE_DIR)/src/version.c \
 				$(CORE_DIR)/src/vidhrdw/avgdvg.c \
 				$(CORE_DIR)/src/machine/mathbox.c \
 				$(CORE_DIR)/src/sound/votrax.c
+
+ifneq ($(EXTERNAL_PNG), 1)
+SOURCES_C += $(CORE_DIR)/src/png.c 
+
+endif
 
 
 SOURCES_C += $(CORE_DIR)/src/drivers/wardner.c \
