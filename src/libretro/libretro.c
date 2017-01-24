@@ -349,7 +349,11 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
 void retro_get_system_info(struct retro_system_info *info)
 {
    info->library_name     = "MAME 2000";
+#ifdef GIT_VERSION
+   info->library_version  = "0.37b5" GIT_VERSION;
+#else
    info->library_version  = build_version;
+#endif
    info->need_fullpath    = true;
    info->valid_extensions = "zip|ZIP";
    info->block_extract    = true;

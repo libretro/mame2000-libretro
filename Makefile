@@ -8,6 +8,11 @@ TARGET_NAME = mame2000
 CORE_DIR = .
 GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
 
+GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+	CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
+
 ifeq ($(platform),)
 platform = unix
 ifeq ($(shell uname -a),)
