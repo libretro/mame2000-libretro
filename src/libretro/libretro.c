@@ -425,6 +425,10 @@ void retro_run(void)
 bool retro_load_game(const struct retro_game_info *info)
 {
    enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+
+   if (!info)
+      return false;
+
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
    {
       fprintf(stderr, "[libretro]: RGB565 is not supported.\n");
