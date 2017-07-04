@@ -15,6 +15,9 @@
 #define SPRITE_TYPE_UNPACK 1
 #define SPRITE_TYPE_ZOOM 2
 
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct sprite {
 	int priority, flags;
 
@@ -33,7 +36,11 @@ struct sprite {
 
 	/* private */ const struct sprite *next;
 	/* private */ long mask_offset;
-} __attribute__ ((__aligned__ (32)));
+}
+#ifndef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+   ;
 
 /* sprite list flags */
 #define SPRITE_LIST_BACK_TO_FRONT	0x0
