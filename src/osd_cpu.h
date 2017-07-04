@@ -28,11 +28,11 @@
 typedef unsigned char						UINT8;
 typedef unsigned short						UINT16;
 typedef unsigned int						UINT32;
-__extension__ typedef unsigned long long	UINT64;
+typedef unsigned long long	UINT64;
 typedef signed char 						INT8;
 typedef signed short						INT16;
 typedef signed int							INT32;
-__extension__ typedef signed long long		INT64;
+typedef signed long long		INT64;
 
 /* Combine two 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
