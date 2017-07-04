@@ -309,7 +309,7 @@ INCFLAGS :=
 # include the various .mak files
 include Makefile.common
 
-DEFS += -ffast-math $(fpic) $(PLATFORM_DEFINES) $(ZLIB_INCLUDE) $(GCC_DEFINES) $(INCFLAGS) $(INCFLAGS_PLATFORM)
+DEFS += $(fpic) $(PLATFORM_DEFINES) $(ZLIB_INCLUDE) $(GCC_DEFINES) $(INCFLAGS) $(INCFLAGS_PLATFORM)
 # combine the various definitions to one
 CDEFS +=  $(ENDIANNESS_DEFINES)$(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
