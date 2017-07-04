@@ -21,7 +21,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef _WIN32
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 #include <stdarg.h>
 
 #ifndef __MINIMAL_H__
