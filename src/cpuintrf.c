@@ -154,7 +154,7 @@ struct cpuinfo
 	void *context;					/* dynamically allocated context buffer */
 	int save_context;				/* need to context switch this CPU? yes or no */
 }
-#ifdef _MSC_VER
+#ifndef _MSC_VER
 __attribute__ ((__aligned__ (32)))
 #endif
 ;
