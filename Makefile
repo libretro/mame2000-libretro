@@ -6,7 +6,10 @@ IS_X86 = 0
 TARGET_NAME = mame2000
 
 CORE_DIR = .
+
+ifeq (,$(findstring msvc,$(platform)))
 GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
+endif
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
