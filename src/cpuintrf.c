@@ -137,6 +137,9 @@
 #define LOG(x)
 #endif
 
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct cpuinfo
 {
 	struct cpu_interface *intf; 	/* pointer to the interface functions */
@@ -150,7 +153,11 @@ struct cpuinfo
 	timer_tm timedint_period; 		/* timing period of the timed interrupt */
 	void *context;					/* dynamically allocated context buffer */
 	int save_context;				/* need to context switch this CPU? yes or no */
-} __attribute__ ((__aligned__ (32)));
+}
+#ifdef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+;
 
 static struct cpuinfo cpu[MAX_CPU];
 
