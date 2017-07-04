@@ -255,6 +255,9 @@ enum {
 #endif
 
 /* ASG 971222 -- added this generic structure */
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct cpu_interface
 {
 	unsigned cpu_num;
@@ -291,7 +294,11 @@ struct cpu_interface
 	int address_shift;
 	unsigned address_bits, endianess, align_unit, max_inst_len;
 	unsigned abits1, abits2, abitsmin;
-}  __attribute__ ((__aligned__ (32)));
+}
+#ifndef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+;
 
 extern struct cpu_interface cpuintf[];
 
