@@ -34,6 +34,9 @@ struct GfxLayout
 	UINT16 charincrement; /* distance between two consecutive characters/sprites (in bits) */
 };
 
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct GfxElement
 {
 	int width,height;
@@ -51,7 +54,11 @@ struct GfxElement
 	unsigned char *gfxdata;	/* pixel data */
 	int line_modulo;	/* amount to add to get to the next line (usually = width) */
 	int char_modulo;	/* = line_modulo * height */
-} __attribute__ ((__aligned__ (32)));
+}
+#ifndef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+   ;
 
 struct GfxDecodeInfo
 {
