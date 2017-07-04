@@ -93,6 +93,9 @@ struct tilemap_mask {
 	UINT8 **data_row;
 };
 
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct tilemap {
 	UINT32 (*get_memory_offset)( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows );
 	int *memory_offset_to_cached_index;
@@ -150,7 +153,11 @@ struct tilemap {
 	/* for the back half of a split layer */
 
 	struct tilemap *next; /* resource tracking */
-} __attribute__ ((__aligned__ (32)));
+}
+#ifndef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+   ;
 
 /* don't call these from drivers - they are called from mame.c */
 int tilemap_init( void );
