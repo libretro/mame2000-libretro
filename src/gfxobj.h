@@ -21,6 +21,9 @@
 #define GFXOBJ_SORT_DEFAULT GFXOBJ_DO_SORT
 
 /* one of object */
+#ifdef _MSC_VER
+__declspec(align(32))
+#endif
 struct gfx_object {
 	int		transparency;		/* transparency of gfx */
 	int		transparet_color;	/* transparet color of gfx */
@@ -54,7 +57,11 @@ struct gfx_object {
 	int		draw_x;			/* x adjusted position */
 	int		draw_y;			/* y adjusted position */
 	struct rectangle clip; /* clipping object size with visible area */
-} __attribute__ ((__aligned__ (32)));
+}
+#ifndef _MSC_VER
+__attribute__ ((__aligned__ (32)))
+#endif
+   ;
 
 /* object list */
 struct gfx_object_list {
