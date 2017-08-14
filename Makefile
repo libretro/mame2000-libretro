@@ -333,7 +333,7 @@ include Makefile.common
 
 DEFS += $(fpic) $(PLATFORM_DEFINES) $(ZLIB_INCLUDE) $(GCC_DEFINES) $(INCFLAGS) $(INCFLAGS_PLATFORM)
 # combine the various definitions to one
-CDEFS +=  $(ENDIANNESS_DEFINES)$(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
+CDEFS +=  $(ENDIANNESS_DEFINES) $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o) $(SOURCES_ASM:.s=.o)
 
