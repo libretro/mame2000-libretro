@@ -1,4 +1,4 @@
-﻿
+*.o
 obj_*
 retro.dll
 libretro.*
