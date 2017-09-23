@@ -12,6 +12,12 @@
 #include "driver.h"
 #include "allegro.h"
 
+#ifdef _WIN32
+char slash = '\\';
+#else
+char slash = '/';
+#endif
+
 char *IMAMEBASEPATH = NULL;
 char *IMAMESAMPLEPATH = NULL;
 
@@ -433,11 +439,11 @@ bool retro_load_game(const struct retro_game_info *info)
 
    int i;
    memcpy(IMAMEBASEPATH, info->path, strlen(info->path) + 1);
-   if (strrchr(IMAMEBASEPATH, '/')) *(strrchr(IMAMEBASEPATH, '/')) = 0;
+   if (strrchr(IMAMEBASEPATH, slash)) *(strrchr(IMAMEBASEPATH, slash)) = 0;
    else { IMAMEBASEPATH[0] = '.'; IMAMEBASEPATH[1] = 0; }
    char baseName[1024];
    const char *romName = info->path;
-   if (strrchr(info->path, '/')) romName = strrchr(info->path, '/') + 1;
+   if (strrchr(info->path, slash)) romName = strrchr(info->path, slash) + 1;
    memcpy(baseName, romName, strlen(romName) + 1);
    if (strrchr(baseName, '.')) *(strrchr(baseName, '.')) = 0;
 
