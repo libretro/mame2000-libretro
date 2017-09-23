@@ -26,6 +26,7 @@ volatile static unsigned audio_done;
 volatile static unsigned video_done;
 volatile static unsigned mame_sleep;
 #ifdef WANT_LIBCO
+int libco_quit=0;
 static cothread_t core_thread;
 static cothread_t main_thread;
 #else
@@ -47,6 +48,10 @@ extern short *samples_buffer;
 extern short *conversion_buffer;
 extern int joy_pressed[40];
 extern int key[KEY_MAX];
+
+extern char *nvdir, *hidir, *cfgdir, *inpdir, *stadir, *memcarddir;
+extern char *artworkdir, *screenshotdir, *alternate_name;
+extern char *cheatdir;
 
 void decompose_rom_sample_path(char *rompath, char *samplepath);
 void init_joy_list(void);
@@ -469,6 +474,17 @@ bool retro_load_game(const struct retro_game_info *info)
    /* parse generic (os-independent) options */
    //parse_cmdline (argc, argv, game_index);
 
+   //Set default path
+   //FIXME change to savedir instead IMAMEBASEPATH
+   nvdir=(char *) malloc(1024);sprintf(nvdir,"%s%c%s\0",IMAMEBASEPATH,slash,"nvram");
+   hidir=(char *) malloc(1024);sprintf(hidir,"%s%c%s\0",IMAMEBASEPATH,slash,"hi");
+   cfgdir=(char *) malloc(1024);sprintf(cfgdir,"%s%c%s\0",IMAMEBASEPATH,slash,"cfg");
+   screenshotdir=(char *) malloc(1024);sprintf(screenshotdir,"%s%c%s\0",IMAMEBASEPATH,slash,"snap");
+   memcarddir=(char *) malloc(1024);sprintf(memcarddir,"%s%c%s\0",IMAMEBASEPATH,slash,"memcard");
+   stadir=(char *) malloc(1024);sprintf(stadir,"%s%c%s\0",IMAMEBASEPATH,slash,"sta");
+   artworkdir=(char *) malloc(1024);sprintf(artworkdir,"%s%c%s\0",IMAMEBASEPATH,slash,"artwork");
+   cheatdir=(char *) malloc(1024);sprintf(cheatdir,"%s%c%s\0",IMAMEBASEPATH,slash,"cheat");
+
    Machine->sample_rate = 32000;
    options.samplerate = 32000;
 
@@ -561,6 +577,8 @@ bool retro_load_game(const struct retro_game_info *info)
 void retro_unload_game(void)
 {
 #ifdef WANT_LIBCO
+   libco_quit=1;
+   co_switch(core_thread);
    co_delete(core_thread);
 #else
    slock_lock(libretro_mutex);
