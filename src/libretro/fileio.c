@@ -321,6 +321,43 @@ int osd_faccess (const char *newfilename, int filetype)
 	return 0;
 }
 
+
+extern char slash;
+#define PATHSEPCH slash
+#define NO_ERROR (0)
+
+UINT32 create_path_recursive(char *path)
+{
+	char *sep = strrchr(path, PATHSEPCH);
+	UINT32 filerr;
+	struct stat st;
+
+	// if there's still a separator, and it's not the root, nuke it and recurse
+	if (sep != NULL && sep > path && sep[0] != ':' && sep[-1] != PATHSEPCH)
+	{
+		*sep = 0;
+		filerr = create_path_recursive(path);
+		*sep = PATHSEPCH;
+		if (filerr != NO_ERROR)
+			return filerr;
+	}
+
+	// if the path already exists, we're done
+	if (!stat(path, &st))
+		return NO_ERROR;
+
+	//printf("mkd(%s)\n",path);
+	// create the path
+	#ifdef WIN32
+	if (mkdir(path) != 0)
+	#else
+	if (mkdir(path, 0777) != 0)
+	#endif
+		return errno;
+
+	return NO_ERROR;
+}
+
 /* JB 980920 update */
 /* AM 980919 update */
 void *osd_fopen (const char *game, const char *filename, int filetype, int _write)

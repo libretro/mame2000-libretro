@@ -21,6 +21,12 @@ char slash = '/';
 char *IMAMEBASEPATH = NULL;
 char *IMAMESAMPLEPATH = NULL;
 
+const char *retro_save_directory;
+const char *retro_system_directory;
+const char *retro_content_directory;
+char core_save_directory[1024];
+char core_sys_directory[1024];
+
 unsigned retro_hook_quit;
 volatile static unsigned audio_done;
 volatile static unsigned video_done;
@@ -316,6 +322,48 @@ static void unlock_mame(void)
 
 void retro_init(void)
 {
+   const char *system_dir  = NULL;
+   const char *content_dir = NULL;
+   const char *save_dir    = NULL;
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
+   {
+      /* if defined, use the system directory */
+      retro_system_directory = system_dir;
+   }
+
+   printf("SYSTEM_DIRECTORY: %s\n", retro_system_directory);
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY, &content_dir) && content_dir)
+   {
+      // if defined, use the system directory
+      retro_content_directory=content_dir;
+   }
+
+   printf("CONTENT_DIRECTORY: %s\n", retro_content_directory);
+
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_dir) && save_dir)
+   {
+      /* If save directory is defined use it, 
+       * otherwise use system directory. */
+      retro_save_directory = *save_dir ? save_dir : retro_system_directory;
+
+   }
+   else
+   {
+      /* make retro_save_directory the same,
+       * in case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY 
+       * is not implemented by the frontend. */
+      retro_save_directory=retro_system_directory;
+   }
+   printf("SAVE_DIRECTORY: %s\n", retro_save_directory);
+
+   sprintf(core_sys_directory,"%s%cmame2000\0",retro_system_directory,slash);
+   sprintf(core_save_directory,"%s%cmame2000\0",retro_save_directory,slash);
+   printf("MAME2000_SYS_DIRECTORY: %s\n", core_sys_directory);
+   printf("MAME2000_SAVE_DIRECTORY: %s\n", core_save_directory);
+
    IMAMEBASEPATH = (char *) malloc(1024);
    IMAMESAMPLEPATH = (char *) malloc(1024);
 #ifdef _3DS
@@ -475,15 +523,37 @@ bool retro_load_game(const struct retro_game_info *info)
    //parse_cmdline (argc, argv, game_index);
 
    //Set default path
-   //FIXME change to savedir instead IMAMEBASEPATH
-   nvdir=(char *) malloc(1024);sprintf(nvdir,"%s%c%s\0",IMAMEBASEPATH,slash,"nvram");
-   hidir=(char *) malloc(1024);sprintf(hidir,"%s%c%s\0",IMAMEBASEPATH,slash,"hi");
-   cfgdir=(char *) malloc(1024);sprintf(cfgdir,"%s%c%s\0",IMAMEBASEPATH,slash,"cfg");
-   screenshotdir=(char *) malloc(1024);sprintf(screenshotdir,"%s%c%s\0",IMAMEBASEPATH,slash,"snap");
-   memcarddir=(char *) malloc(1024);sprintf(memcarddir,"%s%c%s\0",IMAMEBASEPATH,slash,"memcard");
-   stadir=(char *) malloc(1024);sprintf(stadir,"%s%c%s\0",IMAMEBASEPATH,slash,"sta");
-   artworkdir=(char *) malloc(1024);sprintf(artworkdir,"%s%c%s\0",IMAMEBASEPATH,slash,"artwork");
-   cheatdir=(char *) malloc(1024);sprintf(cheatdir,"%s%c%s\0",IMAMEBASEPATH,slash,"cheat");
+   nvdir=(char *) malloc(1024);sprintf(nvdir,"%s%c%s\0",core_save_directory,slash,"nvram");
+   i=create_path_recursive(nvdir);
+   if(i!=0)printf("error %d creating nvram \"%s\"\n", i,nvdir);
+
+   hidir=(char *) malloc(1024);sprintf(hidir,"%s%c%s\0",core_save_directory,slash,"hi");
+   i=create_path_recursive(hidir);
+   if(i!=0)printf("error %d creating hi \"%s\"\n", i,hidir);
+
+   cfgdir=(char *) malloc(1024);sprintf(cfgdir,"%s%c%s\0",core_save_directory,slash,"cfg");
+   i=create_path_recursive(cfgdir);
+   if(i!=0)printf("error %d creating cfg \"%s\"\n", i,cfgdir);
+
+   screenshotdir=(char *) malloc(1024);sprintf(screenshotdir,"%s%c%s\0",core_save_directory,slash,"snap");
+   i=create_path_recursive(screenshotdir);
+   if(i!=0)printf("error %d creating snap \"%s\"\n", i,screenshotdir);
+
+   memcarddir=(char *) malloc(1024);sprintf(memcarddir,"%s%c%s\0",core_save_directory,slash,"memcard");
+   i=create_path_recursive(memcarddir);
+   if(i!=0)printf("error %d creating memcard \"%s\"\n", i,memcarddir);
+
+   stadir=(char *) malloc(1024);sprintf(stadir,"%s%c%s\0",core_sys_directory,slash,"sta");
+   i=create_path_recursive(stadir);
+   if(i!=0)printf("error %d creating sta \"%s\"\n", i,stadir);
+
+   artworkdir=(char *) malloc(1024);sprintf(artworkdir,"%s%c%s\0",core_sys_directory,slash,"artwork");
+   i=create_path_recursive(artworkdir);
+   if(i!=0)printf("error %d creating artwork \"%s\"\n", i,artworkdir);
+
+   cheatdir=(char *) malloc(1024);sprintf(cheatdir,"%s%c%s\0",core_sys_directory,slash,"cheat");
+   i=create_path_recursive(cheatdir);
+   if(i!=0)printf("error %d creating cheat \"%s\"\n", i,cheatdir);
 
    Machine->sample_rate = 32000;
    options.samplerate = 32000;
