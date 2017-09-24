@@ -14,6 +14,10 @@
 #include "state.h"
 #include "hiscore.h"
 
+#ifdef WANT_LIBCO
+extern int libco_quit;
+#endif
+
 #if (HAS_Z80)
 #include "cpu/z80/z80.h"
 #endif
@@ -745,7 +749,9 @@ logerror("Machine reset\n");
 	while (usres == 0)
 	{
 		int cpunum;
-
+#ifdef WANT_LIBCO
+               if(libco_quit==1)usres=1;
+#endif
 		/* was machine_reset() called? */
 		if (have_to_reset)
 		{
