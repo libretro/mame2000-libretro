@@ -62,6 +62,8 @@ extern char *cheatdir;
 void decompose_rom_sample_path(char *rompath, char *samplepath);
 void init_joy_list(void);
 
+extern UINT32 create_path_recursive(char *path);
+	
 #if defined(_3DS)
 void* linearMemAlign(size_t size, size_t alignment);
 void linearFree(void* mem);
