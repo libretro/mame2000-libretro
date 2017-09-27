@@ -353,7 +353,7 @@ UINT32 create_path_recursive(char *path)
 	#else
 	if (mkdir(path, 0777) != 0)
 	#endif
-		return errno;
+		return -1;//errno;
 
 	return NO_ERROR;
 }
