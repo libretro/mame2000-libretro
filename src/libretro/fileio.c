@@ -6,6 +6,7 @@
 #include "unzip.h"
 #include "../zlib/zlib.h"
 #include "shared.h"
+#include <file/file_path.h>
 
 /* Verbose outputs to error.log ? */
 #define VERBOSE 	0
@@ -348,11 +349,14 @@ UINT32 create_path_recursive(char *path)
 
 	//printf("mkd(%s)\n",path);
 	// create the path
+	if (path_mkdir(path) != 1)
+/*
 	#ifdef WIN32
 	if (mkdir(path) != 0)
 	#else
 	if (mkdir(path, 0777) != 0)
 	#endif
+*/
 		return -1;//errno;
 
 	return NO_ERROR;
