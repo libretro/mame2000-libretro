@@ -4082,9 +4082,13 @@ opcode_0_7:
 ;@EX AF,AF'
 opcode_0_8:
 	add r1,cpucontext,#z80a2
-	swp z80a,z80a,[r1]
+	ldr r0,[r1]
+        str z80a,[r1]
+        mov z80a,r0
 	add r1,cpucontext,#z80f2
-	swp z80f,z80f,[r1]
+	ldr r0,[r1]
+        str z80f,[r1]
+        mov z80f,r0
 	fetch 4
 ;@ADD HL,BC
 opcode_0_9:
@@ -5138,11 +5142,17 @@ opcode_D_8:
 ;@EXX
 opcode_D_9:
 	add r1,cpucontext,#z80bc2
-	swp z80bc,z80bc,[r1]
-	add r1,cpucontext,#z80de2
-	swp z80de,z80de,[r1]
+        ldr r0,[r1]
+        str z80bc,[r1]
+        mov z80bc,r0
+        add r1,cpucontext,#z80de2
+	ldr r0,[r1]
+        str z80de,[r1]
+        mov z80de,r0
 	add r1,cpucontext,#z80hl2
-	swp z80hl,z80hl,[r1]
+	ldr r0,[r1]
+        str z80hl,[r1]
+        mov z80hl,r0
 	fetch 4
 ;@JP C,$+3
 opcode_D_A:
