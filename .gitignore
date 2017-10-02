@@ -2,3 +2,5 @@
 obj_*
 retro.dll
 libretro.*
+*.so
+*.a
