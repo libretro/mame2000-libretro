@@ -309,6 +309,8 @@ endif
 
 ifeq ($(ARM), 1)
    CFLAGS += -fsigned-char
+   USE_CYCLONE = 1
+   USE_DRZ80 = 1
 endif
 
 ifeq ($(DEBUG), 1)
