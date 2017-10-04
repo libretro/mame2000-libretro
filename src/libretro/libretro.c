@@ -214,6 +214,7 @@ void retro_reset(void)
 
 static void update_input(void)
 {
+#define RK(port,key)     input_state_cb(port, RETRO_DEVICE_KEYBOARD, 0,RETROK_##key)
 #define JS(port, button) input_state_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
 	int i, c = 0;
 	input_poll_cb();
@@ -232,6 +233,8 @@ static void update_input(void)
 		joy_pressed[c++] = JS(i, X);
 		joy_pressed[c++] = JS(i, L);
 		joy_pressed[c++] = JS(i, R);
+		key[KEY_TAB + i] = JS(i, R2);
+		key[KEY_TAB + i] = RK(i, TAB);
 	}
 #undef JS
 #undef _B
