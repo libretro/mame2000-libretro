@@ -12,6 +12,10 @@
 #include "driver.h"
 #include "allegro.h"
 
+#ifndef RETROK_TILDE
+#define RETROK_TILDE 178
+#endif
+
 #ifdef _WIN32
 char slash = '\\';
 #else
@@ -233,9 +237,117 @@ static void update_input(void)
 		joy_pressed[c++] = JS(i, X);
 		joy_pressed[c++] = JS(i, L);
 		joy_pressed[c++] = JS(i, R);
-		key[KEY_TAB + i] = JS(i, R2);
-		key[KEY_TAB + i] = RK(i, TAB);
+
+		key[KEY_TAB] = JS(i, R2);
 	}
+
+	key[KEY_A] =RK(0, a);
+	key[KEY_B] =RK(0, b);
+	key[KEY_C] =RK(0, c);
+	key[KEY_D] =RK(0, d);
+	key[KEY_E] =RK(0, e);
+	key[KEY_F] =RK(0, f);
+	key[KEY_G] =RK(0, g);
+	key[KEY_H] =RK(0, h);
+	key[KEY_I] =RK(0, i);
+	key[KEY_J] =RK(0, j);
+	key[KEY_K] =RK(0, k);
+	key[KEY_L] =RK(0, l);
+	key[KEY_M] =RK(0, m);
+	key[KEY_N] =RK(0, n);
+	key[KEY_O] =RK(0, o);
+	key[KEY_P] =RK(0, p);
+	key[KEY_Q] =RK(0, q);
+	key[KEY_R] =RK(0, r);
+	key[KEY_S] =RK(0, s);
+	key[KEY_T] =RK(0, t);
+	key[KEY_U] =RK(0, u);
+	key[KEY_V] =RK(0, v);
+	key[KEY_W] =RK(0, w);
+	key[KEY_X] =RK(0, x);
+	key[KEY_Y] =RK(0, y);
+	key[KEY_Z] =RK(0, z);
+	key[KEY_0] =RK(0, 0);
+	key[KEY_1] =RK(0, 1);
+	key[KEY_2] =RK(0, 2);
+	key[KEY_3] =RK(0, 3);
+	key[KEY_4] =RK(0, 4);
+	key[KEY_5] =RK(0, 5);
+	key[KEY_6] =RK(0, 6);
+	key[KEY_7] =RK(0, 7);
+	key[KEY_8] =RK(0, 8);
+	key[KEY_9] =RK(0, 9);
+	key[KEY_0_PAD] =RK(0, KP0);
+	key[KEY_1_PAD] =RK(0, KP1);
+	key[KEY_2_PAD] =RK(0, KP2);
+	key[KEY_3_PAD] =RK(0, KP3);
+	key[KEY_4_PAD] =RK(0, KP4);
+	key[KEY_5_PAD] =RK(0, KP5);
+	key[KEY_6_PAD] =RK(0, KP6);
+	key[KEY_7_PAD] =RK(0, KP7);
+	key[KEY_8_PAD] =RK(0, KP8);
+	key[KEY_9_PAD] =RK(0, KP9);
+	key[KEY_F1] =RK(0, F1);
+	key[KEY_F2] =RK(0, F2);
+	key[KEY_F3] =RK(0, F3);
+	key[KEY_F4] =RK(0, F4);
+	key[KEY_F5] =RK(0, F5);
+	key[KEY_F6] =RK(0, F6);
+	key[KEY_F7] =RK(0, F7);
+	key[KEY_F8] =RK(0, F8);
+	key[KEY_F9] =RK(0, F9);
+	key[KEY_F10] =RK(0, F10);
+	key[KEY_F11] =RK(0, F11);
+	key[KEY_F12] =RK(0, F12);
+	key[KEY_ESC] =RK(0, ESCAPE);
+	key[KEY_TILDE] =RK(0, TILDE);
+	key[KEY_MINUS] =RK(0, MINUS);
+	key[KEY_EQUALS] =RK(0, EQUALS);
+	key[KEY_BACKSPACE] =RK(0, BACKSPACE);
+	key[KEY_TAB] =RK(0, TAB);
+	key[KEY_OPENBRACE] =RK(0, LEFTBRACKET);
+	key[KEY_CLOSEBRACE] =RK(0, RIGHTBRACKET);
+	key[KEY_ENTER] =RK(0, RETURN);
+	key[KEY_COLON] =RK(0, COLON);
+	key[KEY_QUOTE] =RK(0, QUOTE);
+	key[KEY_BACKSLASH] =RK(0, BACKSLASH);
+	key[KEY_BACKSLASH2] =RK(0, LESS);
+	key[KEY_COMMA] =RK(0, COMMA);
+	key[KEY_STOP] =RK(0, PERIOD);
+	key[KEY_SLASH] =RK(0, SLASH);
+	key[KEY_SPACE] =RK(0, SPACE);
+	key[KEY_INSERT] =RK(0, INSERT);
+	key[KEY_DEL] =RK(0, DELETE);
+	key[KEY_HOME] =RK(0, HOME);
+	key[KEY_END] =RK(0, END);
+	key[KEY_PGUP] =RK(0, PAGEUP);
+	key[KEY_PGDN] =RK(0, PAGEDOWN);
+	key[KEY_LEFT] =RK(0, LEFT);
+	key[KEY_RIGHT] =RK(0, RIGHT);
+	key[KEY_UP] =RK(0, UP);
+	key[KEY_DOWN] =RK(0, DOWN);
+	key[KEY_SLASH_PAD] =RK(0, KP_DIVIDE);
+	key[KEY_ASTERISK] =RK(0, ASTERISK);
+	key[KEY_MINUS_PAD] =RK(0, KP_MINUS);
+	key[KEY_PLUS_PAD] =RK(0, KP_PLUS);
+	key[KEY_DEL_PAD] =RK(0, KP_PERIOD);
+	key[KEY_ENTER_PAD] =RK(0, KP_ENTER);
+	key[KEY_PRTSCR] =RK(0, PRINT);
+	key[KEY_PAUSE] =RK(0, PAUSE);
+	key[KEY_LSHIFT] =RK(0, LSHIFT);
+	key[KEY_RSHIFT] =RK(0, RSHIFT);
+	key[KEY_LCONTROL] =RK(0, LCTRL);
+	key[KEY_RCONTROL] =RK(0, RCTRL);
+	key[KEY_ALT] =RK(0, LALT);
+	key[KEY_ALTGR] =RK(0, RALT);
+	key[KEY_LWIN] =RK(0, LMETA);
+	key[KEY_RWIN] =RK(0, RMETA);
+	key[KEY_MENU] =RK(0, MENU);
+	key[KEY_SCRLOCK] =RK(0, SCROLLOCK);
+	key[KEY_NUMLOCK] =RK(0, NUMLOCK);
+	key[KEY_CAPSLOCK] =RK(0, CAPSLOCK);
+
+#undef RK
 #undef JS
 #undef _B
 }
@@ -447,7 +559,8 @@ void retro_run(void)
 {
    int i, j;
 #ifdef WANT_LIBCO
-   co_switch(core_thread);
+   if(libco_quit==0)co_switch(core_thread);
+   else  printf("running dead emulator");
 #else
    lock_mame();
 
@@ -652,8 +765,12 @@ bool retro_load_game(const struct retro_game_info *info)
 void retro_unload_game(void)
 {
 #ifdef WANT_LIBCO
+if(libco_quit==0){
+   printf("ask for quit!\n");
    libco_quit=1;
    co_switch(core_thread);
+}
+else printf("esc pressed quit!\n");
    co_delete(core_thread);
 #else
    slock_lock(libretro_mutex);

@@ -860,6 +860,9 @@ logerror("Machine reset\n");
 		}
 	}
 	totalcpu = 0;
+#ifdef WANT_LIBCO
+               libco_quit=1;
+#endif
 }
 
 
