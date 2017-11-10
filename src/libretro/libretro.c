@@ -223,10 +223,17 @@ static void update_input(void)
 	int i, c = 0;
 	input_poll_cb();
 	
+	key[KEY_TAB] = 0;
 	for (i = 0; i < 4; i++)
 	{
-		key[KEY_1 + i]   = JS(i, START);
-		key[KEY_5 + i]   = JS(i, SELECT);
+		key[KEY_1 + i] = 0;
+		key[KEY_5 + i] = 0;
+	}
+	
+	for (i = 0; i < 4; i++)
+	{
+		key[KEY_1 + i]   |= JS(i, START);
+		key[KEY_5 + i]   |= JS(i, SELECT);
 		joy_pressed[c++] = JS(i, LEFT);
 		joy_pressed[c++] = JS(i, RIGHT);
 		joy_pressed[c++] = JS(i, UP);
@@ -238,7 +245,7 @@ static void update_input(void)
 		joy_pressed[c++] = JS(i, L);
 		joy_pressed[c++] = JS(i, R);
 
-		key[KEY_TAB] = JS(i, R2);
+		key[KEY_TAB] |= JS(i, R2);
 	}
 
 	key[KEY_A] =RK(0, a);
@@ -268,14 +275,14 @@ static void update_input(void)
 	key[KEY_Y] =RK(0, y);
 	key[KEY_Z] =RK(0, z);
 	key[KEY_0] =RK(0, 0);
-	key[KEY_1] =RK(0, 1);
-	key[KEY_2] =RK(0, 2);
-	key[KEY_3] =RK(0, 3);
-	key[KEY_4] =RK(0, 4);
-	key[KEY_5] =RK(0, 5);
-	key[KEY_6] =RK(0, 6);
-	key[KEY_7] =RK(0, 7);
-	key[KEY_8] =RK(0, 8);
+	key[KEY_1] |=RK(0, 1);
+	key[KEY_2] |=RK(0, 2);
+	key[KEY_3] |=RK(0, 3);
+	key[KEY_4] |=RK(0, 4);
+	key[KEY_5] |=RK(0, 5);
+	key[KEY_6] |=RK(0, 6);
+	key[KEY_7] |=RK(0, 7);
+	key[KEY_8] |=RK(0, 8);
 	key[KEY_9] =RK(0, 9);
 	key[KEY_0_PAD] =RK(0, KP0);
 	key[KEY_1_PAD] =RK(0, KP1);
@@ -304,7 +311,7 @@ static void update_input(void)
 	key[KEY_MINUS] =RK(0, MINUS);
 	key[KEY_EQUALS] =RK(0, EQUALS);
 	key[KEY_BACKSPACE] =RK(0, BACKSPACE);
-	key[KEY_TAB] =RK(0, TAB);
+	key[KEY_TAB] |=RK(0, TAB);
 	key[KEY_OPENBRACE] =RK(0, LEFTBRACKET);
 	key[KEY_CLOSEBRACE] =RK(0, RIGHTBRACKET);
 	key[KEY_ENTER] =RK(0, RETURN);
