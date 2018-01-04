@@ -174,6 +174,14 @@ else ifeq ($(platform), wiiu)
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
 
+# Nintendo Switch (libtransistor)
+else ifeq ($(platform), switch)
+	EXT=a
+        TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
+        include $(LIBTRANSISTOR_HOME)/libtransistor.mk
+   HAVE_RZLIB := 1
+        STATIC_LINKING=1
+
 # CTR(3DS)
 else ifeq ($(platform), ctr)
    TARGET := $(TARGET_NAME)_libretro_$(platform).a
