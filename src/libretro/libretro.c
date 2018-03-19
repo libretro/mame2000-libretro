@@ -150,7 +150,7 @@ static void update_variables(void)
     var.value = NULL;
     var.key = "mame2000-skip_disclaimer";
     
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
     {
         if(strcmp(var.value, "enabled") == 0)
             skip_disclaimer = 1;
@@ -163,7 +163,7 @@ static void update_variables(void)
     var.value = NULL;
     var.key = "mame2000-show_gameinfo";
     
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
     {
         if(strcmp(var.value, "enabled") == 0)
             global_showinfo = 1;
