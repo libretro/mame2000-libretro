@@ -22,7 +22,7 @@ extern "C" {
 static thread_local uint32_t co_active_buffer[64];
 static thread_local cothread_t co_active_handle;
 
-asm (
+__asm__ (
 #if defined(__thumb2__)
       ".thumb\n"
       ".align 2\n"
@@ -44,7 +44,7 @@ asm (
       ".globl co_switch_arm\n"
       ".globl _co_switch_arm\n"
       "co_switch_arm:\n"
-      "_co_switch_arm:\n"      
+      "_co_switch_arm:\n"
       "  stmia r1!, {r4, r5, r6, r7, r8, r9, r10, r11, sp, lr}\n"
       "  ldmia r0!, {r4, r5, r6, r7, r8, r9, r10, r11, sp, pc}\n"
 #endif
@@ -52,12 +52,6 @@ asm (
 
 /* ASM */
 void co_switch_arm(cothread_t handle, cothread_t current);
-
-static void crash(void)
-{
-   /* Called only if cothread_t entrypoint returns. */
-   assert(0);
-}
 
 cothread_t co_create(unsigned int size, void (*entrypoint)(void))
 {
