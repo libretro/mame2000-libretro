@@ -163,6 +163,21 @@ else ifeq ($(platform), wii)
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
 
+# Nintendo Switch (libnx)
+else ifeq ($(platform), libnx)
+include $(DEVKITPRO)/libnx/switch_rules
+    EXT=a
+    TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
+    DEFINES := -DSWITCH=1 -U__linux__ -U__linux
+    CFLAGS := $(DEFINES) -g -O3 -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
+    CFLAGS += $(INCDIRS)
+    CFLAGS	+=	$(INCLUDE)  -D__SWITCH__
+    CXXFLAGS := $(ASFLAGS) $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+    CFLAGS += -std=gnu11
+    PLATCFLAGS += -Dstricmp=strcasecmp
+   HAVE_RZLIB := 1
+    STATIC_LINKING = 1
+
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
    TARGET := $(TARGET_NAME)_libretro_$(platform).a
