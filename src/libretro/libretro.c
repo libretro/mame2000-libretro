@@ -446,50 +446,6 @@ static void unlock_mame(void)
 
 void retro_init(void)
 {
-   const char *system_dir  = NULL;
-   const char *content_dir = NULL;
-   const char *save_dir    = NULL;
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
-   {
-      /* if defined, use the system directory */
-      retro_system_directory = system_dir;
-   }
-
-   printf("SYSTEM_DIRECTORY: %s\n", retro_system_directory);
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY, &content_dir) && content_dir)
-   {
-      // if defined, use the system directory
-      retro_content_directory=content_dir;
-   }
-
-   printf("CONTENT_DIRECTORY: %s\n", retro_content_directory);
-
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_dir) && save_dir)
-   {
-      /* If save directory is defined use it, 
-       * otherwise use system directory. */
-      retro_save_directory = *save_dir ? save_dir : retro_system_directory;
-
-   }
-   else
-   {
-      /* make retro_save_directory the same,
-       * in case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY 
-       * is not implemented by the frontend. */
-      retro_save_directory=retro_system_directory;
-   }
-   printf("SAVE_DIRECTORY: %s\n", retro_save_directory);
-
-   sprintf(core_sys_directory,"%s%cmame2000\0",retro_system_directory,slash);
-   sprintf(core_save_directory,"%s%cmame2000\0",retro_save_directory,slash);
-   printf("MAME2000_SYS_DIRECTORY: %s\n", core_sys_directory);
-   printf("MAME2000_SAVE_DIRECTORY: %s\n", core_save_directory);
-
-   IMAMEBASEPATH = (char *) malloc(1024);
-   IMAMESAMPLEPATH = (char *) malloc(1024);
 #ifdef _3DS
    gp2x_screen15 = (unsigned short *) linearMemAlign(640 * 480 * 2, 0x80);
 #else
@@ -676,6 +632,41 @@ bool retro_load_game(const struct retro_game_info *info)
       fprintf(stderr, "[libretro]: RGB565 is not supported.\n");
       return false;
    }
+
+  retro_content_directory = strdup(info->path);
+  path_basedir(retro_content_directory);
+
+  printf("CONTENT_DIRECTORY: %s\n", retro_content_directory);
+
+  /* Get system directory from frontend */
+  retro_system_directory = NULL;
+  environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&retro_system_directory);
+  if (retro_system_directory == NULL || retro_system_directory[0] == '\0')
+  {
+      printf("libretro system path not set by frontend, using content path\n");
+      retro_system_directory = retro_content_directory;
+  }
+   printf("SYSTEM_DIRECTORY: %s\n", retro_system_directory);
+
+
+  /* Get save directory from frontend */
+  retro_save_directory = NULL;
+  environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&retro_save_directory);
+  if (retro_save_directory == NULL || retro_save_directory[0] == '\0')
+  {
+      printf("libretro save path not set by frontent, using content path\n");
+      retro_save_directory = retro_content_directory;
+  }
+   printf("SAVE_DIRECTORY: %s\n", retro_save_directory);
+
+   sprintf(core_sys_directory,"%s%cmame2000\0",retro_system_directory,slash);
+   sprintf(core_save_directory,"%s%cmame2000\0",retro_save_directory,slash);
+   printf("MAME2000_SYS_DIRECTORY: %s\n", core_sys_directory);
+   printf("MAME2000_SAVE_DIRECTORY: %s\n", core_save_directory);
+
+   IMAMEBASEPATH = (char *) malloc(1024);
+   IMAMESAMPLEPATH = (char *) malloc(1024);
+
 
    int i;
    memcpy(IMAMEBASEPATH, info->path, strlen(info->path) + 1);
