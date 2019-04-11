@@ -500,19 +500,46 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
+float ver=0;
+int  max_dim;
+int dx;
+int dy;
+unsigned orientation = Machine->gamedrv->flags & ORIENTATION_MASK;
+ 
 #ifndef WANT_LIBCO
    lock_mame();
 #endif
-   struct retro_game_geometry g = {
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
-   };
-   struct retro_system_timing t = {
+  
+  if (orientation & ORIENTATION_SWAP_XY)
+  ver =  (float)3 / (float)4;
+ 
+  else
+    ver =  (float)4 / (float)3;
+
+
+  dx =  Machine->drv->default_visible_area.max_x - Machine->drv->default_visible_area.min_x + 1;
+  dy =  Machine->drv->default_visible_area.max_y - Machine->drv->default_visible_area.min_y + 1; 
+ 
+
+  if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
+  {
+    dx = options.vector_width;
+    dy = options.vector_height;
+   }
+
+   max_dim = dx > dy  ? dx :  dy ;
+
+  struct retro_game_geometry g = {
+  dx,
+  dy,
+  max_dim,
+  max_dim,
+   ver
+  };
+
+  struct retro_system_timing t = {
       Machine->drv->frames_per_second,
-      32000.0
+      30000.0
    };
    info->timing = t;
    info->geometry = g;
@@ -733,8 +760,8 @@ bool retro_load_game(const struct retro_game_info *info)
    i=create_path_recursive(cheatdir);
    if(i!=0)printf("error %d creating cheat \"%s\"\n", i,cheatdir);
 
-   Machine->sample_rate = 32000;
-   options.samplerate = 32000;
+   Machine->sample_rate = 30000;
+   options.samplerate = 30000;
 
    /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
    options.use_emulated_ym3812 = 1;
