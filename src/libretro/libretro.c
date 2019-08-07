@@ -11,6 +11,7 @@
 #include "osdepend.h"
 #include "driver.h"
 #include "allegro.h"
+#include <file/file_path.h>
 
 #ifndef RETROK_TILDE
 #define RETROK_TILDE 178

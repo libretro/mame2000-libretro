@@ -86,9 +86,21 @@ ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
 
+CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
+
+ifeq ($(platform),ios-arm64)
+   CC = cc -arch arm64 -isysroot $(IOSSDK)
+	LD = armv7-apple-darwin11-ld
+else
    CC = cc -arch armv7 -isysroot $(IOSSDK)
 	LD = armv7-apple-darwin11-ld
-	CFLAGS += -DIOS
+endif
+
+ifeq ($(platform),$(filter $(platform),ios9 ios-arm64))
+   CC += -miphoneos-version-min=8.0
+else
+   CC += -miphoneos-version-min=5.0
+endif
 
 # PS3
 else ifeq ($(platform), ps3)
