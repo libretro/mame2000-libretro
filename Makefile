@@ -103,6 +103,19 @@ else
    CC += -miphoneos-version-min=5.0
 endif
 
+# tvOS
+else ifeq ($(platform), tvos-arm64)
+	TARGET := $(TARGET_NAME)_libretro_tvos.dylib
+	fpic := -fPIC
+	SHARED := -dynamiclib
+	CFLAGS += -DHAVE_POSIX_MEMALIGN
+
+ifeq ($(IOSSDK),)
+   IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
+endif
+
+CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
+
 # PS3
 else ifeq ($(platform), ps3)
    TARGET := $(TARGET_NAME)_libretro_$(platform).a
