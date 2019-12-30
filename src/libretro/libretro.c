@@ -3,6 +3,11 @@
 #else
 #include <rthreads/rthreads.h>
 #endif
+
+#if (HAS_DRZ80 || HAS_CYCLONE)
+#include "frontend_list.h"
+#endif
+
 #include <stdarg.h>
 #include <sys/time.h>
 #include "libretro.h"
@@ -746,9 +751,47 @@ bool retro_load_game(const struct retro_game_info *info)
    /* skip disclaimer - skips 'nag screen' */
    options.skip_disclaimer = skip_disclaimer;
 
+#if (HAS_CYCLONE || HAS_DRZ80)
+   int use_cyclone = 1;
+   int use_drz80 = 1;
+   int use_drz80_snd = 1;
+
+	for (i=0;i<NUMGAMES;i++)
+ 	{
+		if (strcmp(drivers[game_index]->name,fe_drivers[i].name)==0)
+		{
+			/* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
+         switch (fe_drivers[i].cores)
+         {
+         case 0:
+            use_cyclone = 0;
+				use_drz80_snd = 0;
+				use_drz80 = 0;
+            break;
+         case 1:
+				use_drz80_snd = 0;
+				use_drz80 = 0;
+            break;
+         case 2:
+            use_cyclone = 0;
+            break;
+         case 4:
+            use_cyclone = 0;
+				use_drz80 = 0;
+            break;
+         case 5:
+				use_drz80 = 0;
+            break;
+         default:
+            break;
+         }
+			
+         break;
+		}
+	}
+
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
-   int use_cyclone = 1;
    if (use_cyclone)
    {
 	   for (i=0;i<MAX_CPU;i++)
@@ -767,19 +810,33 @@ bool retro_load_game(const struct retro_game_info *info)
 #endif
 
 #if (HAS_DRZ80)
-   int use_drz80 = 1;
-   /* Replace Z80 by DRZ80 */
-   if (use_drz80)
-   {
-	   for (i=0;i<MAX_CPU;i++)
-	   {
-		   int *type=(int*)&(drivers[game_index]->drv->cpu[i].cpu_type);
-		   if (((*type)&0xff)==CPU_Z80)
-		   {
-			   *type=((*type)&(~0xff))|CPU_DRZ80;
-		   }
-	   }
-   }
+	/* Replace Z80 by DRZ80 */
+	if (use_drz80)
+	{
+		for (i=0;i<MAX_CPU;i++)
+		{
+			int *type=(int*)&(drivers[game_index]->drv->cpu[i].cpu_type);
+			if (((*type)&0xff)==CPU_Z80)
+			{
+				*type=((*type)&(~0xff))|CPU_DRZ80;
+			}
+		}
+	}
+
+	/* Replace Z80 with DRZ80 only for sound CPUs */
+	if (use_drz80_snd)
+	{
+		for (i=0;i<MAX_CPU;i++)
+		{
+			int *type=(int*)&(drivers[game_index]->drv->cpu[i].cpu_type);
+			if ((((*type)&0xff)==CPU_Z80) && ((*type)&CPU_AUDIO_CPU))
+			{
+				*type=((*type)&(~0xff))|CPU_DRZ80;
+			}
+		}
+	}
+#endif
+
 #endif
 
    // Remove the mouse usage for certain games
