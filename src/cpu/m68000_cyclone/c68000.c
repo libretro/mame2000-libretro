@@ -81,6 +81,7 @@ void cyclone_reset(void *param)
   	cyclone.regs.pc=cyclone.regs.checkpc(cyclone.regs.read32(4)); /* Get Program Counter */
 	cyclone.regs.state_flags = 0; /* not stopped or tracing */
    	cyclone.pending_interrupts = 0;
+	CycloneReset(&cyclone.regs);
 }
 
 unsigned int cyclone_get_pc(void)
