@@ -6,6 +6,16 @@
 
 
 /*
+ * By default, only ARMv4 instructions are used.
+ * If you want Cyclone to make use of newer ARM instructions, enable the
+ * options(s) below. You can also override this using make argument:
+ *   make HAVE_ARMv6=1
+ */
+#ifndef HAVE_ARMv6
+#define HAVE_ARMv6                  0
+#endif
+
+/*
  * If this option is enabled, Microsoft ARMASM compatible output is generated
  * (output file -  Cyclone.asm). Otherwise GNU as syntax is used (Cyclone.s).
  */
@@ -16,7 +26,6 @@
  * Mega Drive system. As VDP chip in these systems had control of the bus,
  * several instructions were acting differently, for example TAS did'n have
  * the write-back phase. That will be emulated, if this option is enabled.
- * This option also alters timing slightly.
  */
 #define CYCLONE_FOR_GENESIS         0
 
@@ -67,9 +76,20 @@
 #define MEMHANDLERS_CHANGE_CYCLES   1
 
 /*
+ * If the following macro is defined, Cyclone no longer calls read*, write*,
+ * fetch* and checkpc from it's context, it calls these functions directly
+ * instead, prefixed with prefix selected below. For example, if
+ * MEMHANDLERS_DIRECT_PREFIX is set to cyclone_, it will call cyclone_read8
+ * on byte reads.
+ * This is to avoid indirect jumps, which are slower. It also saves one ARM
+ * instruction.
+ */
+/* MEMHANDLERS_DIRECT_PREFIX "cyclone_" */
+
+/*
  * If enabled, Cyclone will call .IrqCallback routine from it's context whenever it
  * acknowledges an IRQ. IRQ level (.irq) is not cleared automatically, do this in your
- * handler if needed. PC, flags and cycles are valid in the context and can be read.
+ * handler if needed.
  * This function must either return vector number to use for interrupt exception,
  * CYCLONE_INT_ACK_AUTOVECTOR to use autovector (this is the most common case), or
  * CYCLONE_INT_ACK_SPURIOUS (least common case).
@@ -133,8 +153,8 @@
 
 /*
  * When this option is enabled Cyclone will do two word writes instead of one
- * long write when handling MOVE.L with pre-decrementing destination, as described in
- * Bart Trzynadlowski's doc (http://www.trzy.org/files/68knotes.txt).
+ * long write when handling MOVE.L or MOVEM.L with pre-decrementing destination,
+ * as described in Bart Trzynadlowski's doc (http://www.trzy.org/files/68knotes.txt).
  * Enable this if you are emulating a 16 bit system.
  */
 #define SPLIT_MOVEL_PD              1
@@ -148,7 +168,7 @@
 /*
  * If enabled, address error exception will be generated if 68k code jumps to an
  * odd address. Causes very small performance hit (2 ARM instructions for every
- * emulated jump/return/exception).
+ * emulated jump/return/exception in normal case).
  * Note: checkpc() must not clear least significant bit of rebased address
  * for this to work, as checks are performed after calling checkpc().
  */
@@ -162,7 +182,7 @@
 #define EMULATE_ADDRESS_ERRORS_IO   0
 
 /*
- * If an address error happens during reset/bus error/address error processing,
+ * If an address error happens during another address error processing,
  * the processor halts until it is reset (catastrophic system failure, as the manual
  * states). This option enables halt emulation.
  * Note that this might be not desired if it is known that emulated system should
