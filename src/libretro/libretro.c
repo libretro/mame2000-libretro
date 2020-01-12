@@ -10,7 +10,7 @@
 
 #include <stdarg.h>
 #include <sys/time.h>
-#include "libretro.h"
+#include <libretro.h>
 #include "mame.h"
 #include "cpuintrf.h"
 #include "osdepend.h"
