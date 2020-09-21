@@ -147,6 +147,8 @@ static retro_environment_t environ_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
 
+static bool libretro_supports_bitmasks = false;
+
 unsigned skip_disclaimer = 0;
 
 static void update_variables(void)
@@ -225,8 +227,8 @@ void retro_reset(void)
 static void update_input(void)
 {
 #define RK(port,key)     input_state_cb(port, RETRO_DEVICE_KEYBOARD, 0,RETROK_##key)
-#define JS(port, button) input_state_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-	int i, c = 0;
+#define JS(port, button) joypad_bits & (1 << RETRO_DEVICE_ID_JOYPAD_##button)
+	int i, j, c = 0;
 	input_poll_cb();
 	
 	key[KEY_TAB] = 0;
@@ -238,6 +240,17 @@ static void update_input(void)
 	
 	for (i = 0; i < 4; i++)
 	{
+		int16_t joypad_bits;
+		
+		if (libretro_supports_bitmasks)
+			joypad_bits = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_MASK);
+		else
+		{
+			joypad_bits = 0;
+			for (j = 0; j < (RETRO_DEVICE_ID_JOYPAD_R3+1); j++)
+				joypad_bits |= input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, j) ? (1 << j) : 0;
+		}
+
 		key[KEY_1 + i]   |= JS(i, START);
 		key[KEY_5 + i]   |= JS(i, SELECT);
 		joy_pressed[c++] = JS(i, LEFT);
@@ -463,6 +476,9 @@ void retro_init(void)
 #endif
    init_joy_list();
    update_variables();
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_INPUT_BITMASKS, NULL))
+      libretro_supports_bitmasks = true;
 }
 
 void retro_deinit(void)
@@ -478,6 +494,8 @@ void retro_deinit(void)
    scond_free(libretro_cond);
    slock_free(libretro_mutex);
 #endif
+
+   libretro_supports_bitmasks = false;
 }
 
 unsigned retro_api_version(void)
