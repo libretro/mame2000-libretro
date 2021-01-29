@@ -71,10 +71,21 @@ else ifeq ($(platform), osx)
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
 ifeq ($(arch),ppc)
-		CFLAGS += -D__ppc__ -DMSB_FIRST
+	CFLAGS += -D__ppc__ -DMSB_FIRST
 endif
    SHARED := -dynamiclib
+ifeq ($(shell uname -p),i386)
    IS_X86 = 1
+endif
+   CFLAGS += -DHAVE_POSIX_MEMALIGN
+
+   ifeq ($(CROSS_COMPILE),1)
+		TARGET_RULE   = -target $(LIBRETRO_APPLE_PLATFORM) -isysroot $(LIBRETRO_APPLE_ISYSROOT)
+		CFLAGS   += $(TARGET_RULE)
+		CPPFLAGS += $(TARGET_RULE)
+		CXXFLAGS += $(TARGET_RULE)
+		LDFLAGS  += $(TARGET_RULE)
+   endif
 
 # iOS
 else ifneq (,$(findstring ios,$(platform)))
