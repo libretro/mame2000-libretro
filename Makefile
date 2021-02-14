@@ -539,6 +539,15 @@ INCFLAGS :=
 include Makefile.common
 
 DEFS += $(fpic) $(PLATFORM_DEFINES) $(ZLIB_INCLUDE) $(GCC_DEFINES) $(INCFLAGS) $(INCFLAGS_PLATFORM)
+
+ifneq (,$(findstring msvc,$(platform)))
+ifeq ($(DEBUG),1)
+DEFS += -MTd
+else
+DEFS += -MT
+endif
+endif
+
 # combine the various definitions to one
 CDEFS +=  $(ENDIANNESS_DEFINES) $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS)
 
@@ -563,7 +572,6 @@ ifeq ($(platform), emscripten)
 else ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
 else
-	@echo Linking $@...
 	$(LD) $(SHARED) $(LDFLAGS) $(OBJECTS) $(LIBS) $(LINKOUT)$@
 endif
     
