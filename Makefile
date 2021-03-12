@@ -102,10 +102,10 @@ CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
 
 ifeq ($(platform),ios-arm64)
    CC = cc -arch arm64 -isysroot $(IOSSDK)
-	LD = armv7-apple-darwin11-ld
+   LD = armv7-apple-darwin11-ld
 else
    CC = cc -arch armv7 -isysroot $(IOSSDK)
-	LD = armv7-apple-darwin11-ld
+   LD = armv7-apple-darwin11-ld
 endif
 
 ifeq ($(platform),$(filter $(platform),ios9 ios-arm64))
@@ -121,11 +121,13 @@ else ifeq ($(platform), tvos-arm64)
 	SHARED := -dynamiclib
 	CFLAGS += -DHAVE_POSIX_MEMALIGN
 
+
 ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
 endif
 
-CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
+   CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
+   CC = cc -arch arm64 -isysroot $(IOSSDK)
 
 # PS3
 else ifeq ($(platform), ps3)
