@@ -693,7 +693,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
 
    int i;
-   memcpy(IMAMEBASEPATH, info->path, strlen(info->path) + 1);
+   memcpy(IMAMEBASEPATH, info->path, strlen(core_sys_directory) + 1);
    if (strrchr(IMAMEBASEPATH, slash)) *(strrchr(IMAMEBASEPATH, slash)) = 0;
    else { IMAMEBASEPATH[0] = '.'; IMAMEBASEPATH[1] = 0; }
    char baseName[1024];
@@ -702,7 +702,7 @@ bool retro_load_game(const struct retro_game_info *info)
    memcpy(baseName, romName, strlen(romName) + 1);
    if (strrchr(baseName, '.')) *(strrchr(baseName, '.')) = 0;
 
-   strcpy(IMAMESAMPLEPATH, IMAMEBASEPATH);
+   strcpy(IMAMESAMPLEPATH, core_sys_directory);
    strcat(IMAMESAMPLEPATH, "/samples");
 
    /* do we have a driver for this? */
