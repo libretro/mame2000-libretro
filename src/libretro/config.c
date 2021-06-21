@@ -202,7 +202,7 @@ void get_rom_sample_path (int argc, char **argv, int game_index)
 	game = game_index;
     
 	rompath    = get_string ("directory", "rompath",    NULL, IMAMEBASEPATH);
-	samplepath = get_string ("directory", "samplepath", NULL, IMAMEBASEPATH);
+	samplepath = get_string ("directory", "samplepath", NULL, IMAMESAMPLEPATH);
 
 	/* handle '-romdir' hack. We should get rid of this BW */
 	alternate_name = 0;

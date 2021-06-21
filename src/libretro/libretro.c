@@ -693,7 +693,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
 
    int i;
-   memcpy(IMAMEBASEPATH, info->path, strlen(core_sys_directory) + 1);
+   memcpy(IMAMEBASEPATH, info->path, strlen(info->path) + 1);
    if (strrchr(IMAMEBASEPATH, slash)) *(strrchr(IMAMEBASEPATH, slash)) = 0;
    else { IMAMEBASEPATH[0] = '.'; IMAMEBASEPATH[1] = 0; }
    char baseName[1024];
