@@ -469,7 +469,6 @@ int osd_create_display(int width,int height,int depth,int fps,int attributes,int
 
 	video_depth = depth;
 	video_fps = fps;
-
 	brightness = 100;
 	brightness_paused_adjust = 1.0;
 	dirty_bright = 1;

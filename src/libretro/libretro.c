@@ -67,7 +67,6 @@ extern short *samples_buffer;
 extern short *conversion_buffer;
 extern int joy_pressed[40];
 extern int key[KEY_MAX];
-
 extern char *nvdir, *hidir, *cfgdir, *inpdir, *stadir, *memcarddir;
 extern char *artworkdir, *screenshotdir, *alternate_name;
 extern char *cheatdir;
@@ -527,6 +526,8 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
+   
+   float aspect_ratio = Machine->orientation & ORIENTATION_SWAP_XY? ( (float) 3 / (float) 4) : ( (float) 4/ (float) 3);
 #ifndef WANT_LIBCO
    lock_mame();
 #endif
@@ -535,7 +536,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
       emulated_height,
       emulated_width,
       emulated_height,
-      ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
+      aspect_ratio
    };
    struct retro_system_timing t = {
       Machine->drv->frames_per_second,
