@@ -51,6 +51,9 @@ static scond_t   *libretro_cond = NULL;
 static slock_t   *libretro_mutex = NULL;
 #endif
 
+int underclock_sound=0;
+int underclock_cpu=0;
+int fast_sound=0;
 int game_index = -1;
 unsigned short *gp2x_screen15;
 int thread_done = 0;
@@ -64,7 +67,6 @@ extern short *samples_buffer;
 extern short *conversion_buffer;
 extern int joy_pressed[40];
 extern int key[KEY_MAX];
-
 extern char *nvdir, *hidir, *cfgdir, *inpdir, *stadir, *memcarddir;
 extern char *artworkdir, *screenshotdir, *alternate_name;
 extern char *cheatdir;
@@ -524,19 +526,21 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
+   
+   float aspect_ratio = Machine->orientation & ORIENTATION_SWAP_XY? ( (float) 3 / (float) 4) : ( (float) 4/ (float) 3);
 #ifndef WANT_LIBCO
    lock_mame();
 #endif
    struct retro_game_geometry g = {
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
+     emulated_width,
+      emulated_height,
+      emulated_width,
+      emulated_height,
+      aspect_ratio
    };
    struct retro_system_timing t = {
       Machine->drv->frames_per_second,
-      32000.0
+      30000.0
    };
    info->timing = t;
    info->geometry = g;
@@ -693,7 +697,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
 
    int i;
-   memcpy(IMAMEBASEPATH, info->path, strlen(core_sys_directory) + 1);
+   memcpy(IMAMEBASEPATH, info->path, strlen(info->path) + 1);
    if (strrchr(IMAMEBASEPATH, slash)) *(strrchr(IMAMEBASEPATH, slash)) = 0;
    else { IMAMEBASEPATH[0] = '.'; IMAMEBASEPATH[1] = 0; }
    char baseName[1024];
@@ -757,8 +761,8 @@ bool retro_load_game(const struct retro_game_info *info)
    i=create_path_recursive(cheatdir);
    if(i!=0)printf("error %d creating cheat \"%s\"\n", i,cheatdir);
 
-   Machine->sample_rate = 32000;
-   options.samplerate = 32000;
+   Machine->sample_rate = 30000;
+   options.samplerate = 30000;
 
    /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
    options.use_emulated_ym3812 = 1;
