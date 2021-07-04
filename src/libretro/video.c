@@ -21,7 +21,7 @@ char *dirty_old=grid1;
 char *dirty_new=grid2;
 
 /* in msdos/sound.c */
-//int msdos_update_audio(void);
+//int msdos_update_adirtyudio(void);
 
 /* specialized update_screen functions defined in blit.c */
 /* dirty mode 1 (VIDEO_SUPPORTS_DIRTY) */
@@ -54,7 +54,7 @@ int wait_vsync;
 int vsync_frame_rate;
 int skiplines;
 int skipcolumns;
-int use_dirty;
+int use_dirty = -1;
 float osd_gamma_correction = 1.0;
 int brightness;
 float brightness_paused_adjust;
@@ -465,7 +465,7 @@ Returns 0 on success.
 */
 int osd_create_display(int width,int height,int depth,int fps,int attributes,int orientation)
 {
-	logerror("width %d, height %d\n", width,height);
+	printf("width %d, height %d\n", width,height);
 
 	video_depth = depth;
 	video_fps = fps;

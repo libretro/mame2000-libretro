@@ -531,10 +531,10 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    lock_mame();
 #endif
    struct retro_game_geometry g = {
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
+     emulated_width,
+      emulated_height,
+      emulated_width,
+      emulated_height,
       ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
    };
    struct retro_system_timing t = {
