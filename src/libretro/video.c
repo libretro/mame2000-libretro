@@ -21,7 +21,7 @@ char *dirty_old=grid1;
 char *dirty_new=grid2;
 
 /* in msdos/sound.c */
-//int msdos_update_adirtyudio(void);
+//int msdos_update_audio(void);
 
 /* specialized update_screen functions defined in blit.c */
 /* dirty mode 1 (VIDEO_SUPPORTS_DIRTY) */
