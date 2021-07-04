@@ -51,6 +51,9 @@ static scond_t   *libretro_cond = NULL;
 static slock_t   *libretro_mutex = NULL;
 #endif
 
+int underclock_sound=0;
+int underclock_cpu=0;
+int fast_sound=0;
 int game_index = -1;
 unsigned short *gp2x_screen15;
 int thread_done = 0;

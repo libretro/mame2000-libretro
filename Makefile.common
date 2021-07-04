@@ -1806,7 +1806,6 @@ SOURCES_C += $(CORE_DIR)/src/libretro/libretro.c \
 				 $(CORE_DIR)/src/libretro/sound.c \
 				 $(CORE_DIR)/src/libretro/input.c \
 				 $(CORE_DIR)/src/libretro/fileio.c \
-				 $(CORE_DIR)/src/libretro/config.c \
 				 $(CORE_DIR)/src/libretro/shared.c
 
 ifeq ($(WANT_LIBCO), 1)
