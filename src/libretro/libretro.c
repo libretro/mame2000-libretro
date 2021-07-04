@@ -539,7 +539,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    };
    struct retro_system_timing t = {
       Machine->drv->frames_per_second,
-      32000.0
+      30000.0
    };
    info->timing = t;
    info->geometry = g;
@@ -760,8 +760,8 @@ bool retro_load_game(const struct retro_game_info *info)
    i=create_path_recursive(cheatdir);
    if(i!=0)printf("error %d creating cheat \"%s\"\n", i,cheatdir);
 
-   Machine->sample_rate = 32000;
-   options.samplerate = 32000;
+   Machine->sample_rate = 30000;
+   options.samplerate = 30000;
 
    /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
    options.use_emulated_ym3812 = 1;
