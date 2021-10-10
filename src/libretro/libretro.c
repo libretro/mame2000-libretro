@@ -65,6 +65,9 @@ int update_audio_latency                 = false;
 
 int should_skip_frame                    = 0;
 
+static int sample_rate                   = 32000;
+static int stereo_enabled                = true;
+
 int game_index = -1;
 unsigned short *gp2x_screen15;
 int thread_done = 0;
@@ -272,6 +275,27 @@ static void update_variables(bool first_run)
     else
         global_showinfo = 0;
 
+    var.value = NULL;
+    var.key = "mame2000-sample_rate";
+
+    sample_rate = 32000;
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+       sample_rate = strtol(var.value, NULL, 10);
+
+    var.value = NULL;
+    var.key = "mame2000-stereo";
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+        if(strcmp(var.value, "enabled") == 0)
+            stereo_enabled = true;
+        else
+            stereo_enabled = false;
+    }
+    else
+        stereo_enabled = true;
+
    /* Reinitialise frameskipping, if required */
    if (!first_run &&
        ((frameskip_type     != prev_frameskip_type)))
@@ -286,6 +310,8 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2000-frameskip_interval", "Frameskip Interval; 1|2|3|4|5|6|7|8|9" },
       { "mame2000-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2000-show_gameinfo", "Show Game Information; disabled|enabled" },
+      { "mame2000-sample_rate", "Audio Rate (Restart); 32000|11025|22050|32000|44100" },
+      { "mame2000-stereo", "Stereo (Restart); enabled|disabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -643,7 +669,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    };
    struct retro_system_timing t = {
       Machine->drv->frames_per_second,
-      32000.0
+      (double)Machine->sample_rate
    };
    info->timing = t;
    info->geometry = g;
@@ -881,8 +907,9 @@ bool retro_load_game(const struct retro_game_info *info)
    i=create_path_recursive(cheatdir);
    if(i!=0)printf("error %d creating cheat \"%s\"\n", i,cheatdir);
 
-   Machine->sample_rate = 32000;
-   options.samplerate = 32000;
+   Machine->sample_rate = sample_rate;
+   options.samplerate = sample_rate;
+   usestereo = stereo_enabled;
 
    /* This is needed so emulated YM3526/YM3812 chips are used instead on physical ones. */
    options.use_emulated_ym3812 = 1;
