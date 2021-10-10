@@ -8,6 +8,17 @@ extern int isIpad;
 extern int emulated_width;
 extern int emulated_height;
 extern int safe_render_path;
+
+extern unsigned frameskip_type;
+extern unsigned frameskip_threshold;
+extern unsigned frameskip_counter;
+extern unsigned frameskip_interval;
+
+extern int retro_audio_buff_active;
+extern unsigned retro_audio_buff_occupancy;
+extern int retro_audio_buff_underrun;
+extern int should_skip_frame;
+
 int iOS_exitPause = 0;
 int iOS_cropVideo = 0;
 int iOS_aspectRatio = 0;
@@ -793,7 +804,7 @@ static INLINE void pan_display(void)
 
 int osd_skip_this_frame(void)
 {
-   return 0;
+   return should_skip_frame;
 }
 
 /* Update the display. */
@@ -901,6 +912,41 @@ void osd_update_video_and_audio(struct osd_bitmap *bitmap)
 
 	/* Check for PGUP, PGDN and pan screen */
 	pan_display();
+
+	should_skip_frame = 0;
+	/* Check whether current frame should
+	 * be skipped */
+	if ((frameskip_type > 0) &&
+	    retro_audio_buff_active)
+	{
+		int skip_frame;
+
+		switch (frameskip_type)
+		{
+		case 1: /* auto */
+			skip_frame = retro_audio_buff_underrun;
+			break;
+		case 2: /* threshold */
+			skip_frame = (retro_audio_buff_occupancy < frameskip_threshold);
+			break;
+		default:
+			skip_frame = 0;
+			break;
+		}
+
+		if (skip_frame)
+		{
+			if(frameskip_counter < frameskip_interval)
+			{
+				should_skip_frame = 1;
+				frameskip_counter++;
+			}
+			else
+				frameskip_counter = 0;
+		}
+		else
+			frameskip_counter = 0;
+	}
 
    hook_video_done();
 }

@@ -51,6 +51,20 @@ static scond_t   *libretro_cond = NULL;
 static slock_t   *libretro_mutex = NULL;
 #endif
 
+unsigned frameskip_type                  = 0;
+unsigned frameskip_threshold             = 0;
+unsigned frameskip_counter               = 0;
+unsigned frameskip_interval              = 0;
+
+int retro_audio_buff_active              = false;
+unsigned retro_audio_buff_occupancy      = 0;
+int retro_audio_buff_underrun            = false;
+
+unsigned retro_audio_latency             = 0;
+int update_audio_latency                 = false;
+
+int should_skip_frame                    = 0;
+
 int game_index = -1;
 unsigned short *gp2x_screen15;
 int thread_done = 0;
@@ -151,10 +165,87 @@ static bool libretro_supports_bitmasks = false;
 
 unsigned skip_disclaimer = 0;
 
-static void update_variables(void)
+static void retro_audio_buff_status_cb(
+      bool active, unsigned occupancy, bool underrun_likely)
+{
+   retro_audio_buff_active    = active;
+   retro_audio_buff_occupancy = occupancy;
+   retro_audio_buff_underrun  = underrun_likely;
+}
+
+static void retro_set_audio_buff_status_cb(void)
+{
+   if (frameskip_type > 0)
+   {
+      struct retro_audio_buffer_status_callback buf_status_cb;
+
+      buf_status_cb.callback = retro_audio_buff_status_cb;
+      if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
+            &buf_status_cb))
+      {
+         retro_audio_buff_active    = false;
+         retro_audio_buff_occupancy = 0;
+         retro_audio_buff_underrun  = false;
+         retro_audio_latency        = 0;
+      }
+      else
+      {
+         /* Frameskip is enabled - increase frontend
+          * audio latency to minimise potential
+          * buffer underruns */
+         uint32_t frame_time_usec = 1000000.0 / Machine->drv->frames_per_second;
+
+         /* Set latency to 6x current frame time... */
+         retro_audio_latency = (unsigned)(6 * frame_time_usec / 1000);
+
+         /* ...then round up to nearest multiple of 32 */
+         retro_audio_latency = (retro_audio_latency + 0x1F) & ~0x1F;
+      }
+   }
+   else
+   {
+      environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK, NULL);
+      retro_audio_latency = 0;
+   }
+
+   update_audio_latency = true;
+}
+
+static void update_variables(bool first_run)
 {
     struct retro_variable var;
-    
+    bool prev_frameskip_type;
+
+    var.key = "mame2000-frameskip";
+    var.value = NULL;
+
+    prev_frameskip_type = frameskip_type;
+    frameskip_type      = 0;
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+       if (strcmp(var.value, "auto") == 0)
+          frameskip_type = 1;
+       if (strcmp(var.value, "threshold") == 0)
+          frameskip_type = 2;
+    }
+
+    var.key = "mame2000-frameskip_threshold";
+    var.value = NULL;
+
+    frameskip_threshold = 30;
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+       frameskip_threshold = strtol(var.value, NULL, 10);
+
+    var.key = "mame2000-frameskip_interval";
+    var.value = NULL;
+
+    frameskip_interval = 1;
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+       frameskip_interval = strtol(var.value, NULL, 10);
+
     var.value = NULL;
     var.key = "mame2000-skip_disclaimer";
     
@@ -180,11 +271,19 @@ static void update_variables(void)
     }
     else
         global_showinfo = 0;
+
+   /* Reinitialise frameskipping, if required */
+   if (!first_run &&
+       ((frameskip_type     != prev_frameskip_type)))
+      retro_set_audio_buff_status_cb();
 }
 
 void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
+      { "mame2000-frameskip", "Frameskip ; disabled|auto|threshold" },
+      { "mame2000-frameskip_threshold", "Frameskip Threshold (%); 30|40|50|60" },
+      { "mame2000-frameskip_interval", "Frameskip Interval; 1|2|3|4|5|6|7|8|9" },
       { "mame2000-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2000-show_gameinfo", "Show Game Information; disabled|enabled" },
       { NULL, NULL },
@@ -475,7 +574,7 @@ void retro_init(void)
    libretro_mutex = slock_new();
 #endif
    init_joy_list();
-   update_variables();
+   update_variables(true);
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_INPUT_BITMASKS, NULL))
       libretro_supports_bitmasks = true;
@@ -496,6 +595,14 @@ void retro_deinit(void)
 #endif
 
    libretro_supports_bitmasks = false;
+   frameskip_type             = 0;
+   frameskip_threshold        = 0;
+   frameskip_counter          = 0;
+   retro_audio_buff_active    = false;
+   retro_audio_buff_occupancy = 0;
+   retro_audio_buff_underrun  = false;
+   retro_audio_latency        = 0;
+   update_audio_latency       = false;
 }
 
 unsigned retro_api_version(void)
@@ -560,9 +667,13 @@ void retro_run(void)
    update_input();
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-      update_variables();
+      update_variables(false);
 
-   video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
+   if (should_skip_frame)
+      video_cb(NULL, gfx_width, gfx_height, gfx_width * 2);
+   else
+      video_cb(gp2x_screen15, gfx_width, gfx_height, gfx_width * 2);
+
    if (samples_per_frame)
    {
       if (usestereo)
@@ -584,6 +695,19 @@ void retro_run(void)
 #ifndef WANT_LIBCO
    unlock_mame();
 #endif
+
+   /* If frameskip/timing settings have changed,
+    * update frontend audio latency
+    * > Can do this before or after the frameskip
+    *   check, but doing it after means we at least
+    *   retain the current frame's audio output */
+   if (update_audio_latency)
+   {
+      environ_cb(RETRO_ENVIRONMENT_SET_MINIMUM_AUDIO_LATENCY,
+                 &retro_audio_latency);
+      update_audio_latency = false;
+   }
+
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -895,6 +1019,7 @@ bool retro_load_game(const struct retro_game_info *info)
    run_thread = sthread_create(run_thread_proc, NULL);
 #endif
 
+   retro_set_audio_buff_status_cb();
    return true;
 }
 
