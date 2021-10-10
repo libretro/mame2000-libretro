@@ -65,7 +65,7 @@ int update_audio_latency                 = false;
 
 int should_skip_frame                    = 0;
 
-static int sample_rate                   = 32000;
+static int sample_rate                   = 22050;
 static int stereo_enabled                = true;
 
 int game_index = -1;
@@ -278,7 +278,7 @@ static void update_variables(bool first_run)
     var.value = NULL;
     var.key = "mame2000-sample_rate";
 
-    sample_rate = 32000;
+    sample_rate = 22050;
 
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
        sample_rate = strtol(var.value, NULL, 10);
@@ -310,7 +310,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2000-frameskip_interval", "Frameskip Interval; 1|2|3|4|5|6|7|8|9" },
       { "mame2000-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2000-show_gameinfo", "Show Game Information; disabled|enabled" },
-      { "mame2000-sample_rate", "Audio Rate (Restart); 32000|11025|22050|32000|44100" },
+      { "mame2000-sample_rate", "Audio Rate (Restart); 22050|11025|22050|32000|44100" },
       { "mame2000-stereo", "Stereo (Restart); enabled|disabled" },
       { NULL, NULL },
    };
