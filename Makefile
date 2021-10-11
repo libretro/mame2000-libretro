@@ -6,9 +6,16 @@ IS_X86 = 0
 TARGET_NAME = mame2000
 
 CORE_DIR = .
+CFLAGS += -fsigned-char
 
 ifeq (,$(findstring msvc,$(platform)))
 GCC_DEFINES := -Wno-sign-compare -Wunused -Wpointer-arith -Waggregate-return -Wshadow
+endif
+
+ifneq ($(SANITIZER),)
+   CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
+   CXXFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
+   LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
 endif
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
