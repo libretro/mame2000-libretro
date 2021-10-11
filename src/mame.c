@@ -64,8 +64,8 @@ int run_game(int game)
 
     if(!iOS_fixedRes)
     {
-	  if (options.vector_width == 0) options.vector_width = 640;
-	  if (options.vector_height == 0) options.vector_height = 480;
+	  options.vector_width = 640;
+	  options.vector_height = 480;
     }
     else
     {
