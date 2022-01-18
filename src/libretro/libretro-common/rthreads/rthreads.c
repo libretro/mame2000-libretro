@@ -43,7 +43,7 @@
 #include "gx_pthread.h"
 #elif defined(PSP) || defined(VITA)
 #include "psp_pthread.h"
-#elif defined(__CELLOS_LV2__)
+#elif defined(__PS3__)
 #include <pthread.h>
 #include <sys/sys_time.h>
 #else
@@ -442,7 +442,7 @@ bool scond_wait_timeout(scond_t *cond, slock_t *lock, int64_t timeout_us)
    mach_port_deallocate(mach_task_self(), cclock);
    now.tv_sec = mts.tv_sec;
    now.tv_nsec = mts.tv_nsec;
-#elif defined(__CELLOS_LV2__)
+#elif defined(__PS3__)
    sys_time_sec_t s;
    sys_time_nsec_t n;
 
