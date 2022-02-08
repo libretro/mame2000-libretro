@@ -65,7 +65,7 @@ int wait_vsync;
 int vsync_frame_rate;
 int skiplines;
 int skipcolumns;
-int use_dirty;
+int use_dirty = -1;
 float osd_gamma_correction = 1.0;
 int brightness;
 float brightness_paused_adjust;
@@ -476,11 +476,10 @@ Returns 0 on success.
 */
 int osd_create_display(int width,int height,int depth,int fps,int attributes,int orientation)
 {
-	logerror("width %d, height %d\n", width,height);
+	printf("width %d, height %d\n", width,height);
 
 	video_depth = depth;
 	video_fps = fps;
-
 	brightness = 100;
 	brightness_paused_adjust = 1.0;
 	dirty_bright = 1;
