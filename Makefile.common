@@ -130,7 +130,6 @@ SOURCES_C   += $(CORE_DIR)/src/zlib/adler32.c \
 				 $(CORE_DIR)/src/zlib/compress.c \
 				 $(CORE_DIR)/src/zlib/crc32.c \
 				 $(CORE_DIR)/src/zlib/gzio.c \
-				 $(CORE_DIR)/src/zlib/uncompr.c \
 				 $(CORE_DIR)/src/zlib/deflate.c \
 				 $(CORE_DIR)/src/zlib/trees.c \
 				 $(CORE_DIR)/src/zlib/zutil.c \
@@ -139,6 +138,8 @@ SOURCES_C   += $(CORE_DIR)/src/zlib/adler32.c \
 				 $(CORE_DIR)/src/zlib/inftrees.c \
 				 $(CORE_DIR)/src/zlib/inffast.c
 endif
+SOURCES_C += \
+	     $(CORE_DIR)/src/zlib/uncompr.c
 
 SOURCES_C += $(CORE_DIR)/src/version.c \
 				$(CORE_DIR)/src/info.c \
