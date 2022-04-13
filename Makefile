@@ -109,7 +109,7 @@ CFLAGS += -DIOS -D__arm__ -DHAVE_POSIX_MEMALIGN=1
 
 ifeq ($(platform),ios-arm64)
    CC = cc -arch arm64 -isysroot $(IOSSDK)
-   LD = armv7-apple-darwin11-ld
+   LD = arm64-apple-darwin14-ld
 else
    CC = cc -arch armv7 -isysroot $(IOSSDK)
    LD = armv7-apple-darwin11-ld
