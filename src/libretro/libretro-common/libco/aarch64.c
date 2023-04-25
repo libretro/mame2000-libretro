@@ -22,7 +22,7 @@ extern "C" {
 static thread_local uint64_t co_active_buffer[64];
 static thread_local cothread_t co_active_handle;
 
-asm (
+__asm__ (
       ".globl co_switch_aarch64\n"
       ".globl _co_switch_aarch64\n"
       "co_switch_aarch64:\n"
