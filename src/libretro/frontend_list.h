@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2270
+#define NUMGAMES 2271
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
