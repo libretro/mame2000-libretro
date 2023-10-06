@@ -309,6 +309,7 @@ else ifeq ($(platform), emscripten)
    DISABLE_ERROR_LOGGING := 1
    STATIC_LINKING := 1
    WANT_LIBCO := 0
+   CFLAGS += -Wno-int-conversion
 
 # GCW0
 else ifeq ($(platform), gcw0)
@@ -569,9 +570,7 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-ifeq ($(platform), emscripten)
-	$(CC) $(CFLAGS) $(OBJECTS) $(OBJOUT)$@
-else ifeq ($(STATIC_LINKING), 1)
+ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
 else
 	$(LD) $(SHARED) $(LDFLAGS) $(OBJECTS) $(LIBS) $(LINKOUT)$@
