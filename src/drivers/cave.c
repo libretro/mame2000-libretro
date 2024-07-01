@@ -235,7 +235,7 @@ WRITE_HANDLER( guwange_eeprom_w )
 }
 
 
-void cave_nvram_handler(void *file,int read_or_write)
+static void _cave_nvram_handler(void *file,int read_or_write,int type)
 {
 	if (read_or_write)
 		EEPROM_save(file);
@@ -244,8 +244,40 @@ void cave_nvram_handler(void *file,int read_or_write)
 		EEPROM_init(&eeprom_interface);
 
 		if (file) EEPROM_load(file);
-		else usrintf_showmessage("You MUST initialize NVRAM in service mode");
+		else {
+			//usrintf_showmessage("Initialize NVRAM defaults");
+			switch (type)
+			{
+				case 0: // donpachi, ddonpach, esprade
+					EEPROM_set_data((UINT8*)"\x00\x0C\xFF\xFF\xFF\xFF\xFF\xFF\x00\x04", 10);
+					break;
+				case 1: // dfeveron, guwange
+					EEPROM_set_data((UINT8*)"\x00\x0C\x11\x21\xFF\xFF\xFF\xFF\x00\x14\x11\x11", 12);
+					break;
+				case 2: // uopoko
+					EEPROM_set_data((UINT8*)"\x00\x03\x08\x00\xFF\xFF\xFF\xFF\x08\x00\x00\x00", 12);
+					break;
+				default:
+					break;
+			}
+		}
 	}
+}
+
+// donpachi, ddonpach, esprade
+void cave_nvram_handler_0(void *file,int read_or_write)
+{
+	_cave_nvram_handler(file, read_or_write, 0);
+}
+// dfeveron, guwange
+void cave_nvram_handler_1(void *file,int read_or_write)
+{
+	_cave_nvram_handler(file, read_or_write, 1);
+}
+// uopoko
+void cave_nvram_handler_2(void *file,int read_or_write)
+{
+	_cave_nvram_handler(file, read_or_write, 2);
 }
 
 
@@ -816,7 +848,7 @@ static struct MachineDriver machine_driver_dfeveron =
 		{ SOUND_YMZ280B, &ymz280b_intf }
 	},
 
-	cave_nvram_handler
+	cave_nvram_handler_1
 };
 
 
@@ -856,7 +888,7 @@ static struct MachineDriver machine_driver_ddonpach =
 		{ SOUND_YMZ280B, &ymz280b_intf }
 	},
 
-	cave_nvram_handler
+	cave_nvram_handler_0
 };
 
 
@@ -897,7 +929,7 @@ static struct MachineDriver machine_driver_esprade =
 		{ SOUND_YMZ280B, &ymz280b_intf }
 	},
 
-	cave_nvram_handler
+	cave_nvram_handler_0
 };
 
 
@@ -937,7 +969,7 @@ static struct MachineDriver machine_driver_guwange =
 		{ SOUND_YMZ280B, &ymz280b_intf }
 	},
 
-	cave_nvram_handler
+	cave_nvram_handler_1
 };
 
 
@@ -977,7 +1009,7 @@ static struct MachineDriver machine_driver_uopoko =
 		{ SOUND_YMZ280B, &ymz280b_intf }
 	},
 
-	cave_nvram_handler
+	cave_nvram_handler_2
 };
 
 
@@ -1048,8 +1080,8 @@ static void esprade_unpack_sprites(void)
 		unsigned char data1 = src[0];
 		unsigned char data2 = src[1];
 
-		src[0] = (data1 & 0xf0) + (data2 & 0x0f);
-		src[1] = ((data1 & 0x0f)<<4) + ((data2 & 0xf0)>>4);
+		src[0] = ((data1 & 0x0f)<<4) + (data2 & 0x0f);
+		src[1] = (data1 & 0xf0) + ((data2 & 0xf0)>>4);
 
 		src += 2;
 	}
@@ -1093,7 +1125,7 @@ ROM_START( dfeveron )
 ROM_END
 
 
-void init_dfeveron(void)
+void init_dfeveron_uopoko(void)
 {
 	unpack_sprites();
 	cave_spritetype = 0;	// "normal" sprites
@@ -1190,7 +1222,7 @@ ROM_START( esprade )
 ROM_END
 
 
-void init_esprade(void)
+void init_esprade_guwange(void)
 {
 	esprade_unpack_sprites();
 	cave_spritetype = 0;	// "normal" sprites
@@ -1273,14 +1305,6 @@ ROM_START( uopoko )
 ROM_END
 
 
-void init_uopoko(void)
-{
-	unpack_sprites();
-	cave_spritetype = 0;	// "normal" sprites
-}
-
-
-
 
 /***************************************************************************
 
@@ -1291,7 +1315,7 @@ void init_uopoko(void)
 ***************************************************************************/
 
 GAME( 1997, ddonpach, 0, ddonpach, dfeveron, ddonpach, ROT270_16BIT, "Atlus/Cave",                  "Dodonpachi (Japan)"     )
-GAME( 1998, dfeveron, 0, dfeveron, dfeveron, dfeveron, ROT270_16BIT, "Cave (Nihon System license)", "Dangun Feveron (Japan)" )
-GAME( 1998, esprade,  0, esprade,  dfeveron, esprade,  ROT270_16BIT, "Atlus/Cave",                  "ESP Ra.De. (Japan)"     )
-GAME( 1998, uopoko,   0, uopoko,   dfeveron, uopoko,   ROT0_16BIT,   "Cave (Jaleco license)",       "Uo Poko (Japan)"        )
-GAME( 1999, guwange,  0, guwange,  guwange,  esprade,  ROT270_16BIT, "Atlus/Cave",                  "Guwange (Japan)"        )
+GAME( 1998, dfeveron, 0, dfeveron, dfeveron, dfeveron_uopoko, ROT270_16BIT, "Cave (Nihon System license)", "Dangun Feveron (Japan)" )
+GAME( 1998, esprade,  0, esprade,  dfeveron, esprade_guwange,  ROT270_16BIT, "Atlus/Cave",                  "ESP Ra.De. (Japan)"     )
+GAME( 1998, uopoko,   0, uopoko,   dfeveron, dfeveron_uopoko,   ROT0_16BIT,   "Cave (Jaleco license)",       "Uo Poko (Japan)"        )
+GAME( 1999, guwange,  0, guwange,  guwange,  esprade_guwange,  ROT270_16BIT, "Atlus/Cave",                  "Guwange (Japan)"        )
