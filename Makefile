@@ -218,8 +218,8 @@ else ifeq ($(platform), wiiu)
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    ENDIANNESS_DEFINES := -DMSB_FIRST
-   PLATFORM_DEFINES += -DGEKKO -DWIIU -DHW_RVL -mcpu=750 -meabi -mhard-float
-   PLATFORM_DEFINES += -ffunction-sections -fdata-sections -D__wiiu__ -D__wut__
+   PLATFORM_DEFINES += -DGEKKO -DWIIU -DHW_RVL -D__wiiu__ -DHW_WUP -ffunction-sections -fdata-sections -mcpu=750 -meabi -mhard-float
+   PLATFORM_DEFINES += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
    HAVE_RZLIB := 1
    STATIC_LINKING := 1
 
